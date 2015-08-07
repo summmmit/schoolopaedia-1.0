@@ -96,6 +96,7 @@
 <!-- end: REGISTER BOX -->
 @stop
 @section('scripts')
+    <script src="{{ URL::asset('assets/js/modifiedJs/login.js') }} "></script>
 <script>
     jQuery(document).ready(function() {
         Main.init();
