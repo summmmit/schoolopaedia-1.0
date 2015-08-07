@@ -14,3 +14,11 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+require_once app_path().'/Http/routes/user.php';       // including the user routes
+
+require_once app_path().'/Http/routes/admin.php';       // including the user routes
+
+require_once app_path().'/Http/routes/teacher.php';       // including the user routes
+
+require_once app_path().'/Http/routes/school.php';       // including the user routes
