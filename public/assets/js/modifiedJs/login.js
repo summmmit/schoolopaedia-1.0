@@ -1,4 +1,4 @@
-var Login = function() {
+var LoginAndRegister = function() {
 	"use strict";
 	var runBoxToShow = function() {
 		var el = $('.box-login');

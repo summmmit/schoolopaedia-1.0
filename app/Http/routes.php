@@ -17,8 +17,8 @@ Route::get('/', function () {
 
 require_once app_path().'/Http/routes/user.php';       // including the user routes
 
-require_once app_path().'/Http/routes/admin.php';       // including the user routes
+require_once app_path().'/Http/routes/admin.php';       // including the admin routes
 
-require_once app_path().'/Http/routes/teacher.php';       // including the user routes
+require_once app_path().'/Http/routes/teacher.php';       // including the teacher routes
 
-require_once app_path().'/Http/routes/school.php';       // including the user routes
+require_once app_path().'/Http/routes/school.php';       // including the school routes

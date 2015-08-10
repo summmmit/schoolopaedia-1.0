@@ -1,6 +1,6 @@
 @extends('layouts.login.registration')
 @section('stylesheets')
-<link rel="stylesheet" href="{{ URL::asset('assets/plugins/bootstrap-social-buttons/bootstrap-social.css'); }}">
+<link rel="stylesheet" href="{{ URL::asset('assets/plugins/bootstrap-social-buttons/bootstrap-social.css') }}">
 @stop
 @section('content')
 <!-- start: REGISTER BOX -->
@@ -9,7 +9,7 @@
     <p>
         Enter your personal details below:
     </p>
-    <form class="form-register" action="{{ URL::route('user-account-create-post'); }}" method="post">
+    <form class="form-register" action="{{ URL::route('user-account-create-post') }}" method="post">
         <div class="errorHandler alert alert-danger no-display">
             <i class="fa fa-remove-sign"></i> You have some form errors. Please check below.
         </div>
@@ -67,7 +67,7 @@
                 </div>
             </div>
         </fieldset>
-        {{ Form::token() }}
+        {!! csrf_field() !!}
     </form>
     <!-- start: COPYRIGHT -->
     <div class="copyright">
@@ -78,11 +78,4 @@
 <!-- end: REGISTER BOX -->
 @stop
 @section('scripts')
-<script>
-    jQuery(document).ready(function() {
-        Main.init();
-        Login.init();
-    });
-</script>
-
 @stop

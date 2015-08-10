@@ -18,12 +18,12 @@
         <meta content="" name="author" />
         <!-- end: META -->
         <!-- start: MAIN CSS -->
-        <link rel="stylesheet" href="{{ URL::asset('assets/plugins/bootstrap/css/bootstrap.min.css'); }}">
-        <link rel="stylesheet" href="{{ URL::asset('assets/plugins/font-awesome/css/font-awesome.min.css'); }}">
-        <link rel="stylesheet" href="{{ URL::asset('assets/plugins/iCheck/skins/all.css'); }}">
-        <link rel="stylesheet" href="{{ URL::asset('assets/plugins/animate.css/animate.min.css'); }}">
-        <link rel="stylesheet" href="{{ URL::asset('assets/css/styles.css'); }}">
-        <link rel="stylesheet" href="{{ URL::asset('assets/css/styles-responsive.css'); }}">
+        <link rel="stylesheet" href="{{ URL::asset('assets/plugins/bootstrap/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ URL::asset('assets/plugins/font-awesome/css/font-awesome.min.css') }}">
+        <link rel="stylesheet" href="{{ URL::asset('assets/plugins/iCheck/skins/all.css') }}">
+        <link rel="stylesheet" href="{{ URL::asset('assets/plugins/animate.css/animate.min.css') }}">
+        <link rel="stylesheet" href="{{ URL::asset('assets/css/styles.css') }}">
+        <link rel="stylesheet" href="{{ URL::asset('assets/css/styles-responsive.css') }}">
         <!--[if IE 7]>
         <link rel="stylesheet" href="assets/plugins/font-awesome/css/font-awesome-ie7.min.css">
         <![endif]-->
@@ -52,18 +52,25 @@
         <script type="text/javascript" src="assets/plugins/jQuery/jquery-1.11.1.min.js"></script>
         <![endif]-->
         <!--[if gte IE 9]><!-->
-        <script src="{{ URL::asset('assets/plugins/jQuery/jquery-2.1.1.min.js'); }} "></script>
+        <script src="{{ URL::asset('assets/plugins/jQuery/jquery-2.1.1.min.js') }} "></script>
         <!--<![endif]-->
-        <script src="{{ URL::asset('assets/plugins/jquery-ui/jquery-ui-1.10.2.custom.min.js'); }} "></script>
-        <script src="{{ URL::asset('assets/plugins/bootstrap/js/bootstrap.min.js'); }} "></script>
-        <script src="{{ URL::asset('assets/plugins/jquery.transit/jquery.transit.js'); }} "></script>
-        <script src="{{ URL::asset('assets/js/main.js'); }} "></script>
+        <script src="{{ URL::asset('assets/plugins/jquery-ui/jquery-ui-1.10.2.custom.min.js') }} "></script>
+        <script src="{{ URL::asset('assets/plugins/bootstrap/js/bootstrap.min.js') }} "></script>
+        <script src="{{ URL::asset('assets/plugins/jquery.transit/jquery.transit.js') }} "></script>
+        <script src="{{ URL::asset('assets/js/main.js') }} "></script>
         <!-- end: MAIN JAVASCRIPTS -->
         <!-- start: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
-        <script src="{{ URL::asset('assets/plugins/jquery-validation/dist/jquery.validate.min.js'); }} "></script>
-        <script src="{{ URL::asset('assets/js/modifiedJs/login.js'); }} "></script>
-        <!-- end: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
+        <script src="{{ URL::asset('assets/plugins/jquery-validation/dist/jquery.validate.min.js') }} "></script>
+        <script src="{{ URL::asset('assets/js/modifiedJs/login.js') }} "></script>
+
         @yield('scripts')
+        <!-- end: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
+        <script>
+            jQuery(document).ready(function() {
+                Main.init();
+                LoginAndRegister.init();
+            });
+        </script>
     </body>
     <!-- end: BODY -->
 </html>

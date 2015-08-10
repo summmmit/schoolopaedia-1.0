@@ -3758,7 +3758,6 @@ body.login {
 
 /* line 11, ../sass/partials/_login.scss */
 body.login .main-login {
-  margin-top: 60px;
   position: relative;
 }
 
@@ -3782,7 +3781,7 @@ body.login .box-login, body.login .box-forgot, body.login .box-register {
 
 /* line 29, ../sass/partials/_login.scss */
 body.login .box-login, body.login .box-forgot, body.login .box-register {
-  display: none;
+  /* display: none; */
 }
 
 /* line 32, ../sass/partials/_login.scss */

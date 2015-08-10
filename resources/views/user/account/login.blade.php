@@ -1,6 +1,6 @@
 @extends('layouts.login.registration')
 @section('stylesheets')
-<link rel="stylesheet" href="{{ URL::asset('assets/plugins/bootstrap-social-buttons/bootstrap-social.css'); }}">
+<link rel="stylesheet" href="{{ URL::asset('assets/plugins/bootstrap-social-buttons/bootstrap-social.css') }}">
 @stop
 @section('content')
 <!-- start: LOGIN BOX -->
@@ -9,7 +9,7 @@
     <p>
         Please enter your name and password to log in.
     </p>
-    <form class="form-login" action="{{ URL::route('user-sign-in-post'); }}" method="post">
+    <form class="form-login" action="{{ URL::route('user-sign-in-post') }}" method="post">
         <!-- Some Message to be Displayed start-->
         <div class="errorHandler alert alert-danger no-display">
             <i class="fa fa-remove-sign"></i> You have some form errors. Please check below.
@@ -32,7 +32,7 @@
                 <span class="input-icon">
                     <input type="password" class="form-control password" name="password" placeholder="Password">
                     <i class="fa fa-lock"></i>
-                    <a class="forgot" href="{{ URL::route('user-forgot-password'); }}">
+                    <a class="forgot" href="{{ URL::route('user-forgot-password') }}">
                         I forgot my password
                     </a> </span>
             </div>
@@ -47,21 +47,21 @@
             </div>
             <div class="new-account">
                 Don't have an account yet?
-                <a href="{{ URL::route('user-account-create'); }}">
+                <a href="{{ URL::route('user-account-create') }}">
                     Create an account
                 </a>
             </div>
             <br>
             <div class="row">
                 <div class="col-md-6 text-center">
-                    <a href="{{ URL::route('user-google-auth'); }}" class="btn btn-social btn-google-plus"><i class="fa fa-google-plus"></i> Sign in with Google</a>
+                    <a href="{{ URL::route('user-google-auth') }}" class="btn btn-social btn-google-plus"><i class="fa fa-google-plus"></i> Sign in with Google</a>
                 </div>
                 <div class="col-md-6 text-center">
-                    <a href="{{ URL::route('user-facebook-auth'); }}" class="btn btn-social btn-facebook"><i class="fa fa-facebook"></i> Sign in with Facebook</a>
+                    <a href="{{ URL::route('user-facebook-auth') }}" class="btn btn-social btn-facebook"><i class="fa fa-facebook"></i> Sign in with Facebook</a>
                 </div>
             </div>
         </fieldset>
-        {{ Form::token() }}
+        {!! csrf_field() !!}
     </form>
     <!-- start: COPYRIGHT -->
     <div class="copyright">
@@ -72,11 +72,4 @@
 <!-- end: LOGIN BOX -->
 @stop
 @section('scripts')
-<script>
-    jQuery(document).ready(function() {
-        Main.init();
-        Login.init();
-    });
-</script>
-
 @stop

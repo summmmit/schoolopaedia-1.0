@@ -11,6 +11,7 @@ class SchoolController extends Controller
 {
     public function getCreate()
     {
+
         return view('schools.register');
     }
 }
