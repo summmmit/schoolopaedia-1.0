@@ -13,6 +13,8 @@ class UsersGroups extends Model
      */
     protected $table = 'users_groups';
 
+    public $timestamps = false;
+
     protected $fillable = array('user_id', 'groups_id');
 
 }

@@ -217,7 +217,7 @@ var LoginAndRegister = function() {
 					required : true
 				}
 			},
-			submitHandler : function(form) {
+			submitHandler : function(form3) {
 				errorHandler3.hide();
 				form3.submit();
 			},

@@ -22,3 +22,5 @@ require_once app_path().'/Http/routes/admin.php';       // including the admin r
 require_once app_path().'/Http/routes/teacher.php';       // including the teacher routes
 
 require_once app_path().'/Http/routes/school.php';       // including the school routes
+
+require_once app_path().'/Http/routes/loginAndRegister.php';       // including the login and Register routes
