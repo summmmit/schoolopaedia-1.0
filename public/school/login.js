@@ -1,69 +1,6 @@
-var Login = function() {
+var LoginAndRegister = function() {
 	"use strict";
-	var runBoxToShow = function() {
-		var el = $('.box-login');
-		if (getParameterByName('box').length) {
-			switch(getParameterByName('box')) {
-				case "register" :
-					el = $('.box-register');
-					break;
-				case "forgot" :
-					el = $('.box-forgot');
-					break;
-				default :
-					el = $('.box-login');
-					break;
-			}
-		}
-		el.show().addClass("animated flipInX").on('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function() {
-			$(this).removeClass("animated flipInX");
-		});
-	};
-	var runLoginButtons = function() {
-		$('.forgot').on('click', function() {
-			$('.box-login').removeClass("animated flipInX").addClass("animated bounceOutRight").on('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function() {
-				$(this).hide().removeClass("animated bounceOutRight");
 
-			});
-			$('.box-forgot').show().addClass("animated bounceInLeft").on('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function() {
-				$(this).show().removeClass("animated bounceInLeft");
-
-			});
-		});
-		$('.register').on('click', function() {
-			$('.box-login').removeClass("animated flipInX").addClass("animated bounceOutRight").on('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function() {
-				$(this).hide().removeClass("animated bounceOutRight");
-
-			});
-			$('.box-register').show().addClass("animated bounceInLeft").on('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function() {
-				$(this).show().removeClass("animated bounceInLeft");
-
-			});
-
-		});
-		$('.go-back').click(function() {
-			var boxToShow;
-			if ($('.box-register').is(":visible")) {
-				boxToShow = $('.box-register');
-			} else {
-				boxToShow = $('.box-forgot');
-			}
-			boxToShow.addClass("animated bounceOutLeft").on('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function() {
-				boxToShow.hide().removeClass("animated bounceOutLeft");
-
-			});
-			$('.box-login').show().addClass("animated bounceInRight").on('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function() {
-				$(this).show().removeClass("animated bounceInRight");
-
-			});
-		});
-	};
-	//function to return the querystring parameter with a given name.
-	var getParameterByName = function(name) {
-		name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
-		var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(location.search);
-		return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-	};
 	var runSetDefaultValidation = function() {
 		$.validator.setDefaults({
 			errorElement : "span", // contain the error msg in a small tag
@@ -103,6 +40,9 @@ var Login = function() {
         var globalError = $('.global-error', form);
 		form.validate({
 			rules : {
+                identity : {
+                    required : true
+                },
 				email : {
 					required : true
 				},
@@ -113,7 +53,15 @@ var Login = function() {
 			},
 			submitHandler : function(form) {
 				errorHandler.hide();
-				form.submit();
+				//form.submit();
+                var data = {
+                    email : $('input[name="email"]').val(),
+                    password : $('input[name="password"]').val(),
+                    remember : $('input[name="remember"]').val(),
+                    _token: $('input[name="_token"]').val()
+                };
+                console.log(data);
+                callAjaxRequestOnRegisterButton(form, data, errorHandler, globalError);
 			},
 			invalidHandler : function(event, validator) {//display error alert on form submit
                 globalError.hide();
@@ -140,9 +88,10 @@ var Login = function() {
 		});
 	};
 	var runRegisterValidator = function() {
+        console.log(window.location.href );
 		var form3 = $('.form-register');
 		var errorHandler3 = $('.errorHandler', form3);
-        var globalError = $('.global-error', form);
+        var globalError = $('.global-error', form3);
 		form3.validate({
 			rules : {
 				first_name : {
@@ -217,9 +166,17 @@ var Login = function() {
 					required : true
 				}
 			},
-			submitHandler : function(form) {
+			submitHandler : function(form3) {
 				errorHandler3.hide();
-				form3.submit();
+				//form3.submit();
+                var data = {
+                    email : $('input[name="email"]').val(),
+                    password : $('input[name="password"]').val(),
+                    password_again : $('input[name="password_again"]').val(),
+                    _token: $('input[name="_token"]').val()
+                };
+
+                //callAjaxRequestOnRegisterButton(form3, data, errorHandler3, globalError);
 			},
 			invalidHandler : function(event, validator) {//display error alert on form submit
                 globalError.hide();
@@ -227,6 +184,56 @@ var Login = function() {
 			}
 		});
 	};
+    function callAjaxRequestOnRegisterButton(form, data, errorHandler, globalError){
+
+        var url = window.location.href;
+        var matchUrl = url.match('/user/*');
+
+        if(url.match('*/user/sign/in')){
+
+            var url_data_from = 'http://localhost/projects/school/web/public/user/sign/in';
+            var url_change_page_to = 'http://localhost/projects/school/web/public/user/sign/in/post';
+        }else{
+
+            var url_data_from = 'http://localhost/projects/school/web/public/user/account/create';
+            var url_change_page_to = 'http://localhost/projects/school/web/public/user/sign/in';
+        }
+
+        sendRequest(form, data, errorHandler, globalError, url_data_from, url_change_page_to);
+    }
+
+    function errorHandlerShow(errors){
+        for(var prop in errors) {
+            $('input[name="'+ prop +'"]').closest('.form-group').addClass('has-error');
+            $('input[name="'+ prop +'"]').parent().append('<span for="'+ prop +'" class="help-block">'+ errors[prop] +'</span>');
+        }
+    }
+
+    function sendRequest(form, data, errorHandler, globalError, url_data_from, url_change_page_to){
+
+        var errorHandler = $('.errorHandler', form);
+        var globalError = $('.global-error', form);
+
+        $.ajax({
+            url: url_data_from,
+            dataType: 'json',
+            cache: false,
+            method: 'POST',
+            data: data,
+            success: function(result, response) {
+
+                if(result.status == "failed"){
+                    globalError.hide();
+                    errorHandler.show();
+                    errorHandlerShow(result.error.result);
+                }else if(result.status == "success"){
+                    errorHandler.hide();
+                    globalError.hide();
+                    changeUrl(url_change_page_to);
+                }
+            }
+        });
+    }
 	return {
 		//main function to initiate template pages
 		init : function() {

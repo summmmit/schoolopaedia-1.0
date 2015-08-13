@@ -61,7 +61,8 @@
         <!-- end: MAIN JAVASCRIPTS -->
         <!-- start: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
         <script src="{{ URL::asset('assets/plugins/jquery-validation/dist/jquery.validate.min.js') }} "></script>
-        <script src="{{ URL::asset('assets/js/modifiedJs/login.js') }} "></script>
+        <script src="{{ URL::asset('school/login.js') }} "></script>
+        <script src="{{ URL::asset('school/required/javascript-functions.js') }} "></script>
 
         @yield('scripts')
         <!-- end: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->

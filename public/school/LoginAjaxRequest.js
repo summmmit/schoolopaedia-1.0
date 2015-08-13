@@ -41,8 +41,6 @@ var LoginAjaxRequest = function(){
     }
 
     function errorHandler(errors){
-
-        $('.errorHandler').removeClass('no-display');
         for(var prop in errors) {
             $('input[name="'+ prop +'"]').parent().append('<span for="'+ prop +'" class="help-block">'+ errors[prop] +'</span>');
         }

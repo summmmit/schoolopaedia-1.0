@@ -9,7 +9,7 @@
         <p>
             Enter your personal details below:
         </p>
-        <form class="form-register" action="#" method="post">
+        <form class="form-register" method="post">
             <div class="errorHandler alert alert-danger no-display">
                 <i class="fa fa-remove-sign"></i> You have some form errors. Please check below.
             </div>
@@ -27,26 +27,17 @@
                     <input type="email" class="form-control" name="email" placeholder="Email"
                            value="{{ Input::old('email') or '' }}">
                     <i class="fa fa-envelope"></i>
-                    @if ($errors->has('email'))
-                        <p class="help-block alert alert-danger">{{ $errors->first('email') }}</p>
-                    @endif
                 </span>
                 </div>
                 <div class="form-group">
                 <span class="input-icon">
                     <input type="password" class="form-control" id="password" name="password" placeholder="Password">
-                    @if ($errors->has('password'))
-                        <p class="help-block alert-danger">{{ $errors->first('password') }}</p>
-                    @endif
                     <i class="fa fa-lock"></i>
                 </span>
                 </div>
                 <div class="form-group">
                 <span class="input-icon">
                     <input type="password" class="form-control" name="password_again" placeholder="Password Again">
-                    @if ($errors->has('password_again'))
-                        <p class="help-block alert-danger">{{ $errors->first('password_again') }}</p>
-                    @endif
                     <i class="fa fa-lock"></i>
                 </span>
                 </div>
@@ -68,6 +59,7 @@
                     </button>
                 </div>
                 <br>
+
                 <div class="row">
                     <div class="col-md-6 text-center">
                         <a class="btn btn-social btn-google-plus"><i class="fa fa-google-plus"></i> Sign in with Google</a>
@@ -88,10 +80,4 @@
     <!-- end: REGISTER BOX -->
 @stop
 @section('scripts')
-    <script src="{{ URL::asset('assets/js/school/LoginAjaxRequestsgg.js') }}"></script>
-    <script>
-        jQuery(document).ready(function () {
-            LoginAjaxRequest.init();
-        });
-    </script>
 @stop
