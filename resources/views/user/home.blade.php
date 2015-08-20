@@ -60,56 +60,56 @@
                             <td> 9:00 AM - 10:00 PM </td>
                             <td> Hindi </td>
                             <td>Peter Clark</td>
-                            <td class="center"><img src="{{ URL::asset('assets/images/avatar-1.jpg'); }}" alt="image"/></td>
+                            <td class="center"><img src="{{ URL::asset('assets/images/avatar-1.jpg') }}" alt="image"/></td>
                         </tr>
                         <tr>
                             <td> 1 </td>
                             <td> 9:00 AM - 10:00 PM </td>
                             <td> Hindi </td>
                             <td>Peter Clark</td>
-                            <td class="center"><img src="{{ URL::asset('assets/images/avatar-1.jpg'); }}" alt="image"/></td>
+                            <td class="center"><img src="{{ URL::asset('assets/images/avatar-1.jpg') }}" alt="image"/></td>
                         </tr>
                         <tr>
                             <td> 1 </td>
                             <td> 9:00 AM - 10:00 PM </td>
                             <td> Hindi </td>
                             <td>Peter Clark</td>
-                            <td class="center"><img src="{{ URL::asset('assets/images/avatar-1.jpg'); }}" alt="image"/></td>
+                            <td class="center"><img src="{{ URL::asset('assets/images/avatar-1.jpg') }}" alt="image"/></td>
                         </tr>
                         <tr>
                             <td> 1 </td>
                             <td> 9:00 AM - 10:00 PM </td>
                             <td> Hindi </td>
                             <td>Peter Clark</td>
-                            <td class="center"><img src="{{ URL::asset('assets/images/avatar-1.jpg'); }}" alt="image"/></td>
+                            <td class="center"><img src="{{ URL::asset('assets/images/avatar-1.jpg') }}" alt="image"/></td>
                         </tr>
                         <tr>
                             <td> 1 </td>
                             <td> 9:00 AM - 10:00 PM </td>
                             <td> Hindi </td>
                             <td>Peter Clark</td>
-                            <td class="center"><img src="{{ URL::asset('assets/images/avatar-1.jpg'); }}" alt="image"/></td>
+                            <td class="center"><img src="{{ URL::asset('assets/images/avatar-1.jpg') }}" alt="image"/></td>
                         </tr>
                         <tr>
                             <td> 1 </td>
                             <td> 9:00 AM - 10:00 PM </td>
                             <td> Hindi </td>
                             <td>Peter Clark</td>
-                            <td class="center"><img src="{{ URL::asset('assets/images/avatar-1.jpg'); }}" alt="image"/></td>
+                            <td class="center"><img src="{{ URL::asset('assets/images/avatar-1.jpg') }}" alt="image"/></td>
                         </tr>
                         <tr>
                             <td> 1 </td>
                             <td> 9:00 AM - 10:00 PM </td>
                             <td> Hindi </td>
                             <td>Peter Clark</td>
-                            <td class="center"><img src="{{ URL::asset('assets/images/avatar-1.jpg'); }}" alt="image"/></td>
+                            <td class="center"><img src="{{ URL::asset('assets/images/avatar-1.jpg') }}" alt="image"/></td>
                         </tr>
                         <tr>
                             <td> 1 </td>
                             <td> 9:00 AM - 10:00 PM </td>
                             <td> Hindi </td>
                             <td>Peter Clark</td>
-                            <td class="center"><img src="{{ URL::asset('assets/images/avatar-1.jpg'); }}" alt="image"/></td>
+                            <td class="center"><img src="{{ URL::asset('assets/images/avatar-1.jpg') }}" alt="image"/></td>
                         </tr>
                     </tbody>
                 </table>
@@ -234,7 +234,7 @@
 @stop
 
 @section('scripts')
-<script src="{{ URL::asset('assets/js/modifiedJs/user/home.js'); }}"></script>
+<script src="{{ URL::asset('assets/js/modifiedJs/user/home.js') }}"></script>
 <!-- Scripts for This page only -->
 <script>
     jQuery(document).ready(function() {

@@ -21,7 +21,7 @@
         </a>
     </li>
     <li>
-        <a href="{{ URL::route('user-sign-out'); }}">
+        <a href="{{ URL::route('account-user-logout') }}">
             Log Out
         </a>
     </li>

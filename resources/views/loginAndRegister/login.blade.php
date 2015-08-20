@@ -9,7 +9,7 @@
     <p>
         Please enter your name and password to log in.
     </p>
-    <form class="form-login" action="#" method="post">
+    <form class="form-login" action="{{ URL::route('account-user-sign-in-post') }}" method="post">
         <!-- Some Message to be Displayed start-->
         <div class="errorHandler alert alert-danger no-display">
             <i class="fa fa-remove-sign"></i> You have some form errors. Please check below.
@@ -32,7 +32,7 @@
                 <span class="input-icon">
                     <input type="password" class="form-control password" name="password" placeholder="Password">
                     <i class="fa fa-lock"></i>
-                    <a class="forgot" href="{{ URL::route('user-forgot-password') }}">
+                    <a class="forgot" href="{{ URL::route('account-user-forgot-password') }}">
                         I forgot my password
                     </a> </span>
             </div>
@@ -47,7 +47,7 @@
             </div>
             <div class="new-account">
                 Don't have an account yet?
-                <a href="{{ URL::route('user-account-create') }}">
+                <a href="{{ URL::route('account-user-create') }}">
                     Create an account
                 </a>
             </div>

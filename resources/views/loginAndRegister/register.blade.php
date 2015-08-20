@@ -6,9 +6,11 @@
     <!-- start: REGISTER BOX -->
     <div class="box-register">
         <h3>Sign Up</h3>
+
         <p>
             Enter your personal details below:
         </p>
+
         <form class="form-register" method="post">
             <div class="errorHandler alert alert-danger no-display">
                 <i class="fa fa-remove-sign"></i> You have some form errors. Please check below.
@@ -30,16 +32,26 @@
                 </span>
                 </div>
                 <div class="form-group">
-                <span class="input-icon">
+                  <span class="input-icon">
                     <input type="password" class="form-control" id="password" name="password" placeholder="Password">
                     <i class="fa fa-lock"></i>
-                </span>
+                  </span>
                 </div>
                 <div class="form-group">
-                <span class="input-icon">
+                  <span class="input-icon">
                     <input type="password" class="form-control" name="password_again" placeholder="Password Again">
                     <i class="fa fa-lock"></i>
-                </span>
+                  </span>
+                </div>
+                <div class="form-group">
+                    <label for="form-field-select-1">
+                        Register As
+                    </label>
+                    <select id="group_to_register_in" class="form-control" name="group_to_register_in">
+                        <option value="">Select your Position</option>
+                        <option value="2">Student</option>
+                        <option value="3">Teacher</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <div>
@@ -51,7 +63,7 @@
                 </div>
                 <div class="form-actions">
                     Already have an account?
-                    <a href="{{ URL::route('user-sign-in') }}">
+                    <a href="{{ URL::route('account-user-sign-in') }}">
                         Log-in
                     </a>
                     <button type="submit" class="btn btn-green pull-right" id="register-user">
@@ -61,10 +73,10 @@
                 <br>
 
                 <div class="row">
-                    <div class="col-md-6 text-center">
+                    <div class="col-sm-6 text-center">
                         <a class="btn btn-social btn-google-plus"><i class="fa fa-google-plus"></i> Sign in with Google</a>
                     </div>
-                    <div class="col-md-6 text-center">
+                    <div class="col-sm-6 text-center">
                         <a class="btn btn-social btn-facebook"><i class="fa fa-facebook"></i> Sign in with Facebook</a>
                     </div>
                 </div>

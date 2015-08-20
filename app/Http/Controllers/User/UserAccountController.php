@@ -13,16 +13,8 @@ class UserAccountController extends Controller
      * TO show form for user Login
      * @return \Illuminate\View\View
      */
-    public function getSignIn()
+    public function getHome()
     {
-        return view('user.account.login');
-    }
-    /**
-     * To show form for User Registration
-     * @return \Illuminate\View\View
-     */
-    public function getCreate()
-    {
-        return view('user.account.register');
+        return view('user.home');
     }
 }

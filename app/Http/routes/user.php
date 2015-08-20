@@ -1,19 +1,13 @@
 <?php
 
+
 Route::group(['prefix' => 'user'], function(){
     /*
-     * User Create Account (get)
+     * User Forgot password (get)
      */
-    Route::get('/account/create', array(
-        'as' => 'user-account-create',
-        'uses' => 'LoginAndRegisterController@getCreate'
-    ));
-    /*
-     *  User Account Create (post)
-     */
-    Route::Post('/account/create/post', array(
-        'as' => 'user-account-create-post',
-        'uses' => 'MobileUserController@postCreate'
+    Route::get('/home', array(
+        'as' => 'user-home',
+        'uses' => 'User\UserAccountController@getHome'
     ));
     /*
      * User Activate Account (get)
@@ -21,20 +15,6 @@ Route::group(['prefix' => 'user'], function(){
     Route::get('/account/{userId}/activate/{code}', array(
         'as' => 'user-account-activate',
         'uses' => 'UserLoginController@getActivate'
-    ));
-    /*
-     * User SignIn Account (get)
-     */
-    Route::get('/sign/in', array(
-        'as' => 'user-sign-in',
-        'uses' => 'LoginAndRegisterController@getSignIn'
-    ));
-    /*
-     *  User Sign-in (post)SchoolController.php
-     */
-    Route::Post('/sign/in/post', array(
-        'as' => 'user-sign-in-post',
-        'uses' => 'LoginAndRegisterController@postSignIn'
     ));
     /*
      * User Forgot password (get)

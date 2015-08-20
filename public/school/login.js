@@ -35,6 +35,7 @@ var LoginAndRegister = function() {
 		});
 	};
 	var runLoginValidator = function() {
+        console.log(window.location.href );
 		var form = $('.form-login');
 		var errorHandler = $('.errorHandler', form);
         var globalError = $('.global-error', form);
@@ -53,15 +54,7 @@ var LoginAndRegister = function() {
 			},
 			submitHandler : function(form) {
 				errorHandler.hide();
-				//form.submit();
-                var data = {
-                    email : $('input[name="email"]').val(),
-                    password : $('input[name="password"]').val(),
-                    remember : $('input[name="remember"]').val(),
-                    _token: $('input[name="_token"]').val()
-                };
-                console.log(data);
-                callAjaxRequestOnRegisterButton(form, data, errorHandler, globalError);
+				form.submit();
 			},
 			invalidHandler : function(event, validator) {//display error alert on form submit
                 globalError.hide();
@@ -88,7 +81,6 @@ var LoginAndRegister = function() {
 		});
 	};
 	var runRegisterValidator = function() {
-        console.log(window.location.href );
 		var form3 = $('.form-register');
 		var errorHandler3 = $('.errorHandler', form3);
         var globalError = $('.global-error', form3);
@@ -161,6 +153,9 @@ var LoginAndRegister = function() {
 					minlength : 5,
 					equalTo : "#password"
 				},
+                group_to_register_in : {
+                    required : true
+                },
 				agree : {
 					minlength : 1,
 					required : true
@@ -173,10 +168,10 @@ var LoginAndRegister = function() {
                     email : $('input[name="email"]').val(),
                     password : $('input[name="password"]').val(),
                     password_again : $('input[name="password_again"]').val(),
+                    group_to_register_in: $('#group_to_register_in').val(),
                     _token: $('input[name="_token"]').val()
                 };
-
-                //callAjaxRequestOnRegisterButton(form3, data, errorHandler3, globalError);
+                callAjaxRequestOnRegisterButton(form3, data, errorHandler3, globalError);
 			},
 			invalidHandler : function(event, validator) {//display error alert on form submit
                 globalError.hide();
@@ -186,20 +181,16 @@ var LoginAndRegister = function() {
 	};
     function callAjaxRequestOnRegisterButton(form, data, errorHandler, globalError){
 
-        var url = window.location.href;
-        var matchUrl = url.match('/user/*');
-
-        if(url.match('*/user/sign/in')){
-
-            var url_data_from = 'http://localhost/projects/school/web/public/user/sign/in';
-            var url_change_page_to = 'http://localhost/projects/school/web/public/user/sign/in/post';
-        }else{
-
-            var url_data_from = 'http://localhost/projects/school/web/public/user/account/create';
-            var url_change_page_to = 'http://localhost/projects/school/web/public/user/sign/in';
+        var send_data_to = null;
+        var url_change_page_to = null;
+        if(window.location.href.match('/user/sign/in')){
+            send_data_to = "http://localhost/projects/school/web/public/user/sign/in/post";
+        }else if(window.location.href.match('/account/user/create')){
+            send_data_to = "http://localhost/projects/school/web/public/account/user/create/post";
+            url_change_page_to = "http://localhost/projects/school/web/public/account/sign/in";
         }
 
-        sendRequest(form, data, errorHandler, globalError, url_data_from, url_change_page_to);
+        sendRequest(form, data, errorHandler, globalError, send_data_to, url_change_page_to);
     }
 
     function errorHandlerShow(errors){
@@ -209,18 +200,20 @@ var LoginAndRegister = function() {
         }
     }
 
-    function sendRequest(form, data, errorHandler, globalError, url_data_from, url_change_page_to){
+    function sendRequest(form, data, errorHandler, globalError, send_data_to, url_change_page_to){
 
         var errorHandler = $('.errorHandler', form);
         var globalError = $('.global-error', form);
+        console.log(data);
 
         $.ajax({
-            url: url_data_from,
+            url: send_data_to,
             dataType: 'json',
             cache: false,
             method: 'POST',
             data: data,
             success: function(result, response) {
+                console.log(result);
 
                 if(result.status == "failed"){
                     globalError.hide();

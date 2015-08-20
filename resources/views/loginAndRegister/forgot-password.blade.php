@@ -27,7 +27,7 @@
                     <i class="fa fa-envelope"></i> </span>
                 </div>
                 <div class="form-actions">
-                    <a class="btn btn-light-grey go-back" href="{{ URL::route('user-sign-in') }}">
+                    <a class="btn btn-light-grey go-back" href="{{ URL::route('account-user-sign-in') }}">
                         <i class="fa fa-chevron-circle-left"></i> Log-In
                     </a>
                     <button type="submit" class="btn btn-green pull-right">

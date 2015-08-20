@@ -17,21 +17,19 @@ use Auth;
 
 class LoginAndRegisterController extends Controller
 {
-
-
     public function getSignIn()
     {
-        return view('user.account.login');
+        return view('loginAndRegister.login');
     }
 
     public function getCreate()
     {
-        return view('user.account.register');
+        return view('loginAndRegister.register');
     }
 
     public function getForgotPassword()
     {
-        return view('user.account.forgot-password');
+        return view('loginAndRegister.forgot-password');
     }
 
     public function postCreate(Request $request)
@@ -40,35 +38,34 @@ class LoginAndRegisterController extends Controller
         $email = $request->input('email');
         $password = $request->input('password');
         $password_again = $request->input('password_again');
+        $group_to_register_in = $request->input('group_to_register_in');
 
         $inputs = [
             'email' => $email,
             'password' => $password,
-            'password_again' => $password_again
+            'password_again' => $password_again,
+            'group_to_register_in' => $group_to_register_in
         ];
 
         $validator = validator::make($request->all(), [
             'email' => 'required|unique:users|email',
             'password' => 'required|max:16|min:6',
-            'password_again' => 'required|same:password'
+            'password_again' => 'required|same:password',
+            'group_to_register_in' => 'required|in:1,2,3'
         ]);
 
         if ($validator->fails()) {
             return ApiResponseClass::errorResponse('You Have Some Input Errors', $inputs, $validator->errors());
         }
 
-        $isUrlUser = $request->is('user/*');
-        $isUrlAdmin = $request->is('admin/*');
-        $isUrlTeacher = $request->is('teacher/*');
-
         $group_id = null;
 
-        if ($isUrlUser) {
+        if ($group_to_register_in == Groups::Student_Group_Id) {
             $group_id = Groups::Student_Group_Id;
-        } elseif ($isUrlAdmin) {
+        } elseif ($group_to_register_in == Groups::Administrator_Group_ID) {
             $group_id = Groups::Administrator_Group_ID;
-        } elseif ($isUrlTeacher) {
-            $group_id = Groups::Teacher_Group_Id_Group_ID;
+        } elseif ($group_to_register_in == Groups::Teacher_Group_Id) {
+            $group_id = Groups::Teacher_Group_Id;
         }
 
         DB::beginTransaction();
@@ -79,7 +76,7 @@ class LoginAndRegisterController extends Controller
 
             $user = new User();
             $user->email = $email;
-            $user->password = Hash::make('password');
+            $user->password = Hash::make($password);
             $user->activated = 0;
             $user->email_updated_at = date("Y-m-d h:i:s");
             $user->password_updated_at = date("Y-m-d h:i:s");
@@ -112,7 +109,69 @@ class LoginAndRegisterController extends Controller
         return ApiResponseClass::successResponse($user, $inputs);
     }
 
-    public function postSignIn(Request $request)
+    public function postSignIn(Request $request){
+
+        $email = $request->input('email');
+        $password = $request->input('password');
+        $remember = $request->input('remember');
+
+        $inputs = [
+            'email' => $email,
+            'password' => $password,
+            'remember' => $remember,
+        ];
+
+        $validator = validator::make($request->all(), [
+            'email' => 'required',
+            'password' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            $flash_data = 'You have some errors !!';
+            return redirect(route('account-user-sign-in'))->withErrors($validator->errors())->withInputs($inputs)->withGlobal($flash_data);
+        }else{
+            $user = User::where('email', $email)->get()->first();
+            if($user->count() > 0){
+                if($user->activated){
+
+                    $auth = Auth::attempt([
+                        'email' => $email,
+                        'password' => $password
+                    ], $remember);
+
+                    if($auth){
+                        $user_groups = UsersGroups::where('user_id', $user->id)->get()->first();
+                        $group_id = $user_groups->groups_id;
+
+                        echo $group_id;
+
+                        if($group_id == Groups::Student_Group_Id){
+                            return redirect()->intended(route('user-home'));
+                        }elseif($group_id == Groups::Teacher_Group_Id){
+                            return redirect()->intended();
+                        }elseif($group_id == Groups::Administrator_Group_ID){
+                            return redirect()->intended();
+                        }
+
+                    }else{
+                        $flash_data = 'User email or password is not correct !!';
+                        return redirect(route('account-user-sign-in'))->withErrors($validator->errors())->withInputs($inputs)->withGlobal($flash_data);
+                    }
+                }else{
+                    $flash_data = 'User is not Activated !!';
+                    return redirect(route('account-user-sign-in'))->withErrors($validator->errors())->withInputs($inputs)->withGlobal($flash_data);
+                }
+            }else{
+                $flash_data = 'User with this email is not found !!';
+                return redirect(route('account-user-sign-in'))->withErrors($validator->errors())->withInputs($inputs)->withGlobal($flash_data);
+            }
+        }
+        $flash_data = 'Something Went Wrong. Retry again Later sometime !!';
+        return redirect(route('account-user-sign-in'))->withErrors($validator->errors())->withInputs($inputs)->withGlobal($flash_data);
+
+    }
+
+    public function postSignInMobileApp(Request $request)
     {
         $email = $request->input('email');
         $password = $request->input('password');
@@ -124,28 +183,51 @@ class LoginAndRegisterController extends Controller
         ];
 
         $validator = validator::make($request->all(), [
-            'email' => 'required|unique:users|email',
-            'password' => 'required|max:16|min:6'
+            'email' => 'required',
+            'password' => 'required'
         ]);
 
         if ($validator->fails()) {
-            return ApiResponseClass::errorResponse('You Have Some Input Errors', $inputs, $validator->errors());
+            return ApiResponseClass::errorResponse('You Have Some Input Errors. Yes', $inputs, $validator->errors());
         }else{
-            $auth = Auth::attemp([
-                'email' => $email,
-                'password' => $password,
-                'active' => 1
-            ], $remember);
+            $user = User::where('email', $email)->first();
+            if($user->count()){
 
-            if($auth){
-                $user = Auth::user();
-                $login_flag = 1;
+                if($user->activated){
+
+                    $auth = Auth::attempt([
+                        'email' => $email,
+                        'password' => $password
+                    ], $remember);
+
+                    if($auth){
+                        $user = Auth::user();
+                        $login_flag = 1;
+                        $result = array(
+                            'user' => $user,
+                            'login_flag' => $login_flag
+                        );
+                        return ApiResponseClass::successResponse($result, $inputs);
+                    }else{
+                        return ApiResponseClass::errorResponse('Hello, You Have Some Input Errors', $inputs);
+                    }
+                }else{
+                    return ApiResponseClass::errorResponse('User is Not activated. Please activate It.', $inputs);
+                }
+            }else{
                 $result = array(
-                    'user' => $user,
-                    'login_flag' => $login_flag
+                    'email' => 'User Not Found'
                 );
-                return ApiResponseClass::successResponse($result, $inputs);
+                return ApiResponseClass::errorResponse('User Not Found.', $inputs, $result);
             }
         }
+    }
+
+    public function getLogout()
+    {
+        Auth::logout();
+
+        $flash_data = 'You have been successfully Logged Out!!';
+        return redirect(route('account-user-sign-in'))->with('global', $flash_data);
     }
 }

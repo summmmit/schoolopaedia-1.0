@@ -1,5 +1,9 @@
 <?php
-$user_id = Sentry::getUser()->id;
+
+use App\Models\UsersGroups;
+use App\Models\UserDetails;
+
+$user_id = Auth::user()->id;
 $user_group = UsersGroups::where('user_id', '=', $user_id)->get()->first();
 $userDetails = UserDetails::where('user_id', '=', $user_id)->get()->first();
 ?>

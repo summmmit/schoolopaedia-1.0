@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\SoftDeletingTrait;
 
 class UserDetails extends Model {
 
-    use SoftDeletingTrait;
-
     protected $dates = ['deleted_at'];
     protected $fillable = array(
         'username',
