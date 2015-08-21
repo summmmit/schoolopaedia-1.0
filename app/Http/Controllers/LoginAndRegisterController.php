@@ -27,7 +27,7 @@ class LoginAndRegisterController extends Controller
         return view('loginAndRegister.register');
     }
 
-    public function getForgotPassword()
+    public function getRetrievePassword()
     {
         return view('loginAndRegister.forgot-password');
     }
@@ -219,6 +219,131 @@ class LoginAndRegisterController extends Controller
                     'email' => 'User Not Found'
                 );
                 return ApiResponseClass::errorResponse('User Not Found.', $inputs, $result);
+            }
+        }
+    }
+
+    public function postRetrievePassword(Request $request){
+
+        $email = $request->input('email');
+
+        $inputs = [
+            'email' => $email
+        ];
+
+        $validator = validator::make($request->all(), [
+            'email' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            $flash_data = 'You have some errors !!';
+            return redirect(route('account-user-retrieve-password'))->withErrors($validator->errors())->withInputs($inputs)->withGlobal($flash_data);
+        }else{
+            $user = User::where('email', $email)->get()->first();
+            if($user && $user->count() > 0) {
+                if ($user->activated) {
+                    // Send Email to that email address
+
+                    $flash_data = 'Thank You. You have been sent an email to reset your password.!!';
+                    return redirect(route('account-user-retrieve-password'))->withErrors($validator->errors())->withInputs($inputs)->withGlobal($flash_data);
+                }else{
+                    $flash_data = 'User is not Activated !!';
+                    return redirect(route('account-user-retrieve-password'))->withErrors($validator->errors())->withInputs($inputs)->withGlobal($flash_data);
+                }
+            }else{
+                $flash_data = 'Your Email is not Found. Retry with Correct Email Address!!';
+                return redirect(route('account-user-retrieve-password'))->withErrors($validator->errors())->withInputs($inputs)->withGlobal($flash_data);
+            }
+        }
+    }
+
+    public function postRetrievePasswordMobileApp(Request $request){
+
+        $email = $request->input('email');
+
+        $inputs = [
+            'email' => $email
+        ];
+
+        $validator = validator::make($request->all(), [
+            'email' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            $flash_data = 'You have some errors !!';
+            return ApiResponseClass::errorResponse($flash_data, $inputs, $validator->errors());
+        }else{
+            $user = User::where('email', $email)->get()->first();
+            if($user && $user->count() > 0) {
+                if ($user->activated) {
+                    // Send Email to that email address
+
+                    $flash_data = 'Thank You. You have been sent an email to reset your password.!!';
+                    return ApiResponseClass::successResponse(null, $inputs, $flash_data);
+                }else{
+                    $flash_data = 'User is not Activated !!';
+                    return ApiResponseClass::errorResponse($flash_data, $inputs);
+                }
+            }else{
+                $flash_data = 'Your Email is not Found. Retry with Correct Email Address!!';
+                return ApiResponseClass::errorResponse($flash_data, $inputs);
+            }
+        }
+    }
+
+    public function getRecover($user_id, $reset_code){
+
+        $user = User::where('id', $user_id)->where('reset_password_code', $reset_code)->get()->first();
+
+        if($user && $user->count() > 0){
+
+            $flash_data = 'Please Reset Your Password!!';
+            return view('loginAndRegister.reset-password')->with('global', $flash_data)->withEmail($user->email)->withResetcode($reset_code);
+        }else{
+
+            $flash_data = 'Invalid User!!';
+            return redirect(route('account-user-sign-in'))->with('global', $flash_data);
+        }
+
+    }
+
+    public function postRecover(Request $request){
+
+        $email = $request->get('email');
+        $password = $request->get('password');
+        $password_again = $request->get('password_again');
+        $reset_code = $request->get('resetcode');
+
+        $inputs = [
+            'email' => $email,
+            'password' => $password,
+            'password_again' => $password_again,
+            'reset_code' => $reset_code
+        ];
+
+        $validator = validator::make($request->all(), [
+            'email' => 'required',
+            'password' => 'required|min:6',
+            'password_again' => 'required|same:password',
+            'reset' => 'resetcode'
+        ]);
+
+        if($validator->fails()){
+
+            $flash_data = 'You Have some Problems!!';
+            return redirect(route('account-user-recover'))->with('global', $flash_data)->withEmail($email)->withResetcode($reset_code);
+        }else{
+
+            $user = User::where('email', $email)->where('reset_password_code', $reset_code)->get()->first();
+
+            if($user && $user->count() > 0){
+
+                $flash_data = 'Please Reset Your Password!!';
+                return view('loginAndRegister.reset-password')->with('global', $flash_data)->withEmail($user->email)->withResetcode($reset_code);
+            }else{
+
+                $flash_data = 'Invalid User!!';
+                return redirect(route('account-user-sign-in'))->with('global', $flash_data);
             }
         }
     }

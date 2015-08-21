@@ -17,13 +17,6 @@ Route::group(['prefix' => 'user'], function(){
         'uses' => 'UserLoginController@getActivate'
     ));
     /*
-     * User Forgot password (get)
-     */
-    Route::get('/forgot/password', array(
-        'as' => 'user-forgot-password',
-        'uses' => 'LoginAndRegisterController@getForgotPassword'
-    ));
-    /*
      * User Recover Account (get)
      */
     Route::get('/account/recover/{code}', array(

@@ -3,12 +3,10 @@
     <!-- start: FORGOT BOX -->
     <div class="box-forgot">
         <h3>Forget Password?</h3>
-
         <p>
             Enter your e-mail address below to reset your password.
         </p>
-
-        <form class="form-forgot" method="post" action="{{ URL::route('user-forgot-password-post') }}">
+        <form class="form-forgot" method="post" action="{{ URL::route('account-user-retrieve-password-post') }}">
             <div class="errorHandler alert alert-danger no-display">
                 <i class="fa fa-remove-sign"></i> You have some form errors. Please check below.
             </div>
@@ -47,11 +45,4 @@
     <!-- end: FORGOT BOX -->
 @stop
 @section('scripts')
-    <script>
-        jQuery(document).ready(function () {
-            Main.init();
-            Login.init();
-        });
-    </script>
-
 @stop

@@ -33,9 +33,37 @@ Route::group(array('before' => 'guest'), function () {
     /*
      * User Forgot password (get)
      */
-    Route::get('/account/forgot/password', array(
-        'as' => 'account-user-forgot-password',
-        'uses' => 'LoginAndRegisterController@getForgotPassword'
+    Route::get('/account/retrieve/password', array(
+        'as' => 'account-user-retrieve-password',
+        'uses' => 'LoginAndRegisterController@getRetrievePassword'
+    ));
+    /*
+     * User Forgot password (get)
+     */
+    Route::Post('/account/retrieve/password/post', array(
+        'as' => 'account-user-retrieve-password-post',
+        'uses' => 'LoginAndRegisterController@postRetrievePassword'
+    ));
+    /*
+     * User Activate Account (get)
+     */
+    Route::get('/account/{userId}/activate/{code}', array(
+        'as' => 'account-user-activate',
+        'uses' => 'LoginAndRegisterController@getActivate'
+    ));
+    /*
+     * User Recover Account (get)
+     */
+    Route::get('/account/{userId}/recover/{code}', array(
+        'as' => 'account-user-recover',
+        'uses' => 'LoginAndRegisterController@getRecover'
+    ));
+    /*
+     * User Recover Account (get)
+     */
+    Route::post('/account/recover', array(
+        'as' => 'account-user-recover-post',
+        'uses' => 'LoginAndRegisterController@postRecover'
     ));
     /*
      * User Log Out (get)

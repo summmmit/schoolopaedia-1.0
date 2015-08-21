@@ -11,11 +11,12 @@ class ApiResponseClass {
      * @param array $request
      * @return json ( status, result, request)
      */
-    public static function  successResponse($result = array(), $request = array()){
+    public static function  successResponse($result = array(), $request = array(), $description = null){
         $successResponse = [
             'status'   => 'success',
             'result'   =>  $result,
-            'request'  =>  $request
+            'request'  =>  $request,
+            'description' => $description
         ];
         return response()->json($successResponse);
     }

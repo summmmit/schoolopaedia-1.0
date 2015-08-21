@@ -35,7 +35,6 @@ var LoginAndRegister = function() {
 		});
 	};
 	var runLoginValidator = function() {
-        console.log(window.location.href );
 		var form = $('.form-login');
 		var errorHandler = $('.errorHandler', form);
         var globalError = $('.global-error', form);
@@ -65,6 +64,7 @@ var LoginAndRegister = function() {
 	var runForgotValidator = function() {
 		var form2 = $('.form-forgot');
 		var errorHandler2 = $('.errorHandler', form2);
+        var globalError = $('.global-error', form2);
 		form2.validate({
 			rules : {
 				email : {
@@ -183,14 +183,14 @@ var LoginAndRegister = function() {
 
         var send_data_to = null;
         var url_change_page_to = null;
-        if(window.location.href.match('/user/sign/in')){
-            send_data_to = "http://localhost/projects/school/web/public/user/sign/in/post";
-        }else if(window.location.href.match('/account/user/create')){
+        if(window.location.href.match('/account/user/create')){
             send_data_to = "http://localhost/projects/school/web/public/account/user/create/post";
             url_change_page_to = "http://localhost/projects/school/web/public/account/sign/in";
+        }else if(window.location.href.match('/account/retrieve/password')){
+            send_data_to = "http://localhost/projects/school/web/public/account/retrieve/password/post";
+            url_change_page_to = "http://localhost/projects/school/web/public/account/retrieve/password";
         }
-
-        sendRequest(form, data, errorHandler, globalError, send_data_to, url_change_page_to);
+            sendRequest(form, data, errorHandler, globalError, send_data_to, url_change_page_to);
     }
 
     function errorHandlerShow(errors){
@@ -204,7 +204,6 @@ var LoginAndRegister = function() {
 
         var errorHandler = $('.errorHandler', form);
         var globalError = $('.global-error', form);
-        console.log(data);
 
         $.ajax({
             url: send_data_to,
@@ -213,7 +212,6 @@ var LoginAndRegister = function() {
             method: 'POST',
             data: data,
             success: function(result, response) {
-                console.log(result);
 
                 if(result.status == "failed"){
                     globalError.hide();
@@ -222,7 +220,7 @@ var LoginAndRegister = function() {
                 }else if(result.status == "success"){
                     errorHandler.hide();
                     globalError.hide();
-                    changeUrl(url_change_page_to);
+                    //changeUrl(url_change_page_to);
                 }
             }
         });

@@ -32,7 +32,7 @@
                 <span class="input-icon">
                     <input type="password" class="form-control password" name="password" placeholder="Password">
                     <i class="fa fa-lock"></i>
-                    <a class="forgot" href="{{ URL::route('account-user-forgot-password') }}">
+                    <a class="forgot" href="{{ URL::route('account-user-retrieve-password') }}">
                         I forgot my password
                     </a> </span>
             </div>
