@@ -143,8 +143,6 @@ class LoginAndRegisterController extends Controller
                         $user_groups = UsersGroups::where('user_id', $user->id)->get()->first();
                         $group_id = $user_groups->groups_id;
 
-                        echo $group_id;
-
                         if($group_id == Groups::Student_Group_Id){
                             return redirect()->intended(route('user-home'));
                         }elseif($group_id == Groups::Teacher_Group_Id){
@@ -242,10 +240,20 @@ class LoginAndRegisterController extends Controller
             $user = User::where('email', $email)->get()->first();
             if($user && $user->count() > 0) {
                 if ($user->activated) {
+
+                    $user->reset_password_code = str_random(32);
+
                     // Send Email to that email address
 
-                    $flash_data = 'Thank You. You have been sent an email to reset your password.!!';
-                    return redirect(route('account-user-retrieve-password'))->withErrors($validator->errors())->withInputs($inputs)->withGlobal($flash_data);
+                    if($user->save()){
+
+                        $flash_data = 'Thank You. You have been sent an email to reset your password.!!';
+                        return redirect(route('account-user-sign-in'))->withErrors($validator->errors())->withInputs($inputs)->withGlobal($flash_data);
+                    }else{
+
+                        $flash_data = 'Something went Wrong. Please Try again later!!';
+                        return redirect(route('account-user-retrieve-password'))->withErrors($validator->errors())->withInputs($inputs)->withGlobal($flash_data);
+                    }
                 }else{
                     $flash_data = 'User is not Activated !!';
                     return redirect(route('account-user-retrieve-password'))->withErrors($validator->errors())->withInputs($inputs)->withGlobal($flash_data);
