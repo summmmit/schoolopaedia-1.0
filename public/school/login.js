@@ -64,7 +64,6 @@ var LoginAndRegister = function () {
     var runForgotValidator = function () {
         var form2 = $('.form-forgot');
         var errorHandler2 = $('.errorHandler', form2);
-        var globalError = $('.global-error', form2);
         form2.validate({
             rules: {
                 email: {
@@ -179,6 +178,98 @@ var LoginAndRegister = function () {
             }
         });
     };
+    var runSchoolRegisterValidator = function () {
+        var form4 = $('.form-school-register');
+        var errorHandler4 = $('.errorHandler', form4);
+        var globalError = $('.global-error', form4);
+        form4.validate({
+            rules: {
+                first_name: {
+                    minlength: 2,
+                    required: true
+                },
+                last_name: {
+                    minlength: 2,
+                    required: true
+                },
+                school_name: {
+                    minlength: 3,
+                    required: true
+                },
+                manager_name: {
+                    minlength: 3,
+                    required: true
+                },
+                phone_number: {
+                    minlength: 8,
+                    required: true
+                },
+                add_1: {
+                    minlength: 3,
+                    required: true
+                },
+                add_2: {
+                    minlength: 3
+                },
+                city: {
+                    minlength: 2,
+                    required: true
+                },
+                state: {
+                    minlength: 2,
+                    required: true
+                },
+                country: {
+                    minlength: 2,
+                    required: true
+                },
+                pin_code: {
+                    minlength: 4,
+                    required: true
+                },
+                gender: {
+                    required: true
+                },
+                school_registration_code: {
+                    required: true
+                },
+                admin_registration_code: {
+                    required: true
+                },
+                user_registration_code: {
+                    required: true
+                },
+                email: {
+                    required: true
+                },
+                password: {
+                    minlength: 6,
+                    required: true
+                },
+                password_again: {
+                    required: true,
+                    minlength: 5,
+                    equalTo: "#password"
+                },
+                group_to_register_in: {
+                    required: true
+                },
+                agree: {
+                    minlength: 1,
+                    required: true
+                }
+            },
+            submitHandler: function (form4) {
+                errorHandler4.hide();
+                form4.submit();
+            },
+            invalidHandler: function (event, validator) {//display error alert on form submit
+                errorHandler4.hide();
+                globalError.hide();
+                errorHandler4.show();
+            }
+        });
+    };
 
     function callAjaxRequestOnRegisterButton(form, data, errorHandler, globalError) {
 
@@ -233,6 +324,7 @@ var LoginAndRegister = function () {
             runLoginValidator();
             runForgotValidator();
             runRegisterValidator();
+            runSchoolRegisterValidator();
         }
     };
 }();

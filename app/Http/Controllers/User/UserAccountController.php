@@ -9,12 +9,14 @@ use App\Http\Controllers\Controller;
 
 class UserAccountController extends Controller
 {
-    /**
-     * TO show form for user Login
-     * @return \Illuminate\View\View
-     */
+
     public function getHome()
     {
         return view('user.home');
+    }
+
+    public function getWelcomeSettings()
+    {
+        return view('user.welcome-settings');
     }
 }

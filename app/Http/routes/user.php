@@ -30,5 +30,12 @@ Route::group(['prefix' => 'user'], function(){
         'as' => 'mobile-user-school-validation-post',
         'uses' => 'SchoolController@postValidateSchool'
     ));
+    /*
+     * User Welcome Settings (get)
+     */
+    Route::get('/welcome/settings', array(
+        'as' => 'user-welcome-settings',
+        'uses' => 'UserAccountController@getWelcomeSettings'
+    ));
 
 });

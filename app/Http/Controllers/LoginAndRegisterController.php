@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Groups;
 use App\Models\User;
 use App\Models\UsersGroups;
+use App\Models\UsersLoginInfo;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Libraries\ApiResponseClass;
+use App\Libraries\RequiredFunctions;
 use Illuminate\Support\Facades\Hash;
 use DB;
 use Validator;
@@ -128,7 +130,7 @@ class LoginAndRegisterController extends Controller
 
         if ($validator->fails()) {
             $flash_data = 'You have some errors !!';
-            return redirect(route('account-user-sign-in'))->withErrors($validator->errors())->withInputs($inputs)->withGlobal($flash_data);
+            return redirect(route('account-user-sign-in'))->withErrors($validator->errors())->withInput()->withGlobal($flash_data);
         }else{
             $user = User::where('email', $email)->get()->first();
             if($user->count() > 0){
@@ -140,33 +142,57 @@ class LoginAndRegisterController extends Controller
                     ], $remember);
 
                     if($auth){
-                        $user_groups = UsersGroups::where('user_id', $user->id)->get()->first();
-                        $group_id = $user_groups->groups_id;
 
-                        if($group_id == Groups::Student_Group_Id){
+                        $userType = RequiredFunctions::checkUserTypeByUserId($user->id);
+
+                        if($userType == Groups::Student_Group_Id){
                             return redirect()->intended(route('user-home'));
-                        }elseif($group_id == Groups::Teacher_Group_Id){
+                        }elseif($userType == Groups::Teacher_Group_Id){
                             return redirect()->intended();
-                        }elseif($group_id == Groups::Administrator_Group_ID){
+                        }elseif($userType == Groups::Administrator_Group_ID){
                             return redirect()->intended();
                         }
 
                     }else{
                         $flash_data = 'User email or password is not correct !!';
-                        return redirect(route('account-user-sign-in'))->withErrors($validator->errors())->withInputs($inputs)->withGlobal($flash_data);
+                        return redirect(route('account-user-sign-in'))->withErrors($validator->errors())->withInput()->withGlobal($flash_data);
                     }
                 }else{
                     $flash_data = 'User is not Activated !!';
-                    return redirect(route('account-user-sign-in'))->withErrors($validator->errors())->withInputs($inputs)->withGlobal($flash_data);
+                    return redirect(route('account-user-sign-in'))->withErrors($validator->errors())->withInput()->withGlobal($flash_data);
                 }
             }else{
                 $flash_data = 'User with this email is not found !!';
-                return redirect(route('account-user-sign-in'))->withErrors($validator->errors())->withInputs($inputs)->withGlobal($flash_data);
+                return redirect(route('account-user-sign-in'))->withErrors($validator->errors())->withInput()->withGlobal($flash_data);
             }
         }
         $flash_data = 'Something Went Wrong. Retry again Later sometime !!';
-        return redirect(route('account-user-sign-in'))->withErrors($validator->errors())->withInputs($inputs)->withGlobal($flash_data);
+        return redirect(route('account-user-sign-in'))->withErrors($validator->errors())->withInput()->withGlobal($flash_data);
 
+    }
+
+    protected function goToStudentAfterLogin($user){
+
+        $users_login_info = UsersLoginInfo::where('user_id', $user->id)->get()->first();
+
+        if($users_login_info->count() > 0){
+            $school_id = $user->school_id;
+
+            $school_session = SchoolSession::where('school_id', '=', $school_id)->where('current_session', '=', 1)->get()->first();
+
+            $user_registered_to_session = UsersToClass::where('session_id', '=', $school_session->id)
+                ->where('user_id', '=', Sentry::getUser()->id)->get();
+            if($user_registered_to_session->count() > 0){
+
+                return Redirect::to(route('user-home'));
+            }else{
+                Session::flash('global', 'Loggedin Successfully.<br>You Have to Register For new School Session first');
+                return Redirect::to(route('user-class-set-initial'));
+            }
+
+        }else{
+            return Redirect::to(route('user-welcome-settings'));
+        }
     }
 
     public function postSignInMobileApp(Request $request)
@@ -235,7 +261,7 @@ class LoginAndRegisterController extends Controller
 
         if ($validator->fails()) {
             $flash_data = 'You have some errors !!';
-            return redirect(route('account-user-retrieve-password'))->withErrors($validator->errors())->withInputs($inputs)->withGlobal($flash_data);
+            return redirect(route('account-user-retrieve-password'))->withErrors($validator->errors())->withInput()->withGlobal($flash_data);
         }else{
             $user = User::where('email', $email)->get()->first();
             if($user && $user->count() > 0) {
@@ -243,24 +269,26 @@ class LoginAndRegisterController extends Controller
 
                     $user->reset_password_code = str_random(32);
 
-                    // Send Email to that email address
+                    if(!RequiredFunctions::checkIfTestEmail($email)){
+                        // Send Email to that email address
+                    }
 
                     if($user->save()){
 
                         $flash_data = 'Thank You. You have been sent an email to reset your password.!!';
-                        return redirect(route('account-user-sign-in'))->withErrors($validator->errors())->withInputs($inputs)->withGlobal($flash_data);
+                        return redirect(route('account-user-sign-in'))->withErrors($validator->errors())->withInput()->withGlobal($flash_data);
                     }else{
 
                         $flash_data = 'Something went Wrong. Please Try again later!!';
-                        return redirect(route('account-user-retrieve-password'))->withErrors($validator->errors())->withInputs($inputs)->withGlobal($flash_data);
+                        return redirect(route('account-user-retrieve-password'))->withErrors($validator->errors())->withInput()->withGlobal($flash_data);
                     }
                 }else{
                     $flash_data = 'User is not Activated !!';
-                    return redirect(route('account-user-retrieve-password'))->withErrors($validator->errors())->withInputs($inputs)->withGlobal($flash_data);
+                    return redirect(route('account-user-retrieve-password'))->withErrors($validator->errors())->withInput()->withGlobal($flash_data);
                 }
             }else{
                 $flash_data = 'Your Email is not Found. Retry with Correct Email Address!!';
-                return redirect(route('account-user-retrieve-password'))->withErrors($validator->errors())->withInputs($inputs)->withGlobal($flash_data);
+                return redirect(route('account-user-retrieve-password'))->withErrors($validator->errors())->withInput()->withGlobal($flash_data);
             }
         }
     }

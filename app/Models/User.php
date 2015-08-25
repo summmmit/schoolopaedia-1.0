@@ -39,7 +39,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         'last_login',
         'persist_code',
         'reset_password_code',
-        'school_id',
         'remember_token'
     );
 

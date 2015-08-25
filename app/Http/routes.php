@@ -24,3 +24,5 @@ require_once app_path().'/Http/routes/user.php';       // including the user rou
 require_once app_path().'/Http/routes/school.php';       // including the school routes
 
 require_once app_path().'/Http/routes/loginAndRegister.php';       // including the login and Register routes
+
+require_once app_path().'/Http/routes/errorsAndRegister.php';       // including the for errors and thankyou pages
