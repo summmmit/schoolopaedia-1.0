@@ -1,6 +1,13 @@
 @extends('layouts.login.registration')
 @section('stylesheets')
     <link rel="stylesheet" href="{{ URL::asset('assets/plugins/bootstrap-social-buttons/bootstrap-social.css') }}">
+    <style>
+        .btn-social{
+            text-align: center;
+            width: 70%;
+        }
+        @media()
+    </style>
 @stop
 @section('content')
     <!-- start: REGISTER BOX -->
@@ -71,12 +78,11 @@
                     </button>
                 </div>
                 <br>
-
                 <div class="row">
-                    <div class="col-sm-6 text-center">
+                    <div class="col-md-6 text-center margin-bottom-10">
                         <a class="btn btn-social btn-google-plus"><i class="fa fa-google-plus"></i> Sign in with Google</a>
                     </div>
-                    <div class="col-sm-6 text-center">
+                    <div class="col-md-6 text-center">
                         <a class="btn btn-social btn-facebook"><i class="fa fa-facebook"></i> Sign in with Facebook</a>
                     </div>
                 </div>
