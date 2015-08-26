@@ -96,15 +96,13 @@ class SchoolController extends Controller
 
             if ($school) {
 
+                $email_array = [
+                    'link' => route('school-account-activate', $registration_code),
+                    'school_name' => $school_name
+                ];
                 if (!RequiredFunctions::checkIfTestEmail($email)) {
+
                     //send email
-                    $email_array = [
-                        'link' => URL::route('activate-account-activate', $registration_code),
-                        'school_name' => $school_name,
-                        'adminCode' => $code_for_admin,
-                        'teachersCode' => $code_for_teachers,
-                        'studentsCode' => $code_for_students
-                    ];
                     Mail::send('schools.emails.activate-school', $email_array, function ($message) use ($school) {
                         $message->to($school->email, $school->school_name)
                             ->subject('Activate Your Account');
