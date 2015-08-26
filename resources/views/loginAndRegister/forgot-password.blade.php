@@ -21,7 +21,7 @@
             <fieldset>
                 <div class="form-group">
                 <span class="input-icon">
-                    <input type="email" class="form-control" name="email" placeholder="Email">
+                    <input type="email" class="form-control" name="email" placeholder="Email" value="{{ old('email') }}">
                     <i class="fa fa-envelope"></i> </span>
                 </div>
                 <div class="form-actions">

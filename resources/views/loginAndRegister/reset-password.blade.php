@@ -25,12 +25,14 @@
             <div class="form-group">
                 <span class="input-icon">
                     <input type="password" class="form-control password" name="password" placeholder="Password">
-                    <i class="fa fa-user"></i> </span>
+                    <i class="fa fa-user"></i>
+                </span>
             </div>
             <div class="form-group">
                 <span class="input-icon">
                     <input type="password" class="form-control password" name="password_again" placeholder="Confirm Password">
-                    <i class="fa fa-user"></i> </span>
+                    <i class="fa fa-user"></i>
+                </span>
             </div>
             <div class="form-actions">
                 <button type="submit" class="btn btn-green pull-right">

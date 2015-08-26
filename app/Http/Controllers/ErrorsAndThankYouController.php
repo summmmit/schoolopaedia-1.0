@@ -13,4 +13,9 @@ class ErrorsAndThankYouController extends Controller
     {
         return view('layouts.thankyou.thankyou');
     }
+
+    public function getEmail()
+    {
+        return view('schools.emails.activate-school');
+    }
 }

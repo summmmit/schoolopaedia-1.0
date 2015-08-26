@@ -6,18 +6,15 @@
             text-align: center;
             width: 70%;
         }
-        @media()
     </style>
 @stop
 @section('content')
     <!-- start: REGISTER BOX -->
     <div class="box-register">
         <h3>Sign Up</h3>
-
         <p>
             Enter your personal details below:
         </p>
-
         <form class="form-register" method="post">
             <div class="errorHandler alert alert-danger no-display">
                 <i class="fa fa-remove-sign"></i> You have some form errors. Please check below.

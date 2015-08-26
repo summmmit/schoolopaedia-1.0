@@ -1,6 +1,12 @@
 @extends('layouts.login.registration')
 @section('stylesheets')
 <link rel="stylesheet" href="{{ URL::asset('assets/plugins/bootstrap-social-buttons/bootstrap-social.css') }}">
+<style>
+    .btn-social{
+        text-align: center;
+        width: 70%;
+    }
+</style>
 @stop
 @section('content')
 <!-- start: LOGIN BOX -->
@@ -25,7 +31,7 @@
         <fieldset>
             <div class="form-group">
                 <span class="input-icon">
-                    <input type="email" class="form-control" name="email" placeholder="Email Address / Username" value="{{ Input::old('identity') or '' }}">
+                    <input type="email" class="form-control" name="email" placeholder="Email Address / Username" value="{{ old('email') }}">
                     <i class="fa fa-user"></i> </span>
             </div>
             <div class="form-group form-actions">
@@ -34,7 +40,8 @@
                     <i class="fa fa-lock"></i>
                     <a class="forgot" href="{{ URL::route('account-user-retrieve-password') }}">
                         I forgot my password
-                    </a> </span>
+                    </a>
+                </span>
             </div>
             <div class="form-actions">
                 <label for="remember" class="checkbox-inline">
@@ -53,7 +60,7 @@
             </div>
             <br>
             <div class="row">
-                <div class="col-md-6 text-center">
+                <div class="col-md-6 text-center margin-bottom-10">
                     <a href="" class="btn btn-social btn-google-plus"><i class="fa fa-google-plus"></i> Sign in with Google</a>
                 </div>
                 <div class="col-md-6 text-center">

@@ -57,7 +57,7 @@ class SchoolController extends Controller
 
         if ($validator->fails()) {
             return redirect(route('school-register'))->withErrors($validator->errors())->withInput();
-        }else{
+        } else {
             //Registration Code
             $registration_code = str_random(50);
             //staff Code
@@ -96,11 +96,19 @@ class SchoolController extends Controller
 
             if ($school) {
 
-                if(RequiredFunctions::checkIfTestEmail($email)){
+                if (!RequiredFunctions::checkIfTestEmail($email)) {
                     //send email
-//                Mail::send('emails.auth.activate.activate-school', array('link' => URL::route('activate-account-activate', $registration_code), 'school_name' => $school_name, 'adminCode' => $code_for_admin, 'teachersCode' => $code_for_teachers, 'studentsCode' => $code_for_students), function($message) use ($school) {
-//                    $message->to($school->email, $school->school_name)->subject('Activate Your Account');
-//                });
+                    $email_array = [
+                        'link' => URL::route('activate-account-activate', $registration_code),
+                        'school_name' => $school_name,
+                        'adminCode' => $code_for_admin,
+                        'teachersCode' => $code_for_teachers,
+                        'studentsCode' => $code_for_students
+                    ];
+                    Mail::send('schools.emails.activate-school', $email_array, function ($message) use ($school) {
+                        $message->to($school->email, $school->school_name)
+                            ->subject('Activate Your Account');
+                    });
                 }
                 return redirect(route('account-thankyou'))
                     ->with('global', 'You have been Registered. You can activate Now.');
