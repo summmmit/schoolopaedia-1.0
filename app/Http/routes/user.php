@@ -2,19 +2,20 @@
 
 
 Route::group(['prefix' => 'user'], function(){
+
+    /*
+     * User Forgot password (get)
+     */
+    Route::get('/first/page/{userId}', array(
+        'as' => 'user-first-page',
+        'uses' => 'LoginAndRegisterController@goToAfterSignIn'
+    ));
     /*
      * User Forgot password (get)
      */
     Route::get('/home', array(
         'as' => 'user-home',
         'uses' => 'User\UserAccountController@getHome'
-    ));
-    /*
-     * User Activate Account (get)
-     */
-    Route::get('/account/{userId}/activate/{code}', array(
-        'as' => 'user-account-activate',
-        'uses' => 'UserLoginController@getActivate'
     ));
     /*
      * User Recover Account (get)
@@ -35,7 +36,21 @@ Route::group(['prefix' => 'user'], function(){
      */
     Route::get('/welcome/settings', array(
         'as' => 'user-welcome-settings',
-        'uses' => 'UserAccountController@getWelcomeSettings'
+        'uses' => 'User\UserAccountController@getWelcomeSettings'
+    ));
+    /*
+     * Class set Intial Settings (Post)
+     */
+    Route::Post('/class/set/intial', array(
+        'as' => 'user-class-set-initial-post',
+        'uses' => 'User\UserAccountController@postSetInitial'
+    ));
+    /*
+     * Class set Intial Settings (get)
+     */
+    Route::get('/class/set/intial', array(
+        'as' => 'user-class-set-initial',
+        'uses' => 'User\UserAccountController@getSetInitial'
     ));
 
 });

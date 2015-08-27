@@ -1,130 +1,34 @@
 <?php
-/*
- * Unauthenticated Group
- */
-Route::group(array('prefix' => 'teacher', 'before' => 'guest'), function() {
+
+
+Route::group(['prefix' => 'teacher'], function(){
     /*
-     * CSRF protection
+     * User Forgot password (get)
      */
-    Route::group(array('before' => 'csrf'), function() {
-        /*
-         *  Teacher Account Create (post)
-         */
-        Route::Post('/account/create/post', array(
-            'as' => 'teacher-account-create-post',
-            'uses' => 'TeacherLoginController@postCreate'
-        ));
-        /*
-         *  User Sign-in (post)
-         */
-        Route::Post('/sign/in/post', array(
-            'as' => 'teacher-sign-in-post',
-            'uses' => 'TeacherLoginController@postSignIn'
-        ));
-    });
-    /*
-     * Teacher Create Account (get)
-     */
-    Route::get('/account/create', array(
-        'as' => 'teacher-account-create',
-        'uses' => 'TeacherLoginController@getCreate'
+    Route::get('/home', array(
+        'as' => 'teacher-home',
+        'uses' => 'User\UserAccountController@getHome'
     ));
     /*
-     * Teacher Sign In (get)
+     * User Recover Account (get)
      */
-    Route::get('/sign/in', array(
-        'as' => 'teacher-sign-in',
-        'uses' => 'TeacherLoginController@getSignIn'
-    ));    
-    /*
-     * Teacher Activate Account (get)
-     */
-    Route::get('/{userid}/activate/{code}', array(
-        'as' => 'teacher-account-activate',
-        'uses' => 'TeacherLoginController@getActivate'
+    Route::get('/account/recover/{code}', array(
+        'as' => 'teacher-account-recover',
+        'uses' => 'LoginAndRegisterController@getRecover'
     ));
     /*
-     * Teacher Forgot password (get)
+     * Validate Admin By school code and teacher code
      */
-    Route::get('/forgot/password', array(
-        'as' => 'teacher-forgot-password',
-        'uses' => 'TeacherLoginController@getForgotPassword'
-    ));
-    /*
-     * Teacher Recover Account (get)
-     */
-    Route::get('/reset/password', array(
-        'as' => 'teacher-reset-password',
-        'uses' => 'TeacherLoginController@getResetPassword'
-    ));
-});
-/*
- * Authenticated Group
- */
-Route::group(array('prefix' => 'teacher', 'before' => 'teacherAuth'), function() {
-    /*
-     * CSRF protection
-     */
-    Route::group(array('before' => 'csrf'), function() {
-        /*
-         *  Edit User Details (post)
-         */
-        Route::Post('/teacher/edit', array(
-            'as' => 'teacher-edit-post',
-            'uses' => 'UserAccountController@postEdit'
-        ));
-    });
-    /*
-     *
-     * SignOUt (get)
-     */
-    Route::get('/sign/out', array(
-        'as' => 'teacher-sign-out',
-        'uses' => 'TeacherLoginController@getSignOut'
+    Route::Post('/school/validation', array(
+        'as' => 'mobile-teacher-school-validation-post',
+        'uses' => 'SchoolController@postValidateSchool'
     ));
     /*
      * User Welcome Settings (get)
      */
     Route::get('/welcome/settings', array(
         'as' => 'teacher-welcome-settings',
-        'uses' => 'TeacherLoginController@getWelcomeSettings'
+        'uses' => 'UserAccountController@getWelcomeSettings'
     ));
-    /*
-     * Admin Home (get)
-     */
-    Route::get('/home', array(
-        'as' => 'teacher-home',
-        'uses' => 'TeacherLoginController@getTeacherHome'
-    ));
-    /*
-     * Admin Profile (get)
-     */
-    Route::get('/profile', array(
-        'as' => 'teacher-profile',
-        'uses' => 'TeacherAccountController@getTeacherProfile'
-    ));
-    /*
-     * Teacher Attendance (get)
-     */
-    Route::get('/teacher/attendance', array(
-        'as' => 'teacher-attendance',
-        'uses' => 'TeacherController@getAttendance'
-    ));
-    /*
-     * School All settings (get)
-     */
-    /*
-     * Set Initial School Session
-     */
-    Route::get('/school/set/sessions', array(
-        'as' => 'teacher-school-set-sessions',
-        'uses' => 'TeacherLoginController@getSchoolSessions'
-    ));
-    /*
-     * Set Initial School Session (post)
-     */
-    Route::Post('/school/set/sessions/post', array(
-        'as' => 'teacher-school-set-sessions-post',
-        'uses' => 'TeacherLoginController@postSetSchoolSessions'
-    ));
+
 });

@@ -5,9 +5,9 @@ Route::group(['before' => 'guest'], function(){
     /*
      * Thankyou page after registering (get)
      */
-    Route::get('/account/thankyou', array(
-        'as' => 'account-thankyou',
-        'uses' => 'ErrorsAndThankYouController@getThankyou'
+    Route::get('/account/thankyou/for/registering', array(
+        'as' => 'account-thankyou-for-registering',
+        'uses' => 'ErrorsAndThankYouController@getThankYouForRegistering'
     ));
     /*
      * User Forgot password (get)

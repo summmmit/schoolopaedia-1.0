@@ -6,7 +6,7 @@
     <p>
         Please enter your name and password to log in.
     </p>
-    <form class="form-login" action="{{ URL::route('admin-sign-in-post'); }}" method="post">        
+    <form class="form-login" action="{{ URL::route('account-admin-sign-in-post') }}" method="post">
         <!-- Some Message to be Displayed start-->
         <div class="errorHandler alert alert-danger no-display">
             <i class="fa fa-remove-sign"></i> You have some form errors. Please check below.
@@ -22,14 +22,14 @@
         <fieldset>
             <div class="form-group">
                 <span class="input-icon">
-                    <input type="text" class="form-control" name="identity" placeholder="Email Address" value="{{ Input::old('identity') or '' }}">
+                    <input type="text" class="form-control" name="email" placeholder="Email Address" value="{{ old('email') }}">
                     <i class="fa fa-user"></i> </span>
             </div>
             <div class="form-group form-actions">
                 <span class="input-icon">
                     <input type="password" class="form-control password" name="password" placeholder="Password">
                     <i class="fa fa-lock"></i>
-                    <a class="forgot" href="{{ URL::route('admin-forgot-password'); }}">
+                    <a class="forgot" href="{{ URL::route('account-admin-retrieve-password') }}">
                         I forgot my password
                     </a> </span>
             </div>
@@ -44,12 +44,12 @@
             </div>
             <div class="new-account">
                 Don't have an account yet?
-                <a href="{{ URL::route('admin-account-create'); }}">
+                <a href="{{ URL::route('account-admin-create') }}">
                     Create an account
                 </a>
             </div>
         </fieldset>
-        {{ Form::token() }}
+        {!! csrf_field() !!}
     </form>
     <!-- start: COPYRIGHT -->
     <div class="copyright">
@@ -60,11 +60,4 @@
 <!-- end: LOGIN BOX -->
 @stop
 @section('scripts')
-<script>
-    jQuery(document).ready(function() {
-        Main.init();
-        Login.init();
-    });
-</script>
-
 @stop

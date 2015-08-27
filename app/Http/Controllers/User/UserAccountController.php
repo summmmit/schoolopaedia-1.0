@@ -19,4 +19,14 @@ class UserAccountController extends Controller
     {
         return view('user.welcome-settings');
     }
+
+    public function getSetInitial()
+    {
+
+    }
+
+    public function postSetInitial()
+    {
+
+    }
 }

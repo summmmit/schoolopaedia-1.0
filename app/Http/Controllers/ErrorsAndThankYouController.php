@@ -9,9 +9,9 @@ use App\Http\Controllers\Controller;
 
 class ErrorsAndThankYouController extends Controller
 {
-    public function getThankyou()
+    public function getThankYouForRegistering()
     {
-        return view('layouts.thankyou.thankyou');
+        return view('schools.errorsAndThankYou.thankyou-registering');
     }
 
     public function getEmail()

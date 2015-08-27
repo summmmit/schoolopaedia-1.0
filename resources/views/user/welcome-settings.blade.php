@@ -1,18 +1,13 @@
-@extends('layouts.main-layout')
+@extends('layouts.first-settings-layout')
 
 @section('page_header')
-<h1><i class="fa fa-pencil-square"></i>Home</h1>
+<h1><i class="fa fa-pencil-square"></i>Welcome </h1>
 @stop
 
 @section('page_breadcrumb')
 <ol class="breadcrumb">
-    <li>
-        <a href="#">
-            Dashboard
-        </a>
-    </li>
     <li class="active">
-        Home
+        Register Your School
     </li>
 </ol>
 @stop
@@ -146,7 +141,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-2 col-sm-offset-8">
-                                    <a href="{{ URL::route('user-class-set-initial'); }}" class="btn btn-success finish-step btn-block">
+                                    <a href="" class="btn btn-success finish-step btn-block">
                                         Finish <i class="fa fa-arrow-circle-right"></i>
                                     </a>
                                 </div>
@@ -165,8 +160,8 @@
 @section('scripts')
 
 <!-- start: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
-<script src="{{ URL::asset('assets/plugins/jQuery-Smart-Wizard/js/jquery.smartWizard.js'); }}"></script>
-<script src="{{ URL::asset('assets/js/modifiedJs/welcome-settings-wizard.js'); }}"></script>
+<script src="{{ URL::asset('assets/plugins/jQuery-Smart-Wizard/js/jquery.smartWizard.js') }}"></script>
+<script src="{{ URL::asset('assets/js/modifiedJs/welcome-settings-wizard.js') }}"></script>
 <!-- end: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
 <script>
     jQuery(document).ready(function() {

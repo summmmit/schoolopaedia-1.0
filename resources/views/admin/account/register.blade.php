@@ -3,7 +3,7 @@
 <!-- start: REGISTER BOX -->
 <div class="box-register">
     <h3>Sign Up</h3>
-    <form class="form-register" action="{{ URL::route('admin-account-create-post'); }}" method="post">
+    <form class="form-register" action="{{ URL::route('account-admin-create-post') }}" method="post">
         <div class="errorHandler alert alert-danger no-display">
             <i class="fa fa-remove-sign"></i> You have some form errors. Please check below.
         </div>
@@ -21,7 +21,7 @@
             </p>
             <div class="form-group">
                 <span class="input-icon">
-                    <input type="email" class="form-control" name="email" placeholder="Email" value="{{ Input::old('email') or '' }}">
+                    <input type="email" class="form-control" name="email" placeholder="Email" value="{{ old('email') }}">
                            @if ($errors->has('email')) <p class="help-block alert-danger">{{ $errors->first('email') }}</p> @endif
                     <i class="fa fa-envelope"></i> </span>
             </div>
@@ -45,9 +45,10 @@
                     </label>
                 </div>
             </div>
+            <input type="hidden" id="group_to_register_in" name="group_to_register_in" value="1">
             <div class="form-actions">
                 Already have an account?
-                <a href="{{ URL::route('admin-sign-in') }}">
+                <a href="{{ URL::route('account-admin-sign-in') }}">
                     Log-in
                 </a>
                 <button type="submit" class="btn btn-green pull-right">
@@ -55,7 +56,7 @@
                 </button>
             </div>
         </fieldset>
-        {{ Form::token() }}
+        {!! csrf_field() !!}
     </form>
     <!-- start: COPYRIGHT -->
     <div class="copyright">
@@ -66,11 +67,4 @@
 <!-- end: REGISTER BOX -->
 @stop
 @section('scripts')
-<script>
-    jQuery(document).ready(function() {
-        Main.init();
-        Login.init();
-    });
-</script>
-
 @stop

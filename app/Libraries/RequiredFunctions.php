@@ -7,13 +7,13 @@
 
 namespace app\Libraries;
 use App\Models\User;
-use App\Models\UsersGroups;
+use App\Models\UserGroup;
 
 class RequiredFunctions {
 
     /**
      * @param $email
-     * @return true if email is of domain : user.xx, teacher.xx, admin.xx
+     * @return true if email is of domain : user.xx, teacher.xx, admin.xx, school.xx  [xx - any domain]
      * @return false if any other type of email domain
      */
     public static function checkIfTestEmail($email){
@@ -37,9 +37,9 @@ class RequiredFunctions {
     public static function checkUserTypeByEmail($email){
 
         $user = User::where('email', $email)->get()->first();
-        $userGroup = UsersGroups::where('user_id', $user->id)->get()->first();
+        $userGroup = UserGroup::where('user_id', $user->id)->get()->first();
 
-        return $userGroup->groups_id;
+        return $userGroup->group_id;
     }
 
     /**
@@ -50,8 +50,8 @@ class RequiredFunctions {
      */
     public static function checkUserTypeByUserId($userId){
 
-        $userGroup = UsersGroups::where('user_id', $userId)->get()->first();
-        return $userGroup->groups_id;
+        $userGroup = UserGroup::where('user_id', $userId)->get()->first();
+        return $userGroup->group_id;
     }
 
 }

@@ -39,6 +39,11 @@
     <style>
         .page-error .error-number {
             font-size: 80px;
+            letter-spacing: -5px;
+            line-height: 90px;
+        }
+        .page-error .error-details {
+            padding-top: 21px;
         }
     </style>
 </head>
@@ -51,13 +56,15 @@
         <!-- start: 404 -->
         <div class="col-sm-12 page-error animated shake">
             <div class="error-number text-azure">
-                Thank You For registering.
+                Thank You
             </div>
             <div class="error-details col-sm-6 col-sm-offset-3">
-                <h3> Go To Your Mail and Activate your registration.</h3>
+                <h3>
+                    @yield('content')
+                </h3>
                 <p>
                     <a href="{{ URL::route('account-user-sign-in') }}" class="btn btn-red btn-return">
-                       Login Now
+                       Go to Login Page
                     </a>
                 </p>
             </div>

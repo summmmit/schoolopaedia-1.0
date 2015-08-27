@@ -6,7 +6,7 @@
     <p>
         Enter your e-mail address below to reset your password.
     </p>
-    <form class="form-forgot" method="post" action="{{ URL::route('admin-forgot-password-post'); }}">
+    <form class="form-forgot" method="post" action="{{ URL::route('account-admin-retrieve-password-post') }}">
         <div class="errorHandler alert alert-danger no-display">
             <i class="fa fa-remove-sign"></i> You have some form errors. Please check below.
         </div>
@@ -25,7 +25,7 @@
                     <i class="fa fa-envelope"></i> </span>
             </div>
             <div class="form-actions">
-                <a class="btn btn-light-grey go-back" href="{{ URL::route('admin-sign-in'); }}">
+                <a class="btn btn-light-grey go-back" href="{{ URL::route('account-admin-sign-in') }}">
                     <i class="fa fa-chevron-circle-left"></i> Log-In
                 </a>
                 <button type="submit" class="btn btn-green pull-right">
@@ -33,22 +33,15 @@
                 </button>
             </div>
         </fieldset>
-        {{ Form::token() }}
+        {!! csrf_field() !!}
     </form>
     <!-- start: COPYRIGHT -->
     <div class="copyright">
-        2014 &copy; Rapido by cliptheme.
+        2014 &copy; By Sumit Singh
     </div>
     <!-- end: COPYRIGHT -->
 </div>
 <!-- end: FORGOT BOX -->
 @stop
 @section('scripts')
-<script>
-    jQuery(document).ready(function() {
-        Main.init();
-        Login.init();
-    });
-</script>
-
 @stop

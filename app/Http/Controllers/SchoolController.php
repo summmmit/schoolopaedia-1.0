@@ -9,6 +9,7 @@ use Validator;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Mail;
 
 class SchoolController extends Controller
 {
@@ -108,12 +109,48 @@ class SchoolController extends Controller
                             ->subject('Activate Your Account');
                     });
                 }
-                return redirect(route('account-thankyou'))
-                    ->with('global', 'You have been Registered. You can activate Now.');
+                return  redirect(route('school-register'))
+                    ->with('global', 'You have Been Registered. You have been send a mail to activate your account.');
             } else {
-                return Redirect::route('school-register')
+                return redirect(route('school-register'))
                     ->with('global', 'You have not Been Registered. Try Again Later Some time.');
             }
         }
+    }
+
+    public function getActivateSchool($registration_code)
+    {
+
+        $school = Schools::where('registration_code', '=', $registration_code)->where('active', '=', 0);
+
+        if ($school->count()) {
+            $school = $school->first();
+
+            $school->active = 1;
+
+            if ($school->save()) {
+
+                $email_array = [
+                    'school_name' => $school->school_name,
+                    'registration_code' => $school->registration_code,
+                    'code_for_admin' => $school->code_for_admin,
+                    'code_for_students' => $school->code_for_students,
+                    'code_for_teachers' => $school->code_for_teachers,
+                    'code_for_parents'  => $school->code_for_parents
+                ];
+                if (!RequiredFunctions::checkIfTestEmail($school->email)) {
+
+                    //send email
+                    Mail::send('schools.emails.activate-school', $email_array, function ($message) use ($school) {
+                        $message->to($school->email, $school->school_name)
+                            ->subject('Register For Admin and Other Codes');
+                    });
+                }
+                return  redirect(route('school-register'))
+                    ->with('global', 'Your Account Have been activated. You have got mail with registration procedure explained.');
+            }
+        }
+        return redirect(route('school-register'))
+            ->with('global', 'Cant activate do after some time');
     }
 }

@@ -23,7 +23,7 @@ Route::group(array('before' => 'guest'), function() {
      */
     Route::get('/activate/school/{code}', array(
         'as' => 'school-account-activate',
-        'uses' => 'ErrorsAndThankYouController@getThankyou'
+        'uses' => 'SchoolController@getActivateSchool'
     ));
     /**
      * Ajax Api

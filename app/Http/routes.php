@@ -15,14 +15,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-require_once app_path().'/Http/routes/user.php';       // including the user routes
+require_once app_path() . '/Http/routes/user.php';       // including the user routes
 
-//require_once app_path().'/Http/routes/admin.php';       // including the admin routes
+require_once app_path() . '/Http/routes/admin.php';       // including the admin routes
 
 //require_once app_path().'/Http/routes/teacher.php';       // including the teacher routes
 
-require_once app_path().'/Http/routes/school.php';       // including the school routes
+require_once app_path() . '/Http/routes/school.php';       // including the school routes
 
-require_once app_path().'/Http/routes/loginAndRegister.php';       // including the login and Register routes
+require_once app_path() . '/Http/routes/loginAndRegister.php';       // including the login and Register routes
 
-require_once app_path().'/Http/routes/errorsAndRegister.php';       // including the for errors and thankyou pages
+require_once app_path() . '/Http/routes/errorsAndRegister.php';       // including the for errors and thankyou pages

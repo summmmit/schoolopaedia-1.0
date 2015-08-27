@@ -20,8 +20,8 @@
         </div>
         @endif
         <fieldset>
-            <input type="hidden" name="email" value="{{Input::get('email')}}" />
-            <input type="hidden" name="resetcode" value="{{Input::get('resetcode')}}" />
+            <input type="hidden" name="email" value="{{ $email }}" />
+            <input type="hidden" name="resetcode" value="{{ $resetcode }}" />
             <div class="form-group">
                 <span class="input-icon">
                     <input type="password" class="form-control password" name="password" placeholder="Password">

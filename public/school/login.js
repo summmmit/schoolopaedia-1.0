@@ -162,7 +162,7 @@ var LoginAndRegister = function () {
             },
             submitHandler: function (form3) {
                 errorHandler3.hide();
-                //form3.submit();
+                form3.submit();
                 var data = {
                     email: $('input[name="email"]').val(),
                     password: $('input[name="password"]').val(),
@@ -170,7 +170,7 @@ var LoginAndRegister = function () {
                     group_to_register_in: $('#group_to_register_in').val(),
                     _token: $('input[name="_token"]').val()
                 };
-                callAjaxRequestOnRegisterButton(form3, data, errorHandler3, globalError);
+                //callAjaxRequestOnRegisterButton(form3, data, errorHandler3, globalError);
             },
             invalidHandler: function (event, validator) {//display error alert on form submit
                 globalError.hide();
@@ -276,9 +276,11 @@ var LoginAndRegister = function () {
         var send_data_to = null;
         var url_change_page_to = null;
         if (window.location.href.match('/account/user/create')) {
-            send_data_to = "http://localhost/projects/school/web/public/account/user/create/post";
             url_change_page_to = "http://localhost/projects/school/web/public/account/sign/in";
+        }else if (window.location.href.match('/admin/account/create')) {
+            url_change_page_to = "http://localhost/projects/school/web/public/admin/account/sign/in";
         }
+        send_data_to = "http://localhost/projects/school/web/public/account/user/create/post";
         sendRequest(form, data, errorHandler, globalError, send_data_to, url_change_page_to);
     }
 

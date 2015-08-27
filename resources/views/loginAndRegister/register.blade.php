@@ -15,7 +15,7 @@
         <p>
             Enter your personal details below:
         </p>
-        <form class="form-register" method="post">
+        <form class="form-register" action="{{ URL::route('account-user-create-post') }}" method="post">
             <div class="errorHandler alert alert-danger no-display">
                 <i class="fa fa-remove-sign"></i> You have some form errors. Please check below.
             </div>
