@@ -19,8 +19,7 @@ var WelcomeSettingsWizard = function() {
     var animateBar = function(val) {
         if ((typeof val == 'undefined') || val == "") {
             val = 1;
-        }
-        ;
+        };
 
         var valueNow = Math.floor(100 / numberOfSteps * val);
         $('.step-bar').css('width', valueNow + '%');
@@ -122,14 +121,16 @@ var WelcomeSettingsWizard = function() {
                     code_for_teachers: $(this).parents('#step-1').find('#code-for-teachers').val(),
                     code_for_admin: $(this).parents('#step-1').find('#code-for-admin').val(),
                     code_for_students: $(this).parents('#step-1').find('#code-for-students').val(),
-                    group_id:  $(this).parents('#step-1').find('#group-id').val()
+                    group_id:  $(this).parents('#step-1').find('#group-id').val(),
                 };
+
+                console.log(data);
 
                 $.blockUI({
                     message: '<i class="fa fa-spinner fa-spin"></i> Validating Your School Codes......'
                 });
                 $.ajax({
-                    url: 'http://localhost/projects/schoolopaedia/public/school/validation',
+                    url: serverUrl + '/school/validation',
                     dataType: 'json',
                     cache: false,
                     method: 'POST',
@@ -156,7 +157,7 @@ var WelcomeSettingsWizard = function() {
                     message: '<i class="fa fa-spinner fa-spin"></i> Updating Your Details......'
                 });
                 $.ajax({
-                    url: 'http://localhost/projects/schoolopaedia/public/school/brief/update',
+                    url:  serverUrl + '/school/brief/update',
                     dataType: 'json',
                     cache: false,
                     method: 'POST',
@@ -191,8 +192,6 @@ var WelcomeSettingsWizard = function() {
     };
     var validateSteps = function(stepnumber, nextstep) {
         var isStepValid = false;
-
-
         if (numberOfSteps >= nextstep && nextstep > stepnumber) {
 
             // cache the form element selector
@@ -205,8 +204,7 @@ var WelcomeSettingsWizard = function() {
                 animateBar(nextstep);
                 isStepValid = true;
                 return true;
-            }
-            ;
+            };
         } else if (nextstep < stepnumber) {
             for (i = nextstep; i <= stepnumber; i++) {
                 $('.anchor').children("li:nth-child(" + i + ")").children("a").addClass('wait').children('.stepNumber').removeClass('animated tada');

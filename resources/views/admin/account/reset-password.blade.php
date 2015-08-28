@@ -38,7 +38,7 @@
                 </button>
             </div>
         </fieldset>
-        {{ Form::token() }}
+        {!! csrf_field() !!}
     </form>
     <!-- start: COPYRIGHT -->
     <div class="copyright">

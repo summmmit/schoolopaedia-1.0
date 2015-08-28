@@ -11,6 +11,6 @@ namespace app\Libraries;
 
 class RequiredConstants
 {
-    Const ADMIN_ROUTE = 'admin/account/*';
-    Const USER_ROUTE = 'account/user/*';
+    Const ADMIN_ROUTE = 'admin/*';
+    Const USER_ROUTE = 'user/*';
 }

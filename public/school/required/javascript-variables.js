@@ -1,8 +1,7 @@
 
-var localServer = 'http://localhost/projects/schoolopaedia/public';
+var localServer = 'http://localhost/projects/school/web/public';
 //var ProductionServer;
 var serverUrl = localServer;
-
 var weekDays = [
     {
         code: '1',

@@ -1,7 +1,7 @@
 <?php
 
 
-Route::group(['prefix' => 'user'], function(){
+Route::group([ 'prefix' => 'user', 'middleware' => 'auth' ], function(){
 
     /*
      * User Forgot password (get)

@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class UserRegisteredToSchool extends Model
+class UsersRegisteredToSchool extends Model
 {
     use SoftDeletes;
     /**
@@ -17,5 +17,5 @@ class UserRegisteredToSchool extends Model
 
     protected $dates = ['deleted_at'];
 
-    protected $fillable = array('user_id', 'school_id');
+    protected $fillable = array('user_id', 'school_id', 'registration_date');
 }

@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
+use App\Libraries\RequiredConstants;
 
 class Authenticate
 {
@@ -38,7 +39,14 @@ class Authenticate
             if ($request->ajax()) {
                 return response('Unauthorized.', 401);
             } else {
-                return redirect()->guest(route('account-user-sign-in'));
+
+                $account_sign_in_route = null;
+                if ($request->is(RequiredConstants::ADMIN_ROUTE)) {
+                    $account_sign_in_route = route('account-admin-sign-in');
+                } elseif ($request->is(RequiredConstants::USER_ROUTE)) {
+                    $account_sign_in_route = route('account-user-sign-in');
+                }
+                return redirect()->guest($account_sign_in_route);
             }
         }
 

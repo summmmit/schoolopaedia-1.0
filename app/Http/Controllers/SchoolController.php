@@ -2,9 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use app\Libraries\RequiredConstants;
 use App\Libraries\RequiredFunctions;
+use App\Libraries\ApiResponseClass;
+use App\Models\Groups;
 use App\Models\Schools;
+use App\Models\UserDetails;
+use App\Models\UserGroup;
+use App\Models\UserLoginInfo;
+use App\Models\UsersRegisteredToSchool;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Validator;
 
 use App\Http\Requests;
@@ -109,7 +117,7 @@ class SchoolController extends Controller
                             ->subject('Activate Your Account');
                     });
                 }
-                return  redirect(route('school-register'))
+                return redirect(route('school-register'))
                     ->with('global', 'You have Been Registered. You have been send a mail to activate your account.');
             } else {
                 return redirect(route('school-register'))
@@ -136,7 +144,7 @@ class SchoolController extends Controller
                     'code_for_admin' => $school->code_for_admin,
                     'code_for_students' => $school->code_for_students,
                     'code_for_teachers' => $school->code_for_teachers,
-                    'code_for_parents'  => $school->code_for_parents
+                    'code_for_parents' => $school->code_for_parents
                 ];
                 if (!RequiredFunctions::checkIfTestEmail($school->email)) {
 
@@ -146,11 +154,110 @@ class SchoolController extends Controller
                             ->subject('Register For Admin and Other Codes');
                     });
                 }
-                return  redirect(route('school-register'))
+                return redirect(route('school-register'))
                     ->with('global', 'Your Account Have been activated. You have got mail with registration procedure explained.');
             }
         }
         return redirect(route('school-register'))
             ->with('global', 'Cant activate do after some time');
     }
+
+    public function postValidateSchool(Request $request)
+    {
+        $registration_code = $request->input('registration_code');
+        $group_id = $request->input('group_id');
+
+        $group = Groups::find($group_id);
+
+        $code = array();
+
+        if ($group && $group->count() > 0) {
+            if ($group_id == Groups::Teacher_Group_Id) {
+
+                $code_for_teachers = $request->input('code_for_teachers');
+                $school = Schools::where('registration_code', '=', $registration_code)
+                    ->where('code_for_teachers', '=', $code_for_teachers)->get()->first();
+                $code = array(
+                    'code_for_teachers' => $code_for_teachers
+                );
+            } elseif ($group_id == Groups::Student_Group_Id) {
+
+                $code_for_students = $request->input('code_for_students');
+                $school = Schools::where('registration_code', '=', $registration_code)
+                    ->where('code_for_students', '=', $code_for_students)->get()->first();
+                $code = array(
+                    'code_for_students' => $code_for_students
+                );
+            } elseif ($group_id == Groups::Administrator_Group_ID) {
+
+                $code_for_admin = $request->input('code_for_admin');
+                $school = Schools::where('registration_code', '=', $registration_code)
+                    ->where('code_for_admin', '=', $code_for_admin)->get()->first();
+                $code = array(
+                    'code_for_admin' => $code_for_admin
+                );
+            }
+
+            $input = array(
+                'registration_code' => $registration_code,
+                'group_id' => $group_id
+            );
+
+            $input = array_merge($input, $code);
+
+            if ($school && $school->count() > 0) {
+
+                $users_registered_to_school = new UsersRegisteredToSchool();
+                $users_registered_to_school->user_id = Auth::user()->id;
+                $users_registered_to_school->school_id = $school->id;
+                $users_registered_to_school->registration_date = date('Y-m-d H:i:s');
+                $users_registered_to_school->save();
+
+                if($users_registered_to_school->save()){
+
+                    $result = array(
+                        'school' => $school
+                    );
+                    return ApiResponseClass::successResponse($result, $input);
+                }
+            } else {
+
+                return ApiResponseClass::errorResponse('School Codes are InValid. Please Try again with Correct Codes!!', $input);
+            }
+        }
+
+        return ApiResponseClass::errorResponse('Some Problem Occured. Please Try again With Correct Codes!!', $input);
+    }
+    /**
+     * Api for Brief Registration
+     */
+    public function postBriefRegistration(Request $request){
+
+        $first_name = $request->input('first_name');
+        $last_name = $request->input('last_name');
+        $sex = $request->input('sex');
+
+        $input = [
+            'first_name' => $first_name,
+            'last_name' => $last_name,
+            'sex' => $sex
+        ];
+
+        $user_details = new UserDetails();
+        $user_details->first_name = $first_name;
+        $user_details->last_name = $last_name;
+        $user_details->sex = $sex;
+        $user_details->user_id = Auth::user()->id;
+
+        if($user_details->save()){
+
+            $result = array(
+                'details' => $user_details
+            );
+            return ApiResponseClass::successResponse($result, $input);
+        }
+
+        return ApiResponseClass::errorResponse('Some Problem Occured. Please Try again With Correct Values!!', $input);
+    }
+
 }
