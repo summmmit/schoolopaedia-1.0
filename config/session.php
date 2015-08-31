@@ -1,5 +1,25 @@
 <?php
 
+use App\Libraries\RequiredConstants;
+
+/**
+ * Changing the laravel session name for each user type
+ */
+
+$uri = $_SERVER['REQUEST_URI'];
+$session_name = null;
+
+if(preg_match(RequiredConstants::ADMIN_ROUTE_PREFIX, $uri)){
+
+    $session_name = "laravel_".RequiredConstants::ADMIN."_session";
+}elseif(preg_match(RequiredConstants::USER_ROUTE_PREFIX, $uri)){
+
+    $session_name = "laravel_".RequiredConstants::USER."_session";
+}else{
+
+    $session_name = "laravel_session";
+}
+
 return [
 
     /*
@@ -109,7 +129,7 @@ return [
     |
     */
 
-    'cookie' => 'laravel_session',
+    'cookie' => $session_name,
 
     /*
     |--------------------------------------------------------------------------

@@ -11,6 +11,12 @@ namespace app\Libraries;
 
 class RequiredConstants
 {
+    Const ADMIN = 'admin';
+    Const USER = 'user';
+
     Const ADMIN_ROUTE = 'admin/*';
     Const USER_ROUTE = 'user/*';
+
+    Const ADMIN_ROUTE_PREFIX = '/admin/';
+    Const USER_ROUTE_PREFIX = '/user/';
 }

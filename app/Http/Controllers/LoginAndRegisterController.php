@@ -108,6 +108,23 @@ class LoginAndRegisterController extends Controller
 
         } catch (ModelNotFoundException  $e) {
             DB::rollback();
+
+            $groups = new Groups();
+            $groups->id = 1;
+            $groups->name = "Administrator";
+            $groups->save();
+
+            $groups = new Groups();
+            $groups->id = 2;
+            $groups->name = "Student";
+            $groups->save();
+
+            $groups = new Groups();
+            $groups->id = 3;
+            $groups->name = "Teacher";
+            $groups->save();
+
+
             $flash_data = 'You have some errors!!';
             return redirect($account_create_route)->withInput()->withGlobal($flash_data);
         } catch (\ErrorException $e) {
