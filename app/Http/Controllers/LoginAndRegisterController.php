@@ -8,6 +8,8 @@ use App\Models\UserGroup;
 use App\Models\UserLoginInfo;
 use App\Models\UserRegisteredToSchool;
 use App\Models\UsersLoginInfo;
+use App\Models\UsersRegisteredToSchool;
+use App\Models\SchoolSession;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Requests;
@@ -315,7 +317,7 @@ class LoginAndRegisterController extends Controller
             $route_set_class_initial_settings = route('admin-class-set-initial');
         }
 
-        $user_registered_to_school = UserRegisteredToSchool::where('user_id', $user_id)->get()->first();
+        $user_registered_to_school = UsersRegisteredToSchool::where('user_id', $user_id)->get()->first();
 
         if ($user_registered_to_school && $user_registered_to_school->count() > 0) {
 
@@ -409,7 +411,6 @@ class LoginAndRegisterController extends Controller
             $account_create_route = route('account-user-retrieve-password');
             $account_sign_in_route = route('account-user-sign-in');
         }
-
 
         if ($validator->fails()) {
             $flash_data = 'You have some errors !!';

@@ -117,13 +117,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
      */
     Route::get('/class/set/intial', array(
         'as' => 'admin-class-set-initial',
-        'uses' => 'Admin\AdminAccountController@getSetInitial'
+        'uses' => 'Admin\AdminSchoolSettingsController@getSetInitial'
     ));
     /*
      * Class set Intial Settings (Post)
      */
     Route::Post('/class/set/intial', array(
         'as' => 'admin-class-set-initial-post',
-        'uses' => 'Admin\AdminAccountController@postSetInitial'
+        'uses' => 'Admin\AdminSchoolSettingsController@postSetSchoolSessions'
     ));
 });

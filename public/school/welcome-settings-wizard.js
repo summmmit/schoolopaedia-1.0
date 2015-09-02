@@ -56,6 +56,12 @@ var WelcomeSettingsWizard = function() {
                 registration_code: {
                     required: true
                 },
+                code_for_admin: {
+                    required: true
+                },
+                code_for_students: {
+                    required: true
+                },
                 code_for_teachers: {
                     required: true
                 },
@@ -72,7 +78,9 @@ var WelcomeSettingsWizard = function() {
                 }
             },
             messages: {
-                firstname: "Please specify your first name"
+                first_name: "Please specify your first name",
+                last_name: "Please specify your Last name",
+                registration_code: "Please specify your Last name"
             },
             highlight: function(element) {
                 $(element).closest('.help-block').removeClass('valid');
@@ -123,8 +131,6 @@ var WelcomeSettingsWizard = function() {
                     code_for_students: $(this).parents('#step-1').find('#code-for-students').val(),
                     group_id:  $(this).parents('#step-1').find('#group-id').val(),
                 };
-
-                console.log(data);
 
                 $.blockUI({
                     message: '<i class="fa fa-spinner fa-spin"></i> Validating Your School Codes......'
@@ -178,6 +184,10 @@ var WelcomeSettingsWizard = function() {
             e.preventDefault();
             wizardContent.smartWizard("goBackward");
         });
+        $(".finish-step").unbind("click").click(function (e) {
+            e.preventDefault();
+            onFinish(obj, context);
+        });
     };
     var leaveAStepCallback = function(obj, context) {
         return validateSteps(context.fromStep, context.toStep);
@@ -185,7 +195,10 @@ var WelcomeSettingsWizard = function() {
     };
     var onFinish = function(obj, context) {
         if (validateAllSteps()) {
-            alert('form submit function');
+
+            var url = serverUrl + '/admin/class/set/intial';
+            changeUrl(url);
+
             $('.anchor').children("li").last().children("a").removeClass('wait').removeClass('selected').addClass('done').children('.stepNumber').addClass('animated tada');
             //wizardForm.submit();
         }

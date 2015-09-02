@@ -1,7 +1,7 @@
-@extends('layouts.main-layout')
+@extends('layouts.first-settings-layout')
 
 @section('stylesheets')
-<link rel="stylesheet" href="{{ URL::asset('assets/plugins/datepicker/css/datepicker.css'); }}">
+<link rel="stylesheet" href="{{ URL::asset('assets/plugins/datepicker/css/datepicker.css') }}">
 @stop
 
 @section('page_header')
@@ -29,7 +29,7 @@
                 <h4 class="panel-title">Set <span class="text-bold">Current Session</span></h4>
             </div>
             <div class="panel-body">
-                <form action="{{ URL::route('admin-school-set-sessions-post'); }}" method="post" id="form">
+                <form action="{{ URL::route('admin-class-set-initial-post') }}" method="post" id="form">
                     <div class="row">
                         <div class="col-md-offset-4 col-md-4">                                 
                             <!-- Some Message to be Displayed start-->
@@ -77,7 +77,6 @@
                             </button>
                         </div>
                     </div>
-                    {{ Form::token() }}
                 </form>
             </div>
         </div>
@@ -90,13 +89,13 @@
 @section('scripts')
 
 <!-- Scripts for This page only -->
-<script src="{{ URL::asset('assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js'); }}"></script>
-<script src="{{ URL::asset('assets/js/modifiedJs/admin/validation.js'); }}"></script>
+<script src="{{ URL::asset('assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js') }}"></script>
+<script src="{{ URL::asset('school/admin/set-initial-sessions-validation.js') }}"></script>
 <script>
 jQuery(document).ready(function() {
     Main.init();
     SVExamples.init();
-    Validation.init();
+    SET_INITIAL_SESSION_Validation.init();
     $('.date-picker').datepicker({
         autoclose: true
     });

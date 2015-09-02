@@ -213,7 +213,7 @@ class SchoolController extends Controller
                 $users_registered_to_school->registration_date = date('Y-m-d H:i:s');
                 $users_registered_to_school->save();
 
-                if($users_registered_to_school->save()){
+                if ($users_registered_to_school->save()) {
 
                     $result = array(
                         'school' => $school
@@ -228,14 +228,22 @@ class SchoolController extends Controller
 
         return ApiResponseClass::errorResponse('Some Problem Occured. Please Try again With Correct Codes!!', $input);
     }
+
     /**
      * Api for Brief Registration
      */
-    public function postBriefRegistration(Request $request){
+    public function postBriefRegistration(Request $request)
+    {
 
         $first_name = $request->input('first_name');
         $last_name = $request->input('last_name');
         $sex = $request->input('sex');
+
+        $validator = validator::make($request->all(), [
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'sex' => 'required'
+        ]);
 
         $input = [
             'first_name' => $first_name,
@@ -243,13 +251,28 @@ class SchoolController extends Controller
             'sex' => $sex
         ];
 
-        $user_details = new UserDetails();
+        if ($validator->fails()) {
+            return ApiResponseClass::errorResponse('Some Problem Occured. Please Try again With Correct Values!!', $input);
+        }
+
+        $input = [
+            'first_name' => $first_name,
+            'last_name' => $last_name,
+            'sex' => $sex
+        ];
+
+        $user_details = UserDetails::where('user_id', Auth::user()->id)->get()->first();
+
+        if(!$user_details){
+            $user_details = new UserDetails();
+        }
+
         $user_details->first_name = $first_name;
         $user_details->last_name = $last_name;
         $user_details->sex = $sex;
         $user_details->user_id = Auth::user()->id;
 
-        if($user_details->save()){
+        if ($user_details->save()) {
 
             $result = array(
                 'details' => $user_details

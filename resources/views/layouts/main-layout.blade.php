@@ -93,7 +93,7 @@
                         </a>
                     </div>
                     <div class="col-xs-6 text-right no-padding">
-                        <a class="btn btn-sm log-out text-right" href="{{ URL::route('admin-sign-out') }}">
+                        <a class="btn btn-sm log-out text-right" href="{{ URL::route('account-admin-logout') }}">
                             <i class="fa fa-power-off"></i> Log Out
                         </a>
                     </div>
@@ -680,7 +680,7 @@
         <script src="{{ URL::asset('assets/js/main.js') }} "></script>
         <!-- end: CORE JAVASCRIPTS  -->
         <!-- start: VARIABLES FOR JAVASCRIPTS  -->
-        <script src="{{ URL::asset('assets/js/required/javascript-variables.js') }} "></script>
+        <script src="{{ URL::asset('school/required/javascript-variables.js') }} "></script>
         <!-- end: VARIABLES FOR JAVASCRIPTS  -->
         <!-- start: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
         @yield('scripts')

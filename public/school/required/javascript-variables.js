@@ -1,5 +1,6 @@
 
-var localServer = 'http://localhost/projects/school/web/public';
+var localServer = 'http://localhost/projects/web/public';
+//var localServer = env(MAIL_HOST);
 //var ProductionServer;
 var serverUrl = localServer;
 var weekDays = [
