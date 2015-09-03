@@ -2,10 +2,12 @@
 
 use App\Models\UserGroup;
 use App\Models\UserDetails;
+use App\Models\Groups;
 
 $user_id = Auth::user()->id;
 $user_group = UserGroup::where('user_id', '=', $user_id)->get()->first();
 $userDetails = UserDetails::where('user_id', '=', $user_id)->get()->first();
+$admin_group_id = Groups::Administrator_Group_ID;
 ?>
 @section('upper-dropdown')
     <a data-toggle="dropdown" data-hover="dropdown" class="dropdown-toggle" data-close-others="true" href="#">
@@ -37,21 +39,21 @@ $userDetails = UserDetails::where('user_id', '=', $user_id)->get()->first();
 @stop
 
 @section('left-menu')
-    @if($user_group->groups_id == 1)
+    @if($user_group->group_id == $admin_group_id)
         @include('layouts.menus.admin.leftMenu')
-    @elseif($user_group->groups_id == 2)
+    @elseif($user_group->group_id == 2)
         @include('layouts.menus.user.leftMenu')
-    @elseif($user_group->groups_id == 3)
+    @elseif($user_group->group_id == 3)
         @include('layouts.menus.teacher.leftMenu')
     @endif
 @stop
 
 @section('upper-menu')
-    @if($user_group->groups_id == 1)
+    @if($user_group->group_id == 1)
         @include('layouts.menus.admin.upperMenu')
-    @elseif($user_group->groups_id == 2)
+    @elseif($user_group->group_id == 2)
         @include('layouts.menus.user.upperMenu')
-    @elseif($user_group->groups_id == 3)
+    @elseif($user_group->group_id == 3)
         @include('layouts.menus.teacher.upperMenu')
     @endif
 @stop

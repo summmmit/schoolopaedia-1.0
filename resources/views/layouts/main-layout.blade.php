@@ -16,6 +16,7 @@
         <meta name="apple-mobile-web-app-status-bar-style" content="black">
         <meta content="" name="description" />
         <meta content="" name="author" />
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <!-- end: META -->
         <!-- start: MAIN CSS -->
         <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,500,600,700,200,100,800' rel='stylesheet' type='text/css'>
@@ -685,6 +686,13 @@
         <!-- start: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
         @yield('scripts')
         <!-- end: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
+        <script>
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+        </script>
     </body>
     <!-- end: BODY -->
 </html>

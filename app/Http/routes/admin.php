@@ -84,7 +84,7 @@ Route::group(['prefix' => 'admin', 'before' => 'guest'], function () {
      */
     Route::get('/first/page/{adminId}', array(
         'as' => 'admin-first-page',
-        'uses' => 'LoginAndRegisterController@goToAfterSignIn'
+        'uses' => 'LoginAndRegisterController@goToAfterSignInAdmin'
     ));
 
 });
@@ -125,5 +125,33 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::Post('/class/set/intial', array(
         'as' => 'admin-class-set-initial-post',
         'uses' => 'Admin\AdminSchoolSettingsController@postSetSchoolSessions'
+    ));
+    /*
+     * Get All School Schedule Profiles (post)
+     */
+    Route::Post('/school/get/all/schedule/profile/post', array(
+        'as' => 'admin-school-get-all-schedule-profile-post',
+        'uses' => 'Admin\AdminSchoolSettingsController@postGetAllSchoolScheduleProfile'
+    ));
+    /*
+     * Set Initial School Schedule (post)
+     */
+    Route::Post('/school/set/schedule/profile/post', array(
+        'as' => 'admin-school-set-schedule-profile-post',
+        'uses' => 'Admin\AdminSchoolSettingsController@postSetSchoolScheduleProfile'
+    ));
+    /*
+     * Set Initial School Schedule (post)
+     */
+    Route::get('/school/get/schedule', array(
+        'as' => 'admin-school-get-schedule',
+        'uses' => 'Admin\AdminSchoolSettingsController@getSchoolSchedule'
+    ));
+    /*
+     * Set Initial School Schedule (post)
+     */
+    Route::Post('/school/set/schedule/post', array(
+        'as' => 'admin-school-set-schedule-post',
+        'uses' => 'Admin\AdminSchoolSettingsController@postSetSchoolSchedule'
     ));
 });

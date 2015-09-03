@@ -310,20 +310,13 @@ class LoginAndRegisterController extends Controller
             $route_home = route('user-home');
             $route_welcome_settings = route('user-welcome-settings');
             $route_set_class_initial_settings = route('user-class-set-initial');
-        } elseif ($userType == Groups::Administrator_Group_ID) {
-
-            $route_home = route('admin-home');
-            $route_welcome_settings = route('admin-welcome-settings');
-            $route_set_class_initial_settings = route('admin-class-set-initial');
         }
 
         $user_registered_to_school = UsersRegisteredToSchool::where('user_id', $user_id)->get()->first();
 
         if ($user_registered_to_school && $user_registered_to_school->count() > 0) {
 
-            $school_id = 2;
-
-            $school_session = SchoolSession::where('school_id', '=', $school_id)->where('current_session', '=', 1)->get()->first();
+            $school_session = SchoolSession::where('school_id', '=', $user_registered_to_school->school_id)->where('current_session', '=', 1)->get()->first();
 
             $user_registered_to_session = UsersToClass::where('session_id', '=', $school_session->id)
                 ->where('user_id', '=', Sentry::getUser()->id)->get();
@@ -337,6 +330,36 @@ class LoginAndRegisterController extends Controller
             }
         } else {
             return redirect($route_welcome_settings);
+        }
+    }
+
+    protected function goToAfterSignInAdmin($user_id)
+    {
+
+        $userType = RequiredFunctions::checkUserTypeByUserId($user_id);
+
+        if($userType != Groups::Administrator_Group_ID){
+
+            Session::flash('global', 'Sorry Something went Wrong. Please try again Later!!');
+            return redirect(route('admin-welcome-settings'));
+        }
+
+        $user_registered_to_school = UsersRegisteredToSchool::where('user_id', $user_id)->get()->first();
+
+        if ($user_registered_to_school && $user_registered_to_school->count() > 0) {
+
+            $school_session = SchoolSession::where('school_id', '=', $user_registered_to_school->school_id)->where('current_session', '=', 1)->get()->first();
+
+            if ($school_session && $school_session->count() > 0) {
+
+                return redirect(route('admin-home'));
+            } else {
+
+                Session::flash('global', 'Loggedin Successfully.<br>You Have to Register For new School Session first');
+                return redirect(route('admin-class-set-initial'));
+            }
+        } else {
+            return redirect(route('admin-welcome-settings'));
         }
     }
 
