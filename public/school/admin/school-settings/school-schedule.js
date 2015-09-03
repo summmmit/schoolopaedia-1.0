@@ -113,8 +113,8 @@ var AdminSchoolSchedule = function () {
 
         $('#schedule-profile-delete').on('click', function (e) {
 
-            var schedule_profile_id = $(this).closest('tr').attr('data-schedule-profile-id').val();
-            console.log(schedule_profile_id);
+            var schedule_profile_id = $(this).closest('tr').attr('data-schedule-profile-id');
+            alert(schedule_profile_id);
 
         });
 
