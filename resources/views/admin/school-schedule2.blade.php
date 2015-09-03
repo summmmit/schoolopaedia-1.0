@@ -49,7 +49,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr data-schedule-profile-id="">
+                        <tr data-schedule-profile-id="1">
                             <td class="center">Profile 1</td>
                             <td class="center">
                                 <div class="checkbox-table">
