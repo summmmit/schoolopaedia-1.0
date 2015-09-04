@@ -228,7 +228,6 @@ class SchoolController extends Controller
 
         return ApiResponseClass::errorResponse('Some Problem Occured. Please Try again With Correct Codes!!', $input);
     }
-
     /**
      * Api for Brief Registration
      */
@@ -282,5 +281,4 @@ class SchoolController extends Controller
 
         return ApiResponseClass::errorResponse('Some Problem Occured. Please Try again With Correct Values!!', $input);
     }
-
 }

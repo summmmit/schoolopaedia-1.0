@@ -120,6 +120,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
         'uses' => 'Admin\AdminSchoolSettingsController@getSetInitial'
     ));
     /*
+     * Admin School Settings Page (get)
+     */
+    Route::get('/school/settings', array(
+        'as' => 'admin-school-settings',
+        'uses' => 'Admin\AdminSchoolSettingsController@getSchoolSettings'
+    ));
+    /*
      * Class set Intial Settings (Post)
      */
     Route::Post('/class/set/intial', array(
@@ -155,7 +162,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
         'uses' => 'Admin\AdminSchoolSettingsController@postMakeSchoolScheduleProfileCurrent'
     ));
     /*
-     * Set Initial School Schedule (post)
+     * Get School Schedule (post)
      */
     Route::get('/school/get/schedule', array(
         'as' => 'admin-school-get-schedule',
@@ -167,5 +174,12 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::Post('/school/set/schedule/post', array(
         'as' => 'admin-school-set-schedule-post',
         'uses' => 'Admin\AdminSchoolSettingsController@postSetSchoolSchedule'
+    ));
+    /*
+     * School Information
+     */
+    Route::Post('/school/information/post', array(
+        'as' => 'admin-school-information-post',
+        'uses' => 'Admin\AdminSchoolSettingsController@postGetSchoolInformation'
     ));
 });

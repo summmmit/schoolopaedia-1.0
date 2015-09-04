@@ -8,7 +8,7 @@ $(function() {
     });
 
     //editables 
-    $('.opening-time').editable({
+    $('.school-name').editable({
         validate: function(value) {
             if ($.trim(value) == '')
                 return 'Value is required.';

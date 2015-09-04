@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Schools;
 use App\Models\SchoolScheduleProfiles;
 use Illuminate\Http\Request;
 
@@ -105,6 +106,11 @@ class AdminSchoolSettingsController extends Controller
     public function getSchoolSchedule()
     {
         return view('admin.school-schedule');
+    }
+
+    public function getSchoolSettings()
+    {
+        return view('admin.school-settings');
     }
 
     public function postSetSchoolSchedule(Request $request)
@@ -259,24 +265,42 @@ class AdminSchoolSettingsController extends Controller
             return ApiResponseClass::errorResponse('You Have Some Input Errors. Please Try Again!!', $input, $validator->errors());
         } else {
 
-            $current_schedule_profiles = SchoolScheduleProfiles::where('school_id', $this->getSchoolAndUserBasicInfo()->getSchoolId())
-                ->where('current_profile', 1)->get()->first();
+            DB::beginTransaction();
 
-            if($current_schedule_profiles && $current_schedule_profiles->count() > 0){
-                $current_schedule_profiles->current_profile = 0;
+            try{
 
-                $current_schedule_profiles->save();
+                $current_schedule_profiles = SchoolScheduleProfiles::where('school_id', $this->getSchoolAndUserBasicInfo()->getSchoolId())
+                    ->where('current_profile', 1)->get()->first();
+
+                if($current_schedule_profiles && $current_schedule_profiles->count() > 0){
+                    $current_schedule_profiles->current_profile = 0;
+
+                    if (!$current_schedule_profiles->save()) {
+                        throw new \ErrorException();
+                    }
+                }
+
+                $schedule_profiles = SchoolScheduleProfiles::find($request->input('profile_id'));
+
+                $schedule_profiles->current_profile = 1;
+                if (!$schedule_profiles->save()) {
+                    throw new \ErrorException();
+                }
+                DB::commit();
+            }catch (ErrorException $e){
+                DB::rollback();
+                return ApiResponseClass::errorResponse('SomeThing Went Wrong. Please Try Again Later or Contact Support!!', $input, $validator->errors());
             }
-
-            $schedule_profiles = SchoolScheduleProfiles::find($request->input('profile_id'));
-
-            $schedule_profiles->current_profile = 1;
-            $schedule_profiles->save();
-
             return ApiResponseClass::successResponse($schedule_profiles);
         }
 
         return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $input);
+    }
+
+    public function postGetSchoolInformation(){
+
+        $school = Schools::find($this->getSchoolAndUserBasicInfo()->getSchoolId());
+        return ApiResponseClass::successResponse($school);
     }
 
 }
