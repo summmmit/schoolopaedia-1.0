@@ -139,7 +139,7 @@ var SVExamples = function() {
             submitHandler: function(form) {
                 successHandler2.show();
                 errorHandler2.hide();
-                newEvent = new Object;
+                var newEvent = new Object;
                 newEvent.title = $(".form-event .event-name ").val();
                 newEvent.start = new Date($('.form-event .event-start-date').val());
                 newEvent.end = new Date($('.form-event .event-end-date').val());

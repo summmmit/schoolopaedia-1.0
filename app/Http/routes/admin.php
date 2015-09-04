@@ -134,11 +134,25 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
         'uses' => 'Admin\AdminSchoolSettingsController@postGetAllSchoolScheduleProfile'
     ));
     /*
-     * Set Initial School Schedule (post)
+     * Set School Schedule Profile (post)
      */
     Route::Post('/school/set/schedule/profile/post', array(
         'as' => 'admin-school-set-schedule-profile-post',
         'uses' => 'Admin\AdminSchoolSettingsController@postSetSchoolScheduleProfile'
+    ));
+    /*
+     * Delete School Schedule Profile (post)
+     */
+    Route::Post('/school/delete/schedule/profile/post', array(
+        'as' => 'admin-school-delete-schedule-profile-post',
+        'uses' => 'Admin\AdminSchoolSettingsController@postDeleteSchoolScheduleProfile'
+    ));
+    /*
+     * Make School Schedule Profile - Current (post)
+     */
+    Route::Post('/school/make/current/schedule/profile/post', array(
+        'as' => 'admin-school-make-current-schedule-profile-post',
+        'uses' => 'Admin\AdminSchoolSettingsController@postMakeSchoolScheduleProfileCurrent'
     ));
     /*
      * Set Initial School Schedule (post)

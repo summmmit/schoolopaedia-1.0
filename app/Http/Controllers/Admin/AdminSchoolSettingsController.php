@@ -107,7 +107,8 @@ class AdminSchoolSettingsController extends Controller
         return view('admin.school-schedule');
     }
 
-    public function postSetSchoolSchedule(Request $request){
+    public function postSetSchoolSchedule(Request $request)
+    {
 
         $schedule_starts_from = $request->input('schedule_starts_from');
         $schedule_ends_untill = $request->input('schedule_ends_untill');
@@ -118,9 +119,9 @@ class AdminSchoolSettingsController extends Controller
         $input = [
             'schedule_starts_from' => $schedule_starts_from,
             'schedule_ends_untill' => $schedule_ends_untill,
-            'school_opening_time'  => $school_opening_time,
-            'school_lunch_time'    => $school_lunch_time,
-            'school_closing_time'  => $school_closing_time
+            'school_opening_time' => $school_opening_time,
+            'school_lunch_time' => $school_lunch_time,
+            'school_closing_time' => $school_closing_time
         ];
 
         $validator = validator::make($request->all(), [
@@ -169,9 +170,11 @@ class AdminSchoolSettingsController extends Controller
         }
     }
 
-    public function postSetSchoolScheduleProfile(Request $request){
+    public function postSetSchoolScheduleProfile(Request $request)
+    {
 
         $profile_name = $request->input('profile_name');
+        $profile_id = $request->input('profile_id');
 
         $input = [
             'profile_name' => $profile_name
@@ -185,11 +188,16 @@ class AdminSchoolSettingsController extends Controller
             return ApiResponseClass::errorResponse('You Have Some Input Errors. Please Try Again!!', $input, $validator->errors());
         } else {
 
-            $schedule_profile = new SchoolScheduleProfiles();
-            $schedule_profile->profile_name = $profile_name;
+            if ($profile_id) {
+                $schedule_profile = SchoolScheduleProfiles::find($profile_id);
+            } else {
+                $schedule_profile = new SchoolScheduleProfiles();
+            }
+
+            $schedule_profile->profile_name = ucwords($profile_name);
             $schedule_profile->school_id = $this->getSchoolAndUserBasicInfo()->getSchoolId();
 
-            if($schedule_profile->save()){
+            if ($schedule_profile->save()) {
 
                 return ApiResponseClass::successResponse($schedule_profile, $input);
             }
@@ -198,38 +206,77 @@ class AdminSchoolSettingsController extends Controller
         return ApiResponseClass::errorResponse('You Have Some Input Errors. Please Try Again!!', $input, $validator->errors());
     }
 
-    public function postGetAllSchoolScheduleProfile(){
+    public function postGetAllSchoolScheduleProfile()
+    {
 
         $schedule_profiles = SchoolScheduleProfiles::where('school_id', $this->getSchoolAndUserBasicInfo()->getSchoolId())->get();
 
         return ApiResponseClass::successResponse($schedule_profiles);
     }
 
-    public function postDeleteSchoolScheduleProfile(Request $request){
+    public function postDeleteSchoolScheduleProfile(Request $request)
+    {
 
-        $profile_id = $request->input('schedule_profile_id');
+        $profile_id = $request->input('profile_id');
 
         $input = [
-            'schedule_profile_id' => $profile_id
+            'profile_id' => $profile_id
         ];
 
         $validator = validator::make($request->all(), [
-            'schedule_profile_id' => 'required'
+            'profile_id' => 'required'
         ]);
 
         if ($validator->fails()) {
             return ApiResponseClass::errorResponse('You Have Some Input Errors. Please Try Again!!', $input, $validator->errors());
         } else {
 
-            $schedule_profiles = SchoolScheduleProfiles::find($request->input('schedule_profile_id'));
+            $schedule_profiles = SchoolScheduleProfiles::find($request->input('profile_id'));
 
-            if($schedule_profiles && $schedule_profiles->count() > 0 && $schedule_profiles->delete()){
+            if ($schedule_profiles && $schedule_profiles->count() > 0 && $schedule_profiles->delete()) {
 
                 return ApiResponseClass::successResponse($schedule_profiles);
             }
         }
 
-        return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $input, $validator->errors());
+        return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $input);
+    }
+
+    public function postMakeSchoolScheduleProfileCurrent(Request $request)
+    {
+
+        $profile_id = $request->input('profile_id');
+
+        $input = [
+            'profile_id' => $profile_id
+        ];
+
+        $validator = validator::make($request->all(), [
+            'profile_id' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return ApiResponseClass::errorResponse('You Have Some Input Errors. Please Try Again!!', $input, $validator->errors());
+        } else {
+
+            $current_schedule_profiles = SchoolScheduleProfiles::where('school_id', $this->getSchoolAndUserBasicInfo()->getSchoolId())
+                ->where('current_profile', 1)->get()->first();
+
+            if($current_schedule_profiles && $current_schedule_profiles->count() > 0){
+                $current_schedule_profiles->current_profile = 0;
+
+                $current_schedule_profiles->save();
+            }
+
+            $schedule_profiles = SchoolScheduleProfiles::find($request->input('profile_id'));
+
+            $schedule_profiles->current_profile = 1;
+            $schedule_profiles->save();
+
+            return ApiResponseClass::successResponse($schedule_profiles);
+        }
+
+        return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $input);
     }
 
 }
