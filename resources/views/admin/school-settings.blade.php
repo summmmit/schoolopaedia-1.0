@@ -12,6 +12,40 @@
           href="{{ URL::asset('assets/plugins/wysihtml5/bootstrap-wysihtml5-0.0.2/bootstrap-wysihtml5-0.0.2.css') }}">
     <link rel="stylesheet"
           href="{{ URL::asset('assets/plugins/wysihtml5/bootstrap-wysihtml5-0.0.2/wysiwyg-color.css') }}">
+    <style>
+
+        .fb-profile img.fb-image-lg {
+            z-index: 0;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .fb-image-profile {
+            margin: -194px 10px 0px 50px;
+            z-index: 9;
+            width: 15%;
+        }
+
+        .fb-profile-text {
+            margin-top: -120px;
+            margin-right: 20px;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+
+            .fb-profile-text > h1 {
+                font-weight: 700;
+                font-size: 16px;
+            }
+
+            .fb-image-profile {
+                margin: -45px 10px 0px 25px;
+                z-index: 9;
+                width: 20%;
+            }
+        }
+    </style>
 @stop
 
 @section('page_header')
@@ -36,123 +70,257 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="panel panel-white">
-                <div class="panel-heading">
-                    <h4 class="panel-title">Inline <span class="text-bold">Tabs</span></h4>
-                </div>
                 <div class="panel-body">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="tabbable">
-                                <ul id="myTab" class="nav nav-tabs">
-                                    <li class="active">
-                                        <a href="#school-details" data-toggle="tab">
-                                            <i class="green fa fa-home"></i> School Details
+                    <div class="fb-profile">
+                        <img align="left" class="fb-image-cover" height="400px" class="fb-image-lg"
+                             src="http://lorempixel.com/850/280/nightlife/5/" alt="Profile image example"/>
+                        <img align="left" class="fb-image-profile thumbnail"
+                             src="http://lorempixel.com/180/180/people/9/" alt="Profile image example"/>
+
+                        <div class="fb-profile-text pull-right">
+                            <h1 id="data-school-name">School Name</h1>
+                            <p class="pull-right">Girls just wanna go fun.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-5 col-md-4">
+            <div class="panel panel-white">
+                <div class="panel-body">
+                    <div class="user-left">
+                        <table class="table table-condensed table-hover">
+                            <thead>
+                            <tr>
+                                <th colspan="3">General information</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>Address</td>
+                                <td id="data-school-address"></td>
+                                <td><a href="#panel_edit_account" class="show-tab"><i
+                                                class="fa fa-pencil edit-user-info"></i></a></td>
+                            </tr>
+                            <tr>
+                                <td>City</td>
+                                <td id="data-school-city"></td>
+                                <td>
+                                    <a href="#panel_edit_account" class="show-tab">
+                                        <i class="fa fa-pencil edit-user-info"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>State</td>
+                                <td id="data-school-state"></td>
+                                <td>
+                                    <a href="#panel_edit_account" class="show-tab">
+                                        <i class="fa fa-pencil edit-user-info"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Country</td>
+                                <td id="data-school-country"></td>
+                                <td>
+                                    <a href="#panel_edit_account" class="show-tab">
+                                        <i class="fa fa-pencil edit-user-info"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Zip Code</td>
+                                <td id="data-school-pin-code"></td>
+                                <td>
+                                    <a href="#panel_edit_account" class="show-tab">
+                                        <i class="fa fa-pencil edit-user-info"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table-condensed table-hover">
+                            <thead>
+                            <tr>
+                                <th colspan="3">Contact Information</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>email:</td>
+                                <td id="data-school-email"></td>
+                                <td><a href="#panel_edit_account" class="show-tab"><i
+                                                class="fa fa-pencil edit-user-info"></i></a></td>
+                            </tr>
+                            <tr>
+                                <td>phone:</td>
+                                <td id="data-school-phone-number"></td>
+                                <td><a href="#panel_edit_account" class="show-tab"><i
+                                                class="fa fa-pencil edit-user-info"></i></a></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="center">
+                            <hr>
+                            <div class="social-icons block">
+                                <ul>
+                                    <li data-placement="top" data-original-title="Twitter" class="social-twitter tooltips">
+                                        <a href="http://www.twitter.com" target="_blank">
+                                            Twitter
                                         </a>
                                     </li>
-                                    <li>
-                                        <a href="#school-codes" data-toggle="tab">
-                                            <i class="green fa fa-home"></i> School Registration Codes
+                                    <li data-placement="top" data-original-title="Facebook" class="social-facebook tooltips">
+                                        <a href="http://facebook.com" target="_blank">
+                                            Facebook
                                         </a>
                                     </li>
-                                    <li>
-                                        <a href="#school-schedule" data-toggle="tab">
-                                            <i class="green fa fa-home"></i> School Schedule
+                                    <li data-placement="top" data-original-title="Google" class="social-google tooltips">
+                                        <a href="http://google.com" target="_blank">
+                                            Google+
+                                        </a>
+                                    </li>
+                                    <li data-placement="top" data-original-title="LinkedIn" class="social-linkedin tooltips">
+                                        <a href="http://linkedin.com" target="_blank">
+                                            LinkedIn
+                                        </a>
+                                    </li>
+                                    <li data-placement="top" data-original-title="Github" class="social-github tooltips">
+                                        <a href="#" target="_blank">
+                                            Github
                                         </a>
                                     </li>
                                 </ul>
-                                <div class="tab-content">
-                                    <div class="tab-pane fade in active" id="school-details">
-                                        <table data-school-id="" class="table table-bordered table-striped">
-                                            <tbody>
-                                            <tr>
-                                                <td>School Name</td>
-                                                <td id="school-name">Sumit ISngh</td>
-                                            </tr>
-                                            <tr>
-                                                <td>School Name</td>
-                                                <td id="data-school-name"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>School Logo</td>
-                                                <td id="data-school-logo"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Manager Full Name</td>
-                                                <td id="data-school-manager"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Registered Phone number</td>
-                                                <td id="data-school-phone-number"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Email Address</td>
-                                                <td id="data-school-email"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Address</td>
-                                                <td id="data-school-address"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>City</td>
-                                                <td id="data-school-city"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>State</td>
-                                                <td id="data-school-state"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Country</td>
-                                                <td id="data-school-country"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Zip Code</td>
-                                                <td id="data-school-pin-code"></td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="tab-pane fade" id="school-codes">
-                                        <table id="table-school-session" class="table table-bordered table-striped">
-                                            <tbody>
-                                            <tr>
-                                                <td>School Registration Code</td>
-                                                <td id="school-registration-code" class="center"></td>
-                                                <td class="center"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Admin Registration Code</td>
-                                                <td id="code-for-admin" class="center"></td>
-                                                <td class="center">
-                                                    <a href="#" class="btn btn-success">Invite</a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Student Registration Code</td>
-                                                <td id="code-for-students" class="center"></td>
-                                                <td class="center">
-                                                    <a href="#" class="btn btn-success">Invite</a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Teacher Registration Code</td>
-                                                <td id="code-for-teachers" class="center"></td>
-                                                <td class="center">
-                                                    <a href="#" class="btn btn-success">Invite</a>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="tab-pane fade" id="school-schedule">
-                                        <table id="table-school-schedule" class="table table-bordered table-striped">
-                                            <tbody></tbody>
-                                        </table>
-                                        <div class="row">
-                                            <div class="col-md-offset-10 col-md-2 text-right">
-                                                <a class="btn btn-blue show-sv" href="#subview-add-new-schedule"
-                                                   data-startFrom="right">
-                                                    Add New Schedule <i class="fa fa-chevron-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-7 col-md-8">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="panel panel-white">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="tabbable">
+                                        <ul id="myTab" class="nav nav-tabs">
+                                            <li class="active">
+                                                <a href="#school-details" data-toggle="tab">
+                                                    <i class="green fa fa-home"></i> School Details
                                                 </a>
+                                            </li>
+                                            <li>
+                                                <a href="#school-codes" data-toggle="tab">
+                                                    <i class="green fa fa-home"></i> School Registration Codes
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#school-schedule" data-toggle="tab">
+                                                    <i class="green fa fa-home"></i> School Schedule
+                                                </a>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content">
+                                            <div class="tab-pane fade in active" id="school-details">
+                                                <table data-school-id="" class="table table-bordered table-striped">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td>School Name</td>
+                                                        <td id="school-name">Sumit ISngh</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>School Name</td>
+                                                        <td id="data-school-name"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>School Logo</td>
+                                                        <td id="data-school-logo"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Manager Full Name</td>
+                                                        <td id="data-school-manager"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Registered Phone number</td>
+                                                        <td id="data-school-phone-number"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Email Address</td>
+                                                        <td id="data-school-email"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Address</td>
+                                                        <td id="data-school-address"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>City</td>
+                                                        <td id="data-school-city"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>State</td>
+                                                        <td id="data-school-state"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Country</td>
+                                                        <td id="data-school-country"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Zip Code</td>
+                                                        <td id="data-school-pin-code"></td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="tab-pane fade" id="school-codes">
+                                                <table id="table-school-session"
+                                                       class="table table-bordered table-striped">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td>School Registration Code</td>
+                                                        <td id="school-registration-code" class="center"></td>
+                                                        <td class="center"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Admin Registration Code</td>
+                                                        <td id="code-for-admin" class="center"></td>
+                                                        <td class="center">
+                                                            <a href="#" class="btn btn-success">Invite</a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Student Registration Code</td>
+                                                        <td id="code-for-students" class="center"></td>
+                                                        <td class="center">
+                                                            <a href="#" class="btn btn-success">Invite</a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Teacher Registration Code</td>
+                                                        <td id="code-for-teachers" class="center"></td>
+                                                        <td class="center">
+                                                            <a href="#" class="btn btn-success">Invite</a>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="tab-pane fade" id="school-schedule">
+                                                <table id="table-school-schedule"
+                                                       class="table table-bordered table-striped">
+                                                    <tbody></tbody>
+                                                </table>
+                                                <div class="row">
+                                                    <div class="col-md-offset-10 col-md-2 text-right">
+                                                        <a class="btn btn-blue show-sv" href="#subview-add-new-schedule"
+                                                           data-startFrom="right">
+                                                            Add New Schedule <i class="fa fa-chevron-right"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
