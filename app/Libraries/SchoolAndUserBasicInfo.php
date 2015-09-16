@@ -7,6 +7,7 @@
  */
 
 namespace app\Libraries;
+use App\Models\SchoolSession;
 use App\Models\User;
 use App\Models\UsersRegisteredToSchool;
 use Auth;
@@ -19,6 +20,8 @@ class SchoolAndUserBasicInfo
     protected $userId;
 
     protected $schoolId;
+
+    protected $currentSchoolSessionId;
 
     /**
      * SchoolAndUserBasicInfo constructor.
@@ -35,6 +38,8 @@ class SchoolAndUserBasicInfo
         $this->user = User::find($userId);
 
         $this->schoolId = UsersRegisteredToSchool::where('user_id', $userId)->get()->first()->school_id;
+
+        $this->currentSchoolSessionId = SchoolSession::where('school_id', $this->schoolId)->where('current_session', 1)->get()->first()->id;
     }
 
     /**
@@ -59,5 +64,13 @@ class SchoolAndUserBasicInfo
     public function getSchoolId()
     {
         return $this->schoolId;
+    }
+
+    /**
+     * @return CurrentSchoolSession Id
+     */
+    public function getCurrentSchoolSessionId()
+    {
+        return $this->currentSchoolSessionId;
     }
 }

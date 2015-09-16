@@ -176,6 +176,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
         'uses' => 'Admin\AdminSchoolSettingsController@postSetSchoolSchedule'
     ));
     /*
+     * Get School Schedules By Profile (post)
+     */
+    Route::Post('/school/get/schedule/by/profile/post', array(
+        'as' => 'admin-school-get-schedule-by-profile-post',
+        'uses' => 'Admin\AdminSchoolSettingsController@postGetAllSchedulesFromProfile'
+    ));
+    /*
      * School Information
      */
     Route::Post('/school/information/post', array(

@@ -2,50 +2,6 @@ var TableDataSchoolSchedule = function () {
     "use strict";
     var schoolScheduleProfileTable = function () {
 
-        // fetch all the Profiles
-        $.ajax({
-            url: serverUrl + '/admin/school/get/all/schedule/profile/post',
-            dataType: 'json',
-            method: 'POST',
-            success: function (data, response) {
-                if (data.status == "success") {
-                    for (var i = 0; i < data.result.length; i++) {
-                        attachAllProfiles(data.result[i]);
-                    }
-                } else if (data.status == "failed") {
-                    toastr.warning(data.error.error_description);
-                }
-            }
-        });
-
-        function attachAllProfiles(result) {
-
-            var aiNew = oTable.fnAddData(['', '', '', '']);
-            var nRow = oTable.fnGetNodes(aiNew[0]);
-
-            var profile_name_column = '<a href="#subview-add-new-schedule" class="show-sv" data-startFrom="right">'+
-                result.profile_name +'</a>';
-
-            oTable.fnUpdate(profile_name_column, nRow, 0, false);
-
-            if(result.current_profile == 1){
-                var column = '<div class="checkbox-table"><label>' +
-                    '<input type="radio" checked name="schedule_profile_make_current" class="flat-grey foocheck" id="schedule_profile_make_current">' +
-                    '</label></div>';
-            }else if(result.current_profile == 0){
-                var column = '<div class="checkbox-table"><label>' +
-                    '<input type="radio" name="schedule_profile_make_current" class="flat-grey foocheck" id="schedule_profile_make_current">' +
-                    '</label></div>';
-            }
-
-            oTable.fnUpdate(column, nRow, 1, false);
-            oTable.fnUpdate('<a class="edit-row" href="">Edit</a>', nRow, 2, false);
-            oTable.fnUpdate('<a class="delete-row" href="">Delete</a>', nRow, 3, false);
-            nRow = nRow.setAttribute('data-profile-id', result.id);
-            oTable.fnDraw();
-        }
-
-
         var newRow = false;
         var actualEditingRow = null;
 
@@ -62,12 +18,11 @@ var TableDataSchoolSchedule = function () {
 
         function editRow(oTable, nRow) {
             var aData = oTable.fnGetData(nRow);
+            console.log(aData);
             var jqTds = $('>td', nRow);
             jqTds[0].innerHTML = '<input type="text" name="profile_name" class="form-control" value="' + aData[0] + '">';
 
-            var column = '<div class="checkbox-table"><label>' +
-                '<input type="radio" disabled name="schedule_profile_make_current" class="flat-grey foocheck" id="schedule_profile_make_current">' +
-                '</label></div>';
+            var column = '<input type="radio" disabled name="schedule_profile_make_current" class="flat-grey" id="schedule_profile_make_current">';
             jqTds[1].innerHTML = column;
 
             jqTds[2].innerHTML = '<a class="save-row" href="">Save</a>';
@@ -78,19 +33,8 @@ var TableDataSchoolSchedule = function () {
         function saveRow(oTable, nRow, result) {
             var jqInputs = $('input', nRow);
             oTable.fnUpdate(result.profile_name, nRow, 0, false);
-
-            if(result.current_profile == 1){
-                var column = '<div class="checkbox-table"><label>' +
-                    '<input type="radio" checked name="schedule_profile_make_current" class="flat-grey foocheck" id="schedule_profile_make_current">' +
-                    '</label></div>';
-            }else if(result.current_profile == 0){
-                var column = '<div class="checkbox-table"><label>' +
-                    '<input type="radio" name="schedule_profile_make_current" class="flat-grey foocheck" id="schedule_profile_make_current">' +
-                    '</label></div>';
-            }
-            oTable.fnUpdate(column, nRow, 1, false);
+            oTable.fnUpdate('<input type="radio" name="schedule_profile_make_current" class="flat-grey" id="schedule_profile_make_current">', nRow, 1, false);
             oTable.fnUpdate('<a class="edit-row" href="">Edit</a>', nRow, 2, false);
-            oTable.fnUpdate('<a class="delete-row" href="">Delete</a>', nRow, 3, false);
             nRow = nRow.setAttribute('data-profile-id', result.id);
             oTable.fnDraw();
             newRow = false;
@@ -212,7 +156,7 @@ var TableDataSchoolSchedule = function () {
             }],
             "oLanguage": {
                 "sLengthMenu": "Show _MENU_ Rows",
-                "sSearch": "",
+                "sSearch": '<i class="icon-search"></i>',
                 "oPaginate": {
                     "sPrevious": "",
                     "sNext": ""
@@ -236,9 +180,36 @@ var TableDataSchoolSchedule = function () {
             var bVis = oTable.fnSettings().aoColumns[iCol].bVisible;
             oTable.fnSetColumnVis(iCol, ( bVis ? false : true));
         });
+        $('#create-new-profile').on('click', function (e) {
+            e.preventDefault();
+
+            var nRow = $(this).parents('tr')[0];
+
+            var data = {
+                'profile_name': $(this).parents('.form-group').find('#profile-name').val()
+            };
+
+            $.ajax({
+                url: serverUrl + '/admin/school/set/schedule/profile/post',
+                dataType: 'json',
+                data: data,
+                method: 'POST',
+                success: function (data, response) {
+                    $.hideSubview();
+                    if (data.status == "success") {
+                        saveRow(oTable, nRow, data.result);
+                        toastr.info("You Have successfully created this Schedule");
+                    } else if (data.status == "failed") {
+                        toastr.warning(data.error.error_description);
+                    }
+                }
+            });
+
+        });
     };
 
-    var makeScheduleProfileCurrent = function(){
+    var makeScheduleProfileCurrent = function () {
+        $('#table-schedule-profiles-new').find('tbody').append("<tr><td></td><td></td><td>Edit</td><td>Delete</td><td>hello</td></tr>")
 
         $('#table-schedule-profiles').on('click', '#schedule_profile_make_current', function (e) {
             e.preventDefault();
@@ -249,7 +220,7 @@ var TableDataSchoolSchedule = function () {
 
             var input = $(this);
             bootbox.confirm("Are you sure , u want to make this Profile Current?", function (result) {
-                if(result){
+                if (result) {
 
                     $.blockUI({
                         message: '<i class="fa fa-spinner fa-spin"></i> Do some ajax to sync with backend...'
