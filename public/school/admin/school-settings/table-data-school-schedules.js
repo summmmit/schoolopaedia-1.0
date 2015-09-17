@@ -353,6 +353,8 @@ var TableDataSchoolScheduleNew = function () {
         $('#table-schedule-profiles').on('click', '#schedule_profile_make_current', function (e) {
             e.preventDefault();
 
+            alert("asgasg");
+
             var data = {
                 'profile_id': $(this).parents('tr').attr('data-profile-id')
             };

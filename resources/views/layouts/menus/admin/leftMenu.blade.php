@@ -13,9 +13,6 @@
         <a href=""><i class="fa fa-desktop"></i> <span class="title"> Create TimeTable </span></a>
     </li>
     <li>
-        <a href=""><i class="fa fa-caret-up"></i> <span class="title"> School Settings </span></a>
-    </li>
-    <li>
         <a href=""><i class="fa fa-caret-up"></i> <span class="title"> Students </span></a>
     </li>
     <li>
@@ -30,6 +27,11 @@
             <li>
                 <a href="{{ URL::route('admin-school-get-schedule') }}">
                     <span class="title">Schedule</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ URL::route('admin-school-sessions') }}">
+                    <span class="title">Sessions</span>
                 </a>
             </li>
             <li>

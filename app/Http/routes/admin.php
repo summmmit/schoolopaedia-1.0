@@ -189,4 +189,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
         'as' => 'admin-school-information-post',
         'uses' => 'Admin\AdminSchoolSettingsController@postGetSchoolInformation'
     ));
+    /*
+     * School Sessions
+     */
+    Route::get('/school/sessions', array(
+        'as' => 'admin-school-sessions',
+        'uses' => 'Admin\AdminSchoolSettingsController@getSchoolSessions'
+    ));
 });
