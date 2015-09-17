@@ -1,8 +1,117 @@
-var TableDataSections = function() {
+var TableDataSections = function () {
     "use strict";
-    var runDataTable_AddSections = function() {
+    var runDataTable_AddSections = function () {
         var newRow = false;
         var actualEditingRow = null;
+
+        $('#button-show-sections').on('click', function (e) {
+            e.preventDefault();
+            oTable.fnClearTable();
+
+            $('#subview-add-classes').find('#form-field-select-sections-streams');
+
+            $.ajax({
+                url: serverUrl + '/admin/get/all/streams',
+                dataType: 'json',
+                method: 'POST',
+                success: function (data, response) {
+                    for (var i = 0; i < data.result.length; i++) {
+                        attachAllStreamsToDropDown(data.result[i]);
+                    }
+                }
+            });
+        });
+
+        function attachAllStreamsToDropDown(result) {
+
+            $('#subview-add-sections').find('#form-field-select-sections-streams')
+                .append('<option value="' + result.id + '">' + result.stream_name + '</option>');
+        }
+
+        $('#form-field-select-sections-streams').on('change', function (e) {
+            e.preventDefault();
+            oTable.fnClearTable();
+
+            var stream_id = $(this).val();
+
+            if (stream_id) {
+                $('#select-sections-classes-dropdown').removeClass('no-display');
+
+                var data = {
+                    'stream_id': stream_id
+                }
+
+                $.ajax({
+                    url: serverUrl + '/admin/get/all/classes/by/stream/id',
+                    dataType: 'json',
+                    method: 'POST',
+                    data: data,
+                    success: function (data, response) {
+                        if (data.result.length > 0) {
+                            $('#form-field-select-sections-classes').empty();
+                            $('#form-field-select-sections-classes').append('<option value="">Select a Class....</option>');
+                            for (var i = 0; i < data.result.length; i++) {
+                                attachAllClassesToDropDown(data.result[i]);
+                            }
+                        } else {
+                            $('#form-field-select-sections-classes').empty();
+                            $('#form-field-select-sections-classes').append('<option value="">No Class in this Stream.</option>');
+                        }
+                    }
+                });
+            } else {
+                $('#select-sections-classes-dropdown').addClass('no-display');
+            }
+            $('#button-add-section').addClass('no-display');
+            $('#sections-table').addClass('no-display');
+        });
+
+        function attachAllClassesToDropDown(result) {
+
+            $('#subview-add-sections').find('#form-field-select-sections-classes')
+                .append('<option value="' + result.id + '">' + result.class_name + '</option>');
+        }
+
+        $('#form-field-select-sections-classes').on('change', function (e) {
+            e.preventDefault();
+            oTable.fnClearTable();
+
+            var class_id = $(this).val();
+
+            if (class_id) {
+                $('#button-add-section').removeClass('no-display');
+                $('#sections-table').removeClass('no-display');
+
+                var data = {
+                    'class_id': class_id
+                }
+
+                $.ajax({
+                    url: serverUrl + '/admin/get/all/sections/by/class/id',
+                    dataType: 'json',
+                    method: 'POST',
+                    data: data,
+                    success: function (data, response) {
+                        if (data.result.length > 0) {
+                            for (var i = 0; i < data.result.length; i++) {
+                                attachAllSections(oTable, data.result[i]);
+                            }
+                        }
+                    }
+                });
+            } else {
+                $('#button-add-section').addClass('no-display');
+                $('#sections-table').addClass('no-display');
+            }
+        });
+
+        function attachAllSections(oTable, result) {
+
+            var aiNew = oTable.fnAddData(['', '', '']);
+            var nRow = oTable.fnGetNodes(aiNew[0]);
+
+            saveRow(oTable, nRow, result);
+        }
 
         function restoreRow(oTable, nRow) {
             var aData = oTable.fnGetData(nRow);
@@ -24,22 +133,18 @@ var TableDataSections = function() {
 
         }
 
-        function saveRow(oTable, nRow, classId, sectionId) {
-            var jqInputs = $('input', nRow);
-            var isExistsId = nRow.setAttribute('id', classId);
-            var nTr = oTable.fnSettings().aoData;
-            nTr = nTr[nTr.length - 1];
-            nTr = nTr.nTr;
-            $('td', nTr)[0].setAttribute('id', sectionId);
-            oTable.fnUpdate(jqInputs[0].value, nRow, 0, false);
+        function saveRow(oTable, nRow, result) {
+
+            oTable.fnUpdate(result.section_name, nRow, 0, false);
             oTable.fnUpdate('<a class="edit-row-sections" href="">Edit</a>', nRow, 1, false);
             oTable.fnUpdate('<a class="delete-row-sections" href="">Delete</a>', nRow, 2, false);
             oTable.fnDraw();
+            nRow = nRow.setAttribute('data-section-id', result.id);
             newRow = false;
             actualEditingRow = null;
         }
 
-        $('body').on('click', '.add-row-sections', function(e) {
+        $('body').on('click', '.add-row-sections', function (e) {
             e.preventDefault();
             if (newRow == false) {
                 if (actualEditingRow) {
@@ -52,7 +157,7 @@ var TableDataSections = function() {
                 actualEditingRow = nRow;
             }
         });
-        $('#table-add-sections').on('click', '.cancel-row-sections', function(e) {
+        $('#table-add-sections').on('click', '.cancel-row-sections', function (e) {
             e.preventDefault();
             if (newRow) {
                 newRow = false;
@@ -66,39 +171,37 @@ var TableDataSections = function() {
             }
             oTable.parentsUntil(".panel").find(".errorHandler").addClass("no-display");
         });
-        $('#table-add-sections').on('click', '.delete-row-sections', function(e) {
+        $('#table-add-sections').on('click', '.delete-row-sections', function (e) {
             e.preventDefault();
             if (newRow && actualEditingRow) {
                 oTable.fnDeleteRow(actualEditingRow);
                 newRow = false;
-
             }
             var nRow = $(this).parents('tr')[0];
-            var id = $(this).parents('tr').attr('id');
-            var section_name = $(this).parent().prev().prev().text();
-            var section_id = $(this).parent().prev().prev().attr('id');
 
             var data = {
-                class_id: id,
-                section_id: section_id,
-                section_name: section_name
+                section_id: $(this).parents('tr').attr('data-section-id')
             };
 
-            bootbox.confirm("Are you sure to delete this row?", function(result) {
+            bootbox.confirm("Are you sure to delete this row?", function (result) {
                 if (result) {
                     $.blockUI({
                         message: '<i class="fa fa-spinner fa-spin"></i> Do some ajax to sync with backend...'
                     });
                     $.ajax({
-                        url: serverUrl + '/admin/time/table/delete/sections',
+                        url: serverUrl + '/admin/delete/section',
                         dataType: 'json',
                         method: 'POST',
                         cache: false,
                         data: data,
-                        success: function(data, response) {
+                        success: function (data, response) {
                             $.unblockUI();
-                            toastr.success('You have deleted Section : ' + section_name);
-                            oTable.fnDeleteRow(nRow);
+                            if (data.status == "success") {
+                                toastr.success('You have deleted Section : ' + data.result.section_name);
+                                oTable.fnDeleteRow(nRow);
+                            } else if (data.status == "failed") {
+                                toastr.info(data.error.error_description);
+                            }
                         }
                     });
 
@@ -106,41 +209,40 @@ var TableDataSections = function() {
             });
 
 
-
         });
-        $('#table-add-sections').on('click', '.save-row-sections', function(e) {
+        $('#table-add-sections').on('click', '.save-row-sections', function (e) {
             e.preventDefault();
 
             var nRow = $(this).parents('tr')[0];
-            var input = $(this).parents('tr').find('#new-input').val();
-            var class_id = $('#form-field-select-classes').val();
-            var section_id = $(this).parents('tr').find('#new-input').parent().attr('id');
+
             var data = {
-                section_id: section_id,
-                section_name: input,
-                class_id: class_id
+                section_id: $(this).parents('tr').find('#new-input').parent().attr('id'),
+                section_name: $(this).parents('tr').find('#new-input').val(),
+                class_id: $('#form-field-select-sections-classes').val()
             };
+
             $.blockUI({
                 message: '<i class="fa fa-spinner fa-spin"></i> Do some ajax to sync with backend...'
             });
             $.ajax({
-                url: serverUrl + '/admin/time/table/add/sections',
+                url: serverUrl + '/admin/add/or/edit/section',
                 dataType: 'json',
                 cache: false,
                 method: 'POST',
                 data: data,
-                success: function(data, response) {
+                success: function (data, response) {
                     $.unblockUI();
+                    console.log(data);
                     if (data.status == "success") {
-                        saveRow(oTable, nRow, class_id, data.data_send.id);
+                        saveRow(oTable, nRow, data.result);
                         toastr.info('You have successfully Created new Section');
                     } else if (data.status == "failed") {
-                        oTable.parentsUntil(".panel").find(".errorHandler").removeClass("no-display").html('<p class="help-block alert-danger">' + data.error_messages.section_name + '</p>');
+                        toastr.info(data.error.error_description);
                     }
                 }
             });
         });
-        $('#table-add-sections').on('click', '.edit-row-sections', function(e) {
+        $('#table-add-sections').on('click', '.edit-row-sections', function (e) {
             e.preventDefault();
             if (actualEditingRow) {
                 if (newRow) {
@@ -159,8 +261,8 @@ var TableDataSections = function() {
         });
         var oTable = $('#table-add-sections').dataTable({
             "aoColumnDefs": [{
-                    "aTargets": [0]
-                }],
+                "aTargets": [0]
+            }],
             "oLanguage": {
                 "sLengthMenu": "Show _MENU_ Rows",
                 "sSearch": "",
@@ -181,81 +283,17 @@ var TableDataSections = function() {
         // modify table per page dropdown
         $('#table-add-sections_wrapper .dataTables_length select').select2();
         // initialzie select2 dropdown
-        $('#table-add-sections_column_toggler input[type="checkbox"]').change(function() {
+        $('#table-add-sections_column_toggler input[type="checkbox"]').change(function () {
             /* Get the DataTables object again - this is not a recreation, just a get of the object */
             var iCol = parseInt($(this).attr("data-column"));
             var bVis = oTable.fnSettings().aoColumns[iCol].bVisible;
             oTable.fnSetColumnVis(iCol, (bVis ? false : true));
         });
-        $('#form-field-select-classes').on('change', function() {
-            var optionValue = $(this).val();
-
-            if (optionValue !== "" && optionValue !== "undefined" && optionValue !== null) {
-                $('#subview-add-sections').find('#add-section-button').removeClass("no-display");
-            } else {
-                $('#subview-add-sections').find('#add-section-button').addClass("no-display");
-            }
-            $.blockUI({
-                message: '<i class="fa fa-spinner fa-spin"></i> Do some ajax to sync with backend...'
-            });
-
-            var data = {
-                class_id: optionValue
-            };
-
-            $.ajax({
-                url: serverUrl + '/admin/time/table/get/sections',
-                dataType: 'json',
-                method: 'POST',
-                data: data,
-                success: function(data, response) {
-                    oTable.fnClearTable();
-                    $.unblockUI();
-                    var i;
-                    var sections = data.result.sections;
-                    for (i = 0; i < sections.length; i++) {
-                        deleteAndCreateTable(oTable, optionValue, sections[i].id, sections[i].section_name);
-                    }
-                }
-            });
-
-        });
-        function deleteAndCreateTable(oTable, trId, firstTdId, firstTdData) {
-
-            var aiNew = oTable.fnAddData(['', '', '']);
-            var nRow = oTable.fnGetNodes(aiNew[0]);
-            nRow = nRow.setAttribute('id', trId);
-            var nTr = oTable.fnSettings().aoData[aiNew[0]].nTr;
-            $('td', nTr)[0].setAttribute('id', firstTdId);
-            oTable.fnUpdate(firstTdData, nRow, 0, false);
-            oTable.fnUpdate('<a class="edit-row-sections" href="">Edit</a>', nRow, 1, false);
-            oTable.fnUpdate('<a class="delete-row-sections" href="">Delete</a>', nRow, 2, false);
-            oTable.fnDraw();
-
-            nRow = false;
-        }
-    };
-
-    var fetchClasses = function() {
-
-        $.ajax({
-            url: serverUrl + '/admin/time/table/get/class/streams/pair',
-            dataType: 'json',
-            method: 'POST',
-            success: function(data, response) {
-                var i;
-                var pairs = data.result.stream_class_pairs;
-                for (i = 0; i < data.result.stream_class_pairs.length; i++) {
-                    $('#form-field-select-classes').append('<option value=' + pairs[i].classes_id + '>' + pairs[i].stream_class_pair + '</option>');
-                }
-            }
-        });
     };
     return {
         //main function to initiate template pages
-        init: function() {
+        init: function () {
             runDataTable_AddSections();
-            fetchClasses();
         }
     };
 }();

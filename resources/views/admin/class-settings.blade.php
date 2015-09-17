@@ -1,8 +1,7 @@
 @extends('layouts.main-layout')
 
 @section('stylesheets')
-<link rel="stylesheet" type="text/css" href="{{ URL::asset('assets/plugins/select2/select2.css'); }}" />
-<link rel="stylesheet" type="text/css" href="{{ URL::asset('assets/plugins/ms-Dropdown/css/msdropdown/dd.css'); }}" />
+<link rel="stylesheet" type="text/css" href="{{ URL::asset('assets/plugins/select2/select2.css') }}" />
 @stop
 
 @section('page_header')
@@ -32,41 +31,28 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-3">
-                        <a class="btn btn-green show-sv" href="#subview-add-streams" data-startFrom="right">
-                            Add New Streams <i class="fa fa-plus"></i>
+                        <a class="btn btn-green show-sv" id="button-show-streams" href="#subview-add-streams" data-startFrom="right">
+                            Streams <i class="fa fa-plus"></i>
                         </a>
                     </div>
                     <div class="col-md-3">
-                        <a class="btn btn-green show-sv" href="#subview-add-classes" data-startFrom="right">
-                            Add New Classes <i class="fa fa-chevron-right"></i>
+                        <a class="btn btn-green show-sv" id="button-show-classes" href="#subview-add-classes" data-startFrom="right">
+                            Classes <i class="fa fa-chevron-right"></i>
                         </a>
                     </div>
                     <div class="col-md-3">
-                        <a class="btn btn-green show-sv" href="#subview-add-sections" data-startFrom="right">
-                            Add New Sections <i class="fa fa-chevron-right"></i>
+                        <a class="btn btn-green show-sv" id="button-show-sections" href="#subview-add-sections" data-startFrom="right">
+                            Sections <i class="fa fa-chevron-right"></i>
                         </a>
                     </div>
                     <div class="col-md-3">
-                        <a class="btn btn-green show-sv" href="#subview-add-subjects" data-startFrom="top">
-                            Add New Subjects <i class="fa fa-chevron-right"></i>
+                        <a class="btn btn-green show-sv" id="button-show-subjects" href="#subview-add-subjects" data-startFrom="top">
+                            Subjects <i class="fa fa-chevron-right"></i>
                         </a>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <!-- start: EXPORT DATA TABLE PANEL  -->
-        <div class="panel panel-white">
-            <div class="panel-heading">
-                <h4 class="panel-title">Export <span class="text-bold">Data</span> Table</h4>
-            </div>
-            <div class="panel-body">
-            </div>
-        </div>
-        <!-- end: EXPORT DATA TABLE PANEL -->
     </div>
 </div>
 <!-- end: PAGE CONTENT-->
@@ -85,45 +71,39 @@
                     </div>
                     <div class="panel-body">
                         <div class="row">
-                            <div class="col-md-12 space20">
-                                <button class="btn btn-green add-row-classes">
-                                    Add New <i class="fa fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="row">
                             <div class="col-md-12">
                                 <div class="errorHandler alert alert-danger no-display">
                                 </div>
                             </div>
                         </div>
-                        <div class="table-responsive">
+                        <div class="row">
+                            <div class="col-md-offset-3 col-md-6">
+                                <div class="form-group has-info">
+                                    <label>
+                                    </label>
+                                    <select id="form-field-select-classes-streams" class="form-control">
+                                        <option value="">Select a Stream...</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 space20 no-display" id="button-add-row-classes">
+                                <button class="btn btn-green add-row-classes">
+                                    Add New <i class="fa fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="table-responsive no-display" id="classes-table">
                             <table class="table table-striped table-hover" id="table-add-classes">
                                 <thead>
                                     <tr>
                                         <th>Class Name</th>
-                                        <th>Stream</th>
                                         <th>Edit</th>
                                         <th>Delete</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($classes as $class)
-                                    <tr id="{{ $class->id }}">
-                                        <td>{{ $class->class }}</td>
-                                        <td id="{{ $class->streams_id }}">{{ Streams::find($class->streams_id)->stream_name }}</td>
-                                        <td>
-                                            <a href="#" class="edit-row-classes">
-                                                Edit
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <a href="#" class="delete-row-classes">
-                                                Delete
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -166,21 +146,6 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($streams as $stream)
-                                    <tr id="{{ $stream->id }}">
-                                        <td>{{ $stream->stream_name }}</td>
-                                        <td>
-                                            <a href="#" class="edit-row-streams">
-                                                Edit
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <a href="#" class="delete-row-streams">
-                                                Delete
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -198,24 +163,33 @@
                 <div class="panel panel-white panel-add-classes">
                     <div class="panel-heading">
                         <div class="row">
-                            <div class="col-md-8">
-                                <h3>Select a Class ...</h3>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>
-                                    </label>
-                                    <select id="form-field-select-classes" class="form-control">
-                                        <option value="">Select a Class...</option>
-                                    </select>
-                                </div>
+                            <div class="col-md-12">
+                                <h3>Sections Present</h3>
                             </div>
                         </div>
                     </div>
                     <div class="panel-body">
                         <div class="row">
-                            <div class="col-md-12 space20">
-                                <button class="btn btn-green add-row-sections no-display" id="add-section-button">
+                            <div class="col-md-offset-3 col-md-6">
+                                <div class="form-group">
+                                    <select id="form-field-select-sections-streams" class="form-control">
+                                        <option value="">Select a stream...</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-offset-3 col-md-6 no-display" id="select-sections-classes-dropdown">
+                                <div class="form-group">
+                                    <select id="form-field-select-sections-classes" class="form-control">
+                                        <option value="">Select a Class...</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 space20 no-display" id="button-add-section">
+                                <button class="btn btn-green add-row-sections" id="add-section-button">
                                     Add New <i class="fa fa-plus"></i>
                                 </button>
                             </div>
@@ -226,7 +200,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="table-responsive">
+                        <div class="table-responsive no-display" id="sections-table">
                             <table class="table table-striped table-hover" id="table-add-sections">
                                 <thead>
                                     <tr>
@@ -256,41 +230,50 @@
                             <div class="col-md-6">
                                 <h3>Select a Class ...</h3>
                             </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>
-                                    </label>
-                                    <select id="form-field-select-subjects-classes" class="form-control">
-                                        <option value="">Select a Class...</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>
-                                    </label>
-                                    <select id="form-field-select-subjects-sections" class="form-control">
-                                        <option value="">Select a section...</option>
-                                    </select>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     <div class="panel-body">
-                        <div class="row">
-                            <div class="col-md-12 space20">
-                                <button class="btn btn-green add-row-subjects no-display" id="add-subjects-button">
-                                    Add New <i class="fa fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="errorHandler alert alert-danger no-display">
                                 </div>
                             </div>
                         </div>
-                        <div class="table-responsive">
+                        <div class="row">
+                            <div class="col-md-offset-3 col-md-6">
+                                <div class="form-group">
+                                    <select id="form-field-select-subjects-streams" class="form-control">
+                                        <option value="">Select a stream...</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-offset-3 col-md-6 no-display" id="select-subjects-classes-dropdown">
+                                <div class="form-group">
+                                    <select id="form-field-select-subjects-classes" class="form-control">
+                                        <option value="">Select a Class...</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-offset-3 col-md-6 no-display" id="select-subjects-sections-dropdown">
+                                <div class="form-group">
+                                    <select id="form-field-select-subjects-sections" class="form-control">
+                                        <option value="">Select a Section...</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 space20 no-display" id="button-add-subjects">
+                                <button class="btn btn-green add-row-subjects no-display" id="add-subjects-button">
+                                    Add New <i class="fa fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="table-responsive no-display" id="subjects-table">
                             <table class="table table-striped table-hover" id="table-add-subjects">
                                 <thead>
                                     <tr>
@@ -315,22 +298,21 @@
 
 @section('scripts')
 <!-- Scripts for This page only -->
-<script src="{{ URL::asset('assets/plugins/ms-Dropdown/js/msdropdown/jquery.dd.min.js'); }}"></script>
-<script src="{{ URL::asset('assets/plugins/select2/select2.min.js'); }}"></script>  
-<script src="{{ URL::asset('assets/js/ui-subview.js'); }}"></script>                                                                  <!-- For Subview -->
-<script src="{{ URL::asset('assets/js/modifiedJs/admin/timetable/table-data-streams.js'); }}"></script>                               <!-- For streams Table -->
-<script src="{{ URL::asset('assets/js/modifiedJs/admin/timetable/table-data-classes.js'); }}"></script>                               <!-- For classes Table -->
-<script src="{{ URL::asset('assets/js/modifiedJs/admin/timetable/table-data-sections.js'); }}"></script>                              <!-- For sections Table -->
-<script src="{{ URL::asset('assets/js/modifiedJs/admin/timetable/table-data-subjects.js'); }}"></script>                              <!-- For subjects Table -->
+<script src="{{ URL::asset('assets/plugins/select2/select2.min.js') }}"></script>
+<script src="{{ URL::asset('assets/js/ui-subview.js') }}"></script>                                                                  <!-- For Subview -->
+<script src="{{ URL::asset('school/admin/timetable/table-data-streams.js') }}"></script>                               <!-- For streams Table -->
+<script src="{{ URL::asset('school/admin/timetable/table-data-classes.js') }}"></script>                               <!-- For classes Table -->
+<script src="{{ URL::asset('school/admin/timetable/table-data-sections.js') }}"></script>                              <!-- For sections Table -->
+<script src="{{ URL::asset('school/admin/timetable/table-data-subjects.js') }}"></script>                              <!-- For subjects Table -->
 <script>
 jQuery(document).ready(function() {
     Main.init();
     SVExamples.init();
     UISubview.init();
-    TableDataStreams.init();
+    TableDataSchoolStreams.init();
     TableDataClasses.init();
     TableDataSections.init();
-    TableDataSubjects.init();
+    TableDataSchoolSubjects.init();
 });
 </script>
 @stop

@@ -10,7 +10,7 @@
         <a href=""><i class="fa fa-desktop"></i> <span class="title"> Add or Edit TimeTable </span></a>
     </li>
     <li>
-        <a href=""><i class="fa fa-desktop"></i> <span class="title"> Create TimeTable </span></a>
+        <a href="{{ URL::route('admin-class-settings') }}"><i class="fa fa-desktop"></i> <span class="title"> Classes</span></a>
     </li>
     <li>
         <a href=""><i class="fa fa-caret-up"></i> <span class="title"> Students </span></a>

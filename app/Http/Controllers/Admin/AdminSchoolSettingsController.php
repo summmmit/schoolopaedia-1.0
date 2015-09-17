@@ -395,9 +395,4 @@ class AdminSchoolSettingsController extends Controller
         return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $input);
     }
 
-    public function getSchoolSessions()
-    {
-        return view('admin.school-sessions');
-    }
-
 }

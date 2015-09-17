@@ -196,4 +196,102 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
         'as' => 'admin-school-sessions',
         'uses' => 'Admin\AdminSchoolSettingsController@getSchoolSessions'
     ));
+    /**
+     * Get All School Students
+     */
+    Route::get('/school/students', array(
+        'as' => 'admin-school-students',
+        'uses' => 'Admin\AdminSchoolSettingsController@getSchoolStudents'
+    ));
+    /**
+     * Get School Streams And Classes settings
+     */
+    Route::get('/school/class/settings', array(
+        'as' => 'admin-class-settings',
+        'uses' => 'Admin\AdminClassSettingsController@getClassesSettings'
+    ));
+    /**
+     * Get All School Streams
+     */
+    Route::Post('/get/all/streams', array(
+        'as' => 'admin-get-all-streams',
+        'uses' => 'Admin\AdminClassSettingsController@postAllStreams'
+    ));
+    /**
+     * Add or Edit a Stream
+     */
+    Route::Post('/add/or/edit/stream', array(
+        'as' => 'admin-add-edit-stream',
+        'uses' => 'Admin\AdminClassSettingsController@postAddOrEditStream'
+    ));
+    /**
+     * Delete a Stream
+     */
+    Route::Post('/delete/stream', array(
+        'as' => 'admin-delete-stream',
+        'uses' => 'Admin\AdminClassSettingsController@postDeleteStream'
+    ));
+    /**
+     * Get All Class By Stream Id
+     */
+    Route::Post('/get/all/classes/by/stream/id', array(
+        'as' => 'admin-get-all-classes-by-stream-id',
+        'uses' => 'Admin\AdminClassSettingsController@postGetAllClassesByStreamId'
+    ));
+    /**
+     * Add or Edit a Class
+     */
+    Route::Post('/add/or/edit/class', array(
+        'as' => 'admin-add-edit-class',
+        'uses' => 'Admin\AdminClassSettingsController@postAddOrEditClass'
+    ));
+    /**
+     * Delete a Stream
+     */
+    Route::Post('/delete/class', array(
+        'as' => 'admin-delete-class',
+        'uses' => 'Admin\AdminClassSettingsController@postDeleteClass'
+    ));
+    /**
+     * Get All Sections By Class Id
+     */
+    Route::Post('/get/all/sections/by/class/id', array(
+        'as' => 'admin-get-all-sections-by-class-id',
+        'uses' => 'Admin\AdminClassSettingsController@postGetAllSectionsByClassId'
+    ));
+    /**
+     * Add or Edit a Section
+     */
+    Route::Post('/add/or/edit/section', array(
+        'as' => 'admin-add-edit-section',
+        'uses' => 'Admin\AdminClassSettingsController@postAddOrEditSection'
+    ));
+    /**
+     * Delete a Section
+     */
+    Route::Post('/delete/section', array(
+        'as' => 'admin-delete-section',
+        'uses' => 'Admin\AdminClassSettingsController@postDeleteSection'
+    ));
+    /**
+     * Get All Subjects By Section Id
+     */
+    Route::Post('/get/all/subjects/by/section/id', array(
+        'as' => 'admin-get-all-subjects-by-section-id',
+        'uses' => 'Admin\AdminClassSettingsController@postGetAllSubjectsBySectionId'
+    ));
+    /**
+     * Add or Edit a Subject
+     */
+    Route::Post('/add/or/edit/subject', array(
+        'as' => 'admin-add-edit-subject',
+        'uses' => 'Admin\AdminClassSettingsController@postAddOrEditSubject'
+    ));
+    /**
+     * Delete a Subject
+     */
+    Route::Post('/delete/subject', array(
+        'as' => 'admin-delete-subject',
+        'uses' => 'Admin\AdminClassSettingsController@postDeleteSubject'
+    ));
 });
