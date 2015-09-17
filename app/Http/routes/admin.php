@@ -294,4 +294,18 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
         'as' => 'admin-delete-subject',
         'uses' => 'Admin\AdminClassSettingsController@postDeleteSubject'
     ));
+    /**
+     * Get All School Sessions
+     */
+    Route::Post('/get/all/sessions/post', array(
+        'as' => 'admin-get-all-sessions',
+        'uses' => 'Admin\AdminSchoolSettingsController@postGetAllSessions'
+    ));
+    /**
+     * Create Or Edit School Session
+     */
+    Route::Post('/create/or/edit/session/post', array(
+        'as' => 'admin-create-or-edit-session',
+        'uses' => 'Admin\AdminSchoolSettingsController@postAddOrEditSession'
+    ));
 });

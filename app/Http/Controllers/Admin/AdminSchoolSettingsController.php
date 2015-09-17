@@ -395,4 +395,53 @@ class AdminSchoolSettingsController extends Controller
         return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $input);
     }
 
+    public function getSchoolSessions()
+    {
+        return view('admin.school-sessions');
+    }
+
+    public function getSchoolStudents()
+    {
+        return view('admin.school-students');
+    }
+
+    public function postGetAllSessions()
+    {
+        $school_sessions = SchoolSession::where('school_id', $this->getSchoolAndUserBasicInfo()->getSchoolId())->get();
+        return ApiResponseClass::successResponse($school_sessions);
+    }
+
+    public function postAddOrEditSession(Request $request){
+
+        $school_session_id = $request->input('school_session_id');
+        $session_start = $request->input('start_session_from');
+        $session_end   = $request->input('end_session_untill');
+
+        $input = [
+            'start_session_from' => $session_start,
+            'end_session_untill' => $session_end,
+        ];
+
+        $validator = validator::make($request->all(), [
+            'start_session_from' => 'required|date',
+            'end_session_untill' => 'required|date',
+        ]);
+
+        if ($validator->fails()) {
+            return ApiResponseClass::errorResponse('You Have Some Input Errors. Please Try Again!!', $input, $validator->errors());
+        } else {
+
+            $school_session = SchoolSession::findOrNew($school_session_id);
+            $school_session->session_start = $session_start;
+            $school_session->session_end   = $session_end;
+            $school_session->school_id = $this->getSchoolAndUserBasicInfo()->getSchoolId();
+
+            if($school_session->save()){
+
+                return ApiResponseClass::successResponse($school_session, $input);
+            }
+        }
+        return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $input);
+    }
+
 }
