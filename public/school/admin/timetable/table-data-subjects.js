@@ -1,8 +1,159 @@
-var TableDataSubjects = function() {
+var TableDataSchoolSubjects = function() {
     "use strict";
     var runDataTable_AddSubjects = function() {
         var newRow = false;
         var actualEditingRow = null;
+
+        $('#button-show-subjects').on('click', function (e) {
+            e.preventDefault();
+            oTable.fnClearTable();
+
+            $.ajax({
+                url: serverUrl + '/admin/get/all/streams',
+                dataType: 'json',
+                method: 'POST',
+                success: function (data, response) {
+                    for (var i = 0; i < data.result.length; i++) {
+                        attachAllStreamsToDropDown(data.result[i]);
+                    }
+                }
+            });
+        });
+
+        function attachAllStreamsToDropDown(result) {
+
+            $('#subview-add-subjects').find('#form-field-select-subjects-streams')
+                .append('<option value="' + result.id + '">' + result.stream_name + '</option>');
+        }
+
+        $('#form-field-select-subjects-streams').on('change', function (e) {
+            e.preventDefault();
+            oTable.fnClearTable();
+
+            var stream_id = $(this).val();
+
+            if (stream_id) {
+                $('#select-subjects-classes-dropdown').removeClass('no-display');
+
+                var data = {
+                    'stream_id': stream_id
+                }
+
+                $.ajax({
+                    url: serverUrl + '/admin/get/all/classes/by/stream/id',
+                    dataType: 'json',
+                    method: 'POST',
+                    data: data,
+                    success: function (data, response) {
+                        if (data.result.length > 0) {
+                            $('#form-field-select-subjects-classes').empty();
+                            $('#form-field-select-subjects-classes').append('<option value="">Select a Class....</option>');
+                            for (var i = 0; i < data.result.length; i++) {
+                                attachAllClassesToDropDown(data.result[i]);
+                            }
+                        } else {
+                            $('#form-field-select-subjects-classes').empty();
+                            $('#form-field-select-subjects-classes').append('<option value="">No Class in this Stream.</option>');
+                        }
+                    }
+                });
+            } else {
+                $('#select-subjects-classes-dropdown').addClass('no-display');
+                $('#select-subjects-sections-dropdown').addClass('no-display');
+            }
+            $('#button-add-subjects').addClass('no-display');
+            $('#subjects-table').addClass('no-display');
+        });
+
+        function attachAllClassesToDropDown(result) {
+
+            $('#subview-add-subjects').find('#form-field-select-subjects-classes')
+                .append('<option value="' + result.id + '">' + result.class_name + '</option>');
+        }
+
+        $('#form-field-select-subjects-classes').on('change', function (e) {
+            e.preventDefault();
+            oTable.fnClearTable();
+
+            var class_id = $(this).val();
+
+            if (class_id) {
+                $('#select-subjects-sections-dropdown').removeClass('no-display');
+                var data = {
+                    'class_id': class_id
+                }
+
+                $.ajax({
+                    url: serverUrl + '/admin/get/all/sections/by/class/id',
+                    dataType: 'json',
+                    method: 'POST',
+                    data: data,
+                    success: function (data, response) {
+                        if (data.result.length > 0) {
+                            $('#form-field-select-subjects-sections').empty();
+                            $('#form-field-select-subjects-sections').append('<option value="">Select a Sections....</option>');
+                            for (var i = 0; i < data.result.length; i++) {
+                                attachAllSections(oTable, data.result[i]);
+                            }
+                        } else {
+                            $('#form-field-select-subjects-sections').empty();
+                            $('#form-field-select-subjects-sections').append('<option value="">No Sections in this Class.</option>');
+                        }
+                    }
+                });
+            } else {
+                $('#select-subjects-sections-dropdown').addClass('no-display');
+                $('#button-add-subjects').addClass('no-display');
+                $('#subjects-table').addClass('no-display');
+            }
+        });
+
+        function attachAllSections(oTable, result){
+
+            $('#subview-add-subjects').find('#form-field-select-subjects-sections')
+                .append('<option value="' + result.id + '">' + result.section_name + '</option>');
+        }
+
+        $('#form-field-select-subjects-sections').on('change', function (e) {
+            e.preventDefault();
+            oTable.fnClearTable();
+
+            var section_id = $(this).val();
+
+            if (section_id) {
+                $('#button-add-subjects').removeClass('no-display');
+                $('#subjects-table').removeClass('no-display');
+
+                var data = {
+                    'section_id': section_id
+                }
+
+                $.ajax({
+                    url: serverUrl + '/admin/get/all/subjects/by/section/id',
+                    dataType: 'json',
+                    method: 'POST',
+                    data: data,
+                    success: function (data, response) {
+                        if (data.result.length > 0) {
+                            for (var i = 0; i < data.result.length; i++) {
+                                attachAllSubjects(oTable, data.result[i]);
+                            }
+                        }
+                    }
+                });
+            } else {
+                $('#button-add-subjects').addClass('no-display');
+                $('#subjects-table').addClass('no-display');
+            }
+        });
+
+        function attachAllSubjects(oTable, result) {
+
+            var aiNew = oTable.fnAddData(['', '', '', '']);
+            var nRow = oTable.fnGetNodes(aiNew[0]);
+
+            saveRow(oTable, nRow, result);
+        }
 
         function restoreRow(oTable, nRow) {
             var aData = oTable.fnGetData(nRow);
@@ -25,16 +176,14 @@ var TableDataSubjects = function() {
 
         }
 
-        function saveRow(oTable, nRow, subjects) {
-            var jqInputs = $('input', nRow);
-            nRow.setAttribute('id', subjects.class_id);                // class id added to the attribute of the row
-            nRow.setAttribute('data-section-id', subjects.section_id); //section id added to the attribute of the row
-            nRow.setAttribute('data-subject-id', subjects.id);         //subject id added to the attribute of the row
-            oTable.fnUpdate(jqInputs[0].value, nRow, 0, false);
-            oTable.fnUpdate(jqInputs[1].value, nRow, 1, false);
+        function saveRow(oTable, nRow, result) {
+
+            oTable.fnUpdate(result.subject_name, nRow, 0, false);
+            oTable.fnUpdate(result.subject_code, nRow, 1, false);
             oTable.fnUpdate('<a class="edit-row-subjects" href="">Edit</a>', nRow, 2, false);
             oTable.fnUpdate('<a class="delete-row-subjects" href="">Delete</a>', nRow, 3, false);
             oTable.fnDraw();
+            nRow.setAttribute('data-subject-id', subjects.id);         //subject id added to the attribute of the row
             newRow = false;
             actualEditingRow = null;
         }
@@ -195,107 +344,11 @@ var TableDataSubjects = function() {
             var bVis = oTable.fnSettings().aoColumns[iCol].bVisible;
             oTable.fnSetColumnVis(iCol, (bVis ? false : true));
         });
-
-        $('#form-field-select-subjects-classes').on('change', function() {
-            var class_id = $(this).val();
-
-            oTable.fnClearTable();
-            $('#form-field-select-subjects-sections').empty().append('<option value="">Select a Section...</option>');
-
-            $.blockUI({
-                message: '<i class="fa fa-spinner fa-spin"></i> Do some ajax to sync with backend...'
-            });
-
-            var data = {
-                class_id: class_id
-            };
-
-            $.ajax({
-                url: serverUrl + '/admin/time/table/get/sections',
-                dataType: 'json',
-                method: 'POST',
-                data: data,
-                success: function(data, response) {
-                    $.unblockUI();
-                    var i;
-                    var section = data.result.sections;
-                    for (i = 0; i < section.length; i++) {
-                        $('#form-field-select-subjects-sections').append('<option value=' + section[i].id + '>' + section[i].section_name + '</option>');
-                    }
-                }
-            });
-
-        });
-        $('#form-field-select-subjects-sections').on('change', function() {
-            var section_id = $(this).val();
-            oTable.fnClearTable();
-            if (section_id) {
-                $('#subview-add-subjects').find('#add-subjects-button').removeClass("no-display");
-            } else {
-                $('#subview-add-subjects').find('#add-subjects-button').addClass("no-display");
-            }
-            $.blockUI({
-                message: '<i class="fa fa-spinner fa-spin"></i> Do some ajax to sync with backend...'
-            });
-
-            var data = {
-                section_id: section_id,
-                class_id: $('#form-field-select-subjects-classes').val()
-            };
-
-            $.ajax({
-                url: serverUrl + '/admin/time/table/get/subjects',
-                dataType: 'json',
-                method: 'POST',
-                data: data,
-                success: function(data, response) {
-                    $.unblockUI();
-                    var i;
-                    var subjects = data.result.subjects;
-                    for (i = 0; i < subjects.length; i++) {
-                        deleteAndCreateTable(oTable, subjects[i]);
-                    }
-                }
-            });
-
-        });
-        function deleteAndCreateTable(oTable, subjects) {
-
-            var aiNew = oTable.fnAddData(['', '', '', '']);
-            var nRow = oTable.fnGetNodes(aiNew[0]);
-            nRow.setAttribute('id', subjects.class_id);                // class id added to the attribute of the row
-            nRow.setAttribute('data-section-id', subjects.section_id); //section id added to the attribute of the row
-            nRow.setAttribute('data-subject-id', subjects.id);         //subject id added to the attribute of the row
-            oTable.fnUpdate(subjects.subject_name, nRow, 0, false);
-            oTable.fnUpdate(subjects.subject_code, nRow, 1, false);
-            oTable.fnUpdate('<a class="edit-row-subjects" href="">Edit</a>', nRow, 2, false);
-            oTable.fnUpdate('<a class="delete-row-subjects" href="">Delete</a>', nRow, 3, false);
-            oTable.fnDraw();
-
-            nRow = false;
-        }
-    };
-
-    var fetchClasses = function() {
-
-        $.ajax({
-            url: serverUrl + '/admin/time/table/get/class/streams/pair',
-            dataType: 'json',
-            method: 'POST',
-            success: function(data, response) {
-                var i;
-                var pairs = data.result.stream_class_pairs;
-                for (i = 0; i < data.result.stream_class_pairs.length; i++) {
-                    $('#form-field-select-subjects-classes').append('<option value=' + pairs[i].classes_id + '>' + pairs[i].stream_class_pair + '</option>');
-                }
-            }
-        });
     };
     return {
         //main function to initiate template pages
         init: function() {
             runDataTable_AddSubjects();
-            fetchClasses();
         }
     };
 }();

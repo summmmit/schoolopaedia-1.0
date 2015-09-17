@@ -1,9 +1,46 @@
-var TableDataStreams = function() {
+var TableDataSchoolStreams = function () {
     "use strict";
-    
-    var runDataTable_AddStreams = function() {
+
+    var runDataTable_AddStreams = function () {
+
         var newRow = false;
         var actualEditingRow = null;
+
+        $('#button-show-streams').on('click', function(e){
+            e.preventDefault();
+            oTable.fnClearTable();
+
+            $('#table-add-streams').find('tbody').empty();
+            $('#table-add-classes').find('tbody').empty();
+            $('#table-add-sections').find('tbody').empty();
+            $('#table-add-subjects').find('tbody').empty();
+
+            $.ajax({
+                url: serverUrl + '/admin/get/all/streams',
+                dataType: 'json',
+                method: 'POST',
+                cache: false,
+                success: function (data, response) {
+                    for (var i = 0; i < data.result.length; i++) {
+                        attachAllStreams(oTable, data.result[i]);
+                    }
+                }
+            });
+        });
+
+        function attachAllStreams(oTable, result) {
+
+            var aiNew = oTable.fnAddData(['', '', '']);
+            var nRow = oTable.fnGetNodes(aiNew[0])
+
+            nRow = nRow.setAttribute('data-stream-id', result.id);
+            oTable.fnUpdate(result.stream_name, nRow, 0, false);
+            oTable.fnUpdate('<a class="edit-row-streams" href="">Edit</a>', nRow, 1, false);
+            oTable.fnUpdate('<a class="delete-row-streams" href="">Delete</a>', nRow, 2, false);
+            oTable.fnDraw();
+            newRow = false;
+            actualEditingRow = null;
+        }
 
         function restoreRow(oTable, nRow) {
             var aData = oTable.fnGetData(nRow);
@@ -25,21 +62,18 @@ var TableDataStreams = function() {
 
         }
 
-        function saveRow(oTable, nRow, dataId) {
-            var jqInputs = $('input', nRow);
-            var isExistsId = nRow.getAttribute('id');
-            if (isExistsId === null) {
-                nRow = nRow.setAttribute('id', dataId);
-            }
-            oTable.fnUpdate(jqInputs[0].value, nRow, 0, false);
+        function saveRow(oTable, nRow, result) {
+
+            oTable.fnUpdate(result.stream_name, nRow, 0, false);
             oTable.fnUpdate('<a class="edit-row-streams" href="">Edit</a>', nRow, 1, false);
             oTable.fnUpdate('<a class="delete-row-streams" href="">Delete</a>', nRow, 2, false);
             oTable.fnDraw();
+            nRow = nRow.setAttribute('data-stream-id', result.id);
             newRow = false;
             actualEditingRow = null;
         }
 
-        $('body').on('click', '.add-row-streams', function(e) {
+        $('body').on('click', '.add-row-streams', function (e) {
             e.preventDefault();
             if (newRow == false) {
                 if (actualEditingRow) {
@@ -52,7 +86,7 @@ var TableDataStreams = function() {
                 actualEditingRow = nRow;
             }
         });
-        $('#table-add-streams').on('click', '.cancel-row-streams', function(e) {
+        $('#table-add-streams').on('click', '.cancel-row-streams', function (e) {
             e.preventDefault();
             if (newRow) {
                 newRow = false;
@@ -66,7 +100,7 @@ var TableDataStreams = function() {
             }
             oTable.parentsUntil(".panel").find(".errorHandler").addClass("no-display");
         });
-        $('#table-add-streams').on('click', '.delete-row-streams', function(e) {
+        $('#table-add-streams').on('click', '.delete-row-streams', function (e) {
             e.preventDefault();
             if (newRow && actualEditingRow) {
                 oTable.fnDeleteRow(actualEditingRow);
@@ -74,37 +108,31 @@ var TableDataStreams = function() {
 
             }
             var nRow = $(this).parents('tr')[0];
-            var id = $(this).parents('tr').attr('id');
-            var stream_name = $(this).parent().prev().prev().text();
+            var id = $(this).parents('tr').attr('data-stream-id');
 
             var data = {
-                stream_id: id,
-                stream_name: stream_name
+                stream_id: id
             };
 
-            bootbox.confirm("Are you sure to delete this row? If you Delete it, Classes , Subjects and Sections associated with it will also get delete.", function(result) {
+            bootbox.confirm("Are you sure to delete this row? If you Delete it, Classes , Subjects and Sections associated with it will also get delete.", function (result) {
                 if (result) {
                     $.blockUI({
                         message: '<i class="fa fa-spinner fa-spin"></i> Do some ajax to sync with backend...'
                     });
                     $.ajax({
-                        url: serverUrl+'/admin/time/table/delete/stream',
+                        url: serverUrl + '/admin/delete/stream',
                         dataType: 'json',
                         method: 'POST',
                         cache: false,
                         data: data,
-                        success: function(data, response) {
+                        success: function (data, response) {
                             $.unblockUI();
-                            oTable.fnDeleteRow(nRow);
-                            var cTableRows = $('#table-add-classes').find(".sorting_1").parent().parent().find('td[id="' + data.deleted_item_id + '"]').parent();
-                            var i;
-                            for (i = 0; i < cTableRows.length; i++) {
-                                cTableRows[i].remove();
+                            if(data.status == "success"){
+                                oTable.fnDeleteRow(nRow);
+                                toastr.success('You have deleted Stream : ' + data.result.stream_name + ' and Classes , Subjects and Sections associated with it.');
+                            } else if (data.status == "failed") {
+                                toastr.warning(data.error.error_description);
                             }
-                            toastr.success('You have deleted Stream : ' + stream_name + ' and Classes , Subjects and Sections associated with it.');
-
-                            location.reload();
-
                         }
                     });
 
@@ -112,39 +140,40 @@ var TableDataStreams = function() {
             });
 
 
-
         });
-        $('#table-add-streams').on('click', '.save-row-streams', function(e) {
+        $('#table-add-streams').on('click', '.save-row-streams', function (e) {
             e.preventDefault();
 
             var nRow = $(this).parents('tr')[0];
-            var stream_name = $(this).parents('tr').find('#new-input').val();
-            var stream_id = $(this).parents('tr').attr('id');
+
             var data = {
-                stream_name: stream_name,
-                stream_id: stream_id
+                stream_name: $(this).parents('tr').find('#new-input').val(),
+                stream_id: $(this).parents('tr').attr('data-stream-id')
             };
+            console.log(data);
+
             $.blockUI({
                 message: '<i class="fa fa-spinner fa-spin"></i> Do some ajax to sync with backend...'
             });
             $.ajax({
-                url: serverUrl+'/admin/time/table/add/stream',
+                url: serverUrl + '/admin/add/or/edit/stream',
                 dataType: 'json',
                 method: 'POST',
                 cache: false,
                 data: data,
-                success: function(data, response) {
+                success: function (data, response) {
                     $.unblockUI();
+                    console.log(data);
                     if (data.status == "success") {
-                        saveRow(oTable, nRow, data.data_send.id);
-                        toastr.info('You have successfully Created new stream: ' + stream_name);
+                        saveRow(oTable, nRow, data.result);
+                        toastr.info('You have Successfully Edited Stream: ' + data.result.stream_name);
                     } else if (data.status == "failed") {
-                        oTable.parentsUntil(".panel").find(".errorHandler").removeClass("no-display").html('<p class="help-block alert-danger">' + data.error_messages.stream_name + '</p>');
+                        toastr.warning(data.error.error_description);
                     }
                 }
             });
         });
-        $('#table-add-streams').on('click', '.edit-row-streams', function(e) {
+        $('#table-add-streams').on('click', '.edit-row-streams', function (e) {
             e.preventDefault();
             if (actualEditingRow) {
                 if (newRow) {
@@ -152,19 +181,16 @@ var TableDataStreams = function() {
                     newRow = false;
                 } else {
                     restoreRow(oTable, actualEditingRow);
-
                 }
             }
             var nRow = $(this).parents('tr')[0];
-
             editRow(oTable, nRow);
             actualEditingRow = nRow;
-
         });
         var oTable = $('#table-add-streams').dataTable({
             "aoColumnDefs": [{
-                    "aTargets": [0]
-                }],
+                "aTargets": [0]
+            }],
             "oLanguage": {
                 "sLengthMenu": "Show _MENU_ Rows",
                 "sSearch": "",
@@ -185,7 +211,7 @@ var TableDataStreams = function() {
         // modify table per page dropdown
         $('#table-add-streams_wrapper .dataTables_length select').select2();
         // initialzie select2 dropdown
-        $('#table-add-streams_column_toggler input[type="checkbox"]').change(function() {
+        $('#table-add-streams_column_toggler input[type="checkbox"]').change(function () {
             /* Get the DataTables object again - this is not a recreation, just a get of the object */
             var iCol = parseInt($(this).attr("data-column"));
             var bVis = oTable.fnSettings().aoColumns[iCol].bVisible;
@@ -194,7 +220,7 @@ var TableDataStreams = function() {
     };
     return {
         //main function to initiate template pages
-        init: function() {
+        init: function () {
             runDataTable_AddStreams();
         }
     };

@@ -1,6 +1,6 @@
 @extends('layouts.main-layout')
 @section('stylesheets')
-<link rel="stylesheet" type="text/css" href="{{ URL::asset('assets/plugins/select2/select2.css'); }}" />
+<link rel="stylesheet" type="text/css" href="{{ URL::asset('assets/plugins/select2/select2.css') }}" />
 @stop
 @section('page_header')
 <h1><i class="fa fa-pencil-square"></i>Home</h1>
@@ -54,22 +54,6 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <?php $i=1; ?>
-                            @foreach($users as $user)
-                                <tr data-user-id="{{ $user['id'] }}" data-school-id="{{ $user['school_id'] }}">
-                                    <td>{{ $i++ }}</td>
-                                    <td>{{ $user['username'] }}</td>
-                                    <td>{{ $user['first_name'] }} {{ $user['last_name'] }}</td>
-                                    <td>{{ $user['class_name'] }}</td>
-                                    <td>{{ $user['section_name'] }}</td>
-                                    <td><img src="{{ URL::asset($user['pic']); }}"></td>
-                                    <td>
-                                        <a class="show-sv" href="#school-student-details" data-startFrom="right">
-                                            Details
-                                        </a>
-                                    </td>
-                                </tr>
-                            @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -123,7 +107,7 @@
                                                 <div class="fileupload fileupload-new" data-provides="fileupload">
                                                     <div class="user-image">
                                                         <div class="fileupload-new thumbnail">
-                                                            <img src="{{ URL::asset('assets/images/avatar-1-xl.jpg'); }}" alt="">
+                                                            <img src="{{ URL::asset('assets/images/avatar-1-xl.jpg') }}" alt="">
                                                         </div>
                                                         <div class="fileupload-preview fileupload-exists thumbnail"></div>
                                                         <div class="user-image-buttons">
@@ -852,9 +836,9 @@
 
 @section('scripts')
 <!-- Scripts for This page only -->
-<script src="{{ URL::asset('assets/plugins/select2/select2.min.js'); }}"></script>
-<script src="{{ URL::asset('assets/js/modifiedJs/admin/table-school-students.js'); }}"></script><!-- For subjects Table -->
-<script src="{{ URL::asset('assets/js/ui-subview.js'); }}"></script>
+<script src="{{ URL::asset('assets/plugins/select2/select2.min.js') }}"></script>
+<script src="{{ URL::asset('assets/js/modifiedJs/admin/table-school-students.js') }}"></script><!-- For subjects Table -->
+<script src="{{ URL::asset('assets/js/ui-subview.js') }}"></script>
 
 <script>
     jQuery(document).ready(function() {

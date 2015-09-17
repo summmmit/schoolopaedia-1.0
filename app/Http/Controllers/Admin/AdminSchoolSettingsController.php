@@ -395,4 +395,44 @@ class AdminSchoolSettingsController extends Controller
         return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $input);
     }
 
+    public function getSchoolStudents() {
+
+//        $query = "select
+//                        users.id,
+//                        users.school_id,
+//                        user_details.username,
+//                        user_details.first_name,
+//                        user_details.last_name,
+//                        users_to_class.class_id,
+//                        users_to_class.section_id,
+//                        user_details.pic
+//                  from users
+//                  join user_group
+//                  on users.id=user_group.user_id and user_group.group_id=? and users.school_id=?
+//                  join user_details
+//                  on users.id=user_details.user_id
+//                  join users_to_class
+//                  on users_to_class.user_id=users.id";
+//        $all_school_users = DB::select($query, array(2, $this->getSchoolAndUserBasicInfo()->getSchoolId()));
+//        $i = 0;
+//        foreach ($all_school_users as $all_school_user) {
+//
+//            $class = Classes::find($all_school_user->class_id)->get()->first();
+//            $all_users[$i]['class_name'] = $class->class;
+//            $section = Sections::find($all_school_user->section_id);
+//            $all_users[$i]['section_name'] = $section->section_name;
+//
+//            $all_users[$i]['username'] = $all_school_user->username;
+//            $all_users[$i]['first_name'] = $all_school_user->first_name;
+//            $all_users[$i]['last_name'] = $all_school_user->last_name;
+//            $all_users[$i]['pic'] = $all_school_user->pic;
+//            $all_users[$i]['id'] = $all_school_user->id;
+//            $all_users[$i]['school_id'] = $all_school_user->school_id;
+//            $i++;
+//        }
+
+        //return View::make('admin.school-students')->with('users', $all_users);
+        return view('admin.school-students');
+    }
+
 }
