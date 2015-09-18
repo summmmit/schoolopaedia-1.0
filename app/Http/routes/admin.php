@@ -302,10 +302,38 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
         'uses' => 'Admin\AdminSchoolSettingsController@postGetAllSessions'
     ));
     /**
+     * Get School Session By Session By
+     */
+    Route::Post('/get/session/by/id', array(
+        'as' => 'admin-get-session',
+        'uses' => 'Admin\AdminSchoolSettingsController@postGetSessionBySessionId'
+    ));
+    /**
      * Create Or Edit School Session
      */
     Route::Post('/create/or/edit/session/post', array(
         'as' => 'admin-create-or-edit-session',
         'uses' => 'Admin\AdminSchoolSettingsController@postAddOrEditSession'
+    ));
+    /**
+     * Delete a Session
+     */
+    Route::Post('/delete/session', array(
+        'as' => 'admin-delete-session',
+        'uses' => 'Admin\AdminSchoolSettingsController@postDeleteSession'
+    ));
+    /**
+     * Make Session Current
+     */
+    Route::Post('/make/session/current', array(
+        'as' => 'admin-session-current',
+        'uses' => 'Admin\AdminSchoolSettingsController@postMakeSessionCurrent'
+    ));
+    /**
+     * Get Current Session
+     */
+    Route::Post('/get/current/session', array(
+        'as' => 'admin-current-session',
+        'uses' => 'Admin\AdminSchoolSettingsController@postGetSchoolCurrentSession'
     ));
 });

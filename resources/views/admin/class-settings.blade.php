@@ -268,7 +268,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-12 space20 no-display" id="button-add-subjects">
-                                <button class="btn btn-green add-row-subjects no-display" id="add-subjects-button">
+                                <button class="btn btn-green add-row-subjects" id="add-subjects-button">
                                     Add New <i class="fa fa-plus"></i>
                                 </button>
                             </div>

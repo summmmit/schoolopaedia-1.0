@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Classes;
 use App\Models\Sections;
 use App\Models\Streams;
+use App\Models\Subjects;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use PhpSpec\Exception\Example\ErrorException;
 use Validator;
 use DB;
 
@@ -309,16 +311,94 @@ class AdminClassSettingsController extends Controller
         return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $input);
     }
 
-    public function postGetAllSubjectsBySectionId(Request $request){
+    public function postGetAllSubjectsBySectionId(Request $request)
+    {
+        $section_id = $request->input('section_id');
 
+        $input = [
+            'section_id' => $section_id,
+        ];
+
+        $validator = validator::make($request->all(), [
+            'section_id' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return ApiResponseClass::errorResponse('You Have Some Input Errors. Please Try Again!!', $input, $validator->errors());
+        } else {
+
+            $subjects = Subjects::where('section_id', $section_id)->get();
+            return ApiResponseClass::successResponse($subjects, $input);
+        }
+        return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $input);
     }
 
-    public function postAddOrEditSubject(Request $request){
+    public function postAddOrEditSubject(Request $request)
+    {
+        $subject_id = $request->input('subject_id');
+        $subject_name = $request->input('subject_name');
+        $subject_code = $request->input('subject_code');
+        $section_id = $request->input('section_id');
 
+        $input = [
+            'subject_id' => $subject_id,
+            'subject_name' => $subject_name,
+            'subject_code' => $subject_code,
+            'section_id' => $section_id
+        ];
+
+        $validator = validator::make($request->all(), [
+            'section_id' => 'required',
+            'subject_name' => 'required',
+            'subject_code' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return ApiResponseClass::errorResponse('You Have Some Input Errors. Please Try Again!!', $input, $validator->errors());
+        } else {
+
+            $subject = Subjects::findOrNew($subject_id);
+            $subject->subject_name = ucwords($subject_name);
+            $subject->subject_code = strtoupper($subject_code);
+            $subject->section_id = $section_id;
+
+            if ($subject->save()) {
+                return ApiResponseClass::successResponse($subject, $input);
+            }
+        }
+        return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $input);
     }
 
-    public function postDeleteSubject(Request $request){
+    public function postDeleteSubject(Request $request)
+    {
+        $subject_id = $request->input('subject_id');
 
+        $input = [
+            'subject_id' => $subject_id,
+        ];
+
+        $validator = validator::make($request->all(), [
+            'subject_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return ApiResponseClass::errorResponse('You Have Some Input Errors. Please Try Again!!', $input, $validator->errors());
+        } else {
+
+            try{
+
+                $subject = Subjects::findOrFail($subject_id);
+                if (!$subject->delete()) {
+                    throw new ErrorException;
+                }
+            }catch (ModelNotFoundException $e){
+                return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $input);
+            }catch (ErrorException $e){
+                return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $input);
+            }
+            return ApiResponseClass::successResponse($subject, $input);
+        }
+        return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $input);
     }
 
 }

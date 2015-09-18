@@ -21,6 +21,8 @@ class SchoolAndUserBasicInfo
 
     protected $schoolId;
 
+    protected $currentSchoolSession;
+
     protected $currentSchoolSessionId;
 
     /**
@@ -39,7 +41,9 @@ class SchoolAndUserBasicInfo
 
         $this->schoolId = UsersRegisteredToSchool::where('user_id', $userId)->get()->first()->school_id;
 
-        $this->currentSchoolSessionId = SchoolSession::where('school_id', $this->schoolId)->where('current_session', 1)->get()->first()->id;
+        $this->currentSchoolSession = SchoolSession::where('school_id', $this->schoolId)->where('current_session', 1)->get()->first();
+
+        $this->currentSchoolSessionId = $this->currentSchoolSession->id;
     }
 
     /**
@@ -72,5 +76,13 @@ class SchoolAndUserBasicInfo
     public function getCurrentSchoolSessionId()
     {
         return $this->currentSchoolSessionId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCurrentSchoolSession()
+    {
+        return $this->currentSchoolSession;
     }
 }

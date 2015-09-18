@@ -38,12 +38,12 @@
             <!-- start: DYNAMIC TABLE PANEL -->
             <div class="panel panel-white">
                 <div class="panel-heading">
-                    <h4 class="panel-title">Editable <span class="text-bold">Table</span></h4>
+                    <h4 class="panel-title">Current <span class="text-bold">Sessions</span></h4>
                 </div>
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-12 space20">
-                            <a href="#subview-add-new-session" class="btn btn-green show-sv">
+                            <a href="#" class="btn btn-green add-new-session-row">
                                 Add New <i class="fa fa-plus"></i>
                             </a>
                         </div>
@@ -71,59 +71,6 @@
 
 
 @section('subview')
-            <!--Start :  Subview for This page only -->
-    <div id="subview-add-new-session" class="no-display">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="row">
-                <div class="col-md-12">
-                    <!-- start: DYNAMIC TABLE PANEL -->
-                    <div class="panel panel-white panel-add-subjects">
-                        <div class="panel-heading">
-                            <h3 class="text-center"><strong>New Session</strong></h3>
-                        </div>
-                        <div class="panel-body">
-                            <form role="form" class="form-horizontal">
-                                <div class="row">
-                                    <div class="col-md-offset-2 col-md-8">
-                                        <div class="form-group">
-                                            <label for="">
-                                                Session Start From
-                                            </label>
-                                            <div class="input-group">
-                                                <input type="text" data-date-format="yyyy-mm-dd" data-date-viewmode="years" class="form-control date-picker text-center" name="start_session_from">
-                                                <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-offset-2 col-md-8">
-                                        <div class="form-group">
-                                            <label for="">
-                                                Session Ends Untill
-                                            </label>
-                                            <div class="input-group">
-                                                <input type="text" data-date-format="yyyy-mm-dd" data-date-viewmode="years" class="form-control date-picker text-center" name="end_session_untill">
-                                                <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-offset-6 col-md-4">
-                                        <button class="btn btn-green btn-block" id="create-new-session" type="submit">
-                                            Update <i class="fa fa-arrow-circle-right"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <!-- End: DYNAMIC TABLE PANEL -->
-                </div>
-            </div>
-        </div>
-    </div>
 @stop
 @section('scripts')
     <script type="text/javascript" src="{{ URL::asset('assets/plugins/select2/select2.min.js') }}"></script>

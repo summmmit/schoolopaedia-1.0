@@ -3,6 +3,11 @@ var localServer = 'http://localhost/projects/web/public';
 //var localServer = env(MAIL_HOST);
 //var ProductionServer;
 var serverUrl = localServer;
+
+const Administrator = 1;
+const Student = 2;
+const Teacher = 3;
+
 var weekDays = [
     {
         code: '1',

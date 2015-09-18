@@ -29,8 +29,6 @@ var TableDataSchoolScheduleNew = function () {
 
         function saveRow(oTable, nRow, result) {
 
-            console.log(nRow);
-
             //var jqInputs = $('input', nRow);
             oTable.fnUpdate(result.profile_name, nRow, 0, false);
             oTable.fnUpdate('<input type="radio" name="schedule_profile_make_current" class="flat-grey" id="schedule_profile_make_current">', nRow, 1, false);
@@ -352,8 +350,6 @@ var TableDataSchoolScheduleNew = function () {
 
         $('#table-schedule-profiles').on('click', '#schedule_profile_make_current', function (e) {
             e.preventDefault();
-
-            alert("asgasg");
 
             var data = {
                 'profile_id': $(this).parents('tr').attr('data-profile-id')

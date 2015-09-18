@@ -162,7 +162,6 @@ var TableDataSchoolSubjects = function() {
             for (var i = 0, iLen = jqTds.length; i < iLen; i++) {
                 oTable.fnUpdate(aData[i], nRow, i, false);
             }
-
             oTable.fnDraw();
         }
 
@@ -183,7 +182,7 @@ var TableDataSchoolSubjects = function() {
             oTable.fnUpdate('<a class="edit-row-subjects" href="">Edit</a>', nRow, 2, false);
             oTable.fnUpdate('<a class="delete-row-subjects" href="">Delete</a>', nRow, 3, false);
             oTable.fnDraw();
-            nRow.setAttribute('data-subject-id', subjects.id);         //subject id added to the attribute of the row
+            nRow.setAttribute('data-subject-id', result.id);         //subject id added to the attribute of the row
             newRow = false;
             actualEditingRow = null;
         }
@@ -223,34 +222,30 @@ var TableDataSchoolSubjects = function() {
 
             }
             var nRow = $(this).parents('tr')[0];
-            var class_id = $(this).parents('tr').attr('id');
-            var subject_id = $(this).parents('tr').attr('data-subject-id');
-            var section_id = $(this).parents('tr').attr('data-section-id');
-            var subject_name = $(this).parent().prev().prev().prev().text();
-            var subject_code = $(this).parent().prev().prev().text();
 
             var data = {
-                class_id: class_id,
-                section_id: section_id,
-                subject_id: subject_id,
-                subject_name: subject_name,
-                subject_code: subject_code
+                subject_id: $(this).parents('tr').attr('data-subject-id')
             };
+
             bootbox.confirm("Are you sure to delete this row?", function(result) {
                 if (result) {
                     $.blockUI({
                         message: '<i class="fa fa-spinner fa-spin"></i> Do some ajax to sync with backend...'
                     });
                     $.ajax({
-                        url: serverUrl + '/admin/time/table/delete/subjects',
+                        url: serverUrl + '/admin/delete/subject',
                         dataType: 'json',
                         method: 'POST',
                         cache: false,
                         data: data,
                         success: function(data, response) {
                             $.unblockUI();
-                            oTable.fnDeleteRow(nRow);
-                            toastr.success('You have deleted Subject: ' + subject_name);
+                            if (data.status == "success") {
+                                oTable.fnDeleteRow(nRow);
+                                toastr.success('You have successfully deleted Subject');
+                            } else if (data.status == "failed") {
+                                toastr.warning(data.error.error_description);
+                            }
                         }
                     });
 
@@ -267,10 +262,8 @@ var TableDataSchoolSubjects = function() {
             var subject_id = $(this).parents('tr').attr('data-subject-id');
             var subject_name = $(this).parents('tr').find('#new-input-subject-name').val();
             var subject_code = $(this).parents('tr').find('#new-input-subject-code').val();
-            var class_id = $('#form-field-select-subjects-classes').val();
             var section_id = $('#form-field-select-subjects-sections').val();
             var data = {
-                class_id: class_id,
                 section_id: section_id,
                 subject_id: subject_id,
                 subject_name: subject_name,
@@ -281,7 +274,7 @@ var TableDataSchoolSubjects = function() {
                 message: '<i class="fa fa-spinner fa-spin"></i> Do some ajax to sync with backend...'
             });
             $.ajax({
-                url: serverUrl + '/admin/time/table/add/subjects',
+                url: serverUrl + '/admin/add/or/edit/subject',
                 dataType: 'json',
                 method: 'POST',
                 data: data,
@@ -289,10 +282,10 @@ var TableDataSchoolSubjects = function() {
                 success: function(data, response) {
                     $.unblockUI();
                     if (data.status == "success") {
-                        saveRow(oTable, nRow, data.result.subjects);
-                        toastr.info('You have successfully Created new Subject: ' + subject_name);
+                        saveRow(oTable, nRow, data.result);
+                        toastr.info('You have successfully Created new Subject');
                     } else if (data.status == "failed") {
-                        oTable.parentsUntil(".panel").find(".errorHandler").removeClass("no-display").html('<p class="help-block alert-danger">' + data.error_messages.subject_name + '</p>');
+                        toastr.warning(data.error.error_description);
                     }
                 }
             });

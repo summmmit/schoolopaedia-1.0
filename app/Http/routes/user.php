@@ -41,7 +41,7 @@ Route::group([ 'prefix' => 'user', 'middleware' => 'auth' ], function(){
     /*
      * Class set Intial Settings (Post)
      */
-    Route::Post('/class/set/intial', array(
+    Route::Post('/class/set/intial/post', array(
         'as' => 'user-class-set-initial-post',
         'uses' => 'User\UserAccountController@postSetInitial'
     ));

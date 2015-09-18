@@ -138,7 +138,6 @@ var WelcomeSettingsWizard = function() {
                 $.ajax({
                     url: serverUrl + '/school/validation',
                     dataType: 'json',
-                    cache: false,
                     method: 'POST',
                     data: data,
                     success: function(data, response) {
@@ -186,18 +185,22 @@ var WelcomeSettingsWizard = function() {
         });
         $(".finish-step").unbind("click").click(function (e) {
             e.preventDefault();
-            onFinish(obj, context);
+            var group_id = $('input[name="group_id"]').val();
+            console.log(group_id);
+            onFinish(obj, context, group_id);
         });
     };
     var leaveAStepCallback = function(obj, context) {
         return validateSteps(context.fromStep, context.toStep);
         // return false to stay on step and true to continue navigation
     };
-    var onFinish = function(obj, context) {
+    var onFinish = function(obj, context, group_id) {
         if (validateAllSteps()) {
-
-            var url = serverUrl + '/admin/class/set/intial';
-            changeUrl(url);
+            if(group_id == Student){
+                changeUrl(serverUrl + '/user/class/set/intial');
+            }else if(group_id == Administrator){
+                changeUrl(serverUrl + '/admin/class/set/intial');
+            }
 
             $('.anchor').children("li").last().children("a").removeClass('wait').removeClass('selected').addClass('done').children('.stepNumber').addClass('animated tada');
             //wizardForm.submit();

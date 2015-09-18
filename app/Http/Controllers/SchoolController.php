@@ -7,6 +7,7 @@ use App\Libraries\RequiredFunctions;
 use App\Libraries\ApiResponseClass;
 use App\Models\Groups;
 use App\Models\Schools;
+use App\Models\SchoolSession;
 use App\Models\UserDetails;
 use App\Models\UserGroup;
 use App\Models\UserLoginInfo;
@@ -129,7 +130,7 @@ class SchoolController extends Controller
     public function getActivateSchool($registration_code)
     {
 
-        $school = Schools::where('registration_code', '=', $registration_code)->where('active', '=', 0);
+        $school = Schools::where('registration_code', $registration_code)->where('active', 0);
 
         if ($school->count()) {
             $school = $school->first();
@@ -167,67 +168,81 @@ class SchoolController extends Controller
         $registration_code = $request->input('registration_code');
         $group_id = $request->input('group_id');
 
-        $group = Groups::find($group_id);
+        $input = [
+            'group_id' => $group_id,
+            'registration_code' => $registration_code
+        ];
 
-        $code = array();
+        $validator = validator::make($request->all(), [
+            'group_id' => 'required',
+            'registration_code' => 'required',
+        ]);
 
-        if ($group && $group->count() > 0) {
-            if ($group_id == Groups::Teacher_Group_Id) {
+        if ($validator->fails()) {
+            return ApiResponseClass::errorResponse('You Have Some Input Errors. Please Try Again!!', $input, $validator->errors());
+        } else {
 
-                $code_for_teachers = $request->input('code_for_teachers');
-                $school = Schools::where('registration_code', '=', $registration_code)
-                    ->where('code_for_teachers', '=', $code_for_teachers)->get()->first();
-                $code = array(
-                    'code_for_teachers' => $code_for_teachers
-                );
-            } elseif ($group_id == Groups::Student_Group_Id) {
+            $code = array();
+            $group = Groups::find($group_id);
 
-                $code_for_students = $request->input('code_for_students');
-                $school = Schools::where('registration_code', '=', $registration_code)
-                    ->where('code_for_students', '=', $code_for_students)->get()->first();
-                $code = array(
-                    'code_for_students' => $code_for_students
-                );
-            } elseif ($group_id == Groups::Administrator_Group_ID) {
+            if ($group && $group->count() > 0) {
+                if ($group_id == Groups::Teacher_Group_Id) {
 
-                $code_for_admin = $request->input('code_for_admin');
-                $school = Schools::where('registration_code', '=', $registration_code)
-                    ->where('code_for_admin', '=', $code_for_admin)->get()->first();
-                $code = array(
-                    'code_for_admin' => $code_for_admin
-                );
-            }
-
-            $input = array(
-                'registration_code' => $registration_code,
-                'group_id' => $group_id
-            );
-
-            $input = array_merge($input, $code);
-
-            if ($school && $school->count() > 0) {
-
-                $users_registered_to_school = new UsersRegisteredToSchool();
-                $users_registered_to_school->user_id = Auth::user()->id;
-                $users_registered_to_school->school_id = $school->id;
-                $users_registered_to_school->registration_date = date('Y-m-d H:i:s');
-                $users_registered_to_school->save();
-
-                if ($users_registered_to_school->save()) {
-
-                    $result = array(
-                        'school' => $school
+                    $code_for_teachers = $request->input('code_for_teachers');
+                    $school = Schools::where('registration_code', $registration_code)
+                        ->where('code_for_teachers', $code_for_teachers)->get()->first();
+                    $code = array(
+                        'code_for_teachers' => $code_for_teachers
                     );
-                    return ApiResponseClass::successResponse($result, $input);
-                }
-            } else {
+                } elseif ($group_id == Groups::Student_Group_Id) {
 
-                return ApiResponseClass::errorResponse('School Codes are InValid. Please Try again with Correct Codes!!', $input);
+                    $code_for_students = $request->input('code_for_students');
+                    $school = Schools::where('registration_code', $registration_code)
+                        ->where('code_for_students', $code_for_students)->get()->first();
+                    $code = array(
+                        'code_for_students' => $code_for_students
+                    );
+                } elseif ($group_id == Groups::Administrator_Group_ID) {
+
+                    $code_for_admin = $request->input('code_for_admin');
+                    $school = Schools::where('registration_code', $registration_code)
+                        ->where('code_for_admin', $code_for_admin)->get()->first();
+                    $code = array(
+                        'code_for_admin' => $code_for_admin
+                    );
+                }
+
+                $input = array(
+                    'registration_code' => $registration_code,
+                    'group_id' => $group_id
+                );
+
+                $input = array_merge($input, $code);
+
+                if ($school && $school->count() > 0) {
+
+                    $users_registered_to_school = new UsersRegisteredToSchool();
+                    $users_registered_to_school->user_id = Auth::user()->id;
+                    $users_registered_to_school->school_id = $school->id;
+                    $users_registered_to_school->registration_date = date('Y-m-d H:i:s');
+                    $users_registered_to_school->save();
+
+                    if ($users_registered_to_school->save()) {
+
+                        $result = array(
+                            'school' => $school
+                        );
+                        return ApiResponseClass::successResponse($result, $input);
+                    }
+                } else {
+
+                    return ApiResponseClass::errorResponse('School Codes are InValid. Please Try again with Correct Codes!!', $input);
+                }
             }
         }
-
         return ApiResponseClass::errorResponse('Some Problem Occured. Please Try again With Correct Codes!!', $input);
     }
+
     /**
      * Api for Brief Registration
      */
@@ -262,7 +277,7 @@ class SchoolController extends Controller
 
         $user_details = UserDetails::where('user_id', Auth::user()->id)->get()->first();
 
-        if(!$user_details){
+        if (!$user_details) {
             $user_details = new UserDetails();
         }
 

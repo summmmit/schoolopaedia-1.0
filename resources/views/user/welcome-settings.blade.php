@@ -50,7 +50,7 @@
                                     <div class="stepNumber">
                                         4
                                     </div>
-                                    <span class="stepDesc"> Step 4
+                                    <span class="stepDesc"> Step 3
                                         <br />
                                         <small>Finished</small> </span>
                                 </a>
@@ -161,7 +161,7 @@
 
 <!-- start: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
 <script src="{{ URL::asset('assets/plugins/jQuery-Smart-Wizard/js/jquery.smartWizard.js') }}"></script>
-<script src="{{ URL::asset('assets/js/modifiedJs/welcome-settings-wizard.js') }}"></script>
+<script src="{{ URL::asset('school/welcome-settings-wizard.js') }}"></script>
 <!-- end: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
 <script>
     jQuery(document).ready(function() {

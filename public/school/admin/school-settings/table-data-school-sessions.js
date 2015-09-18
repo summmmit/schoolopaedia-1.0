@@ -24,31 +24,6 @@ var TableDataSchoolSessions = function () {
             saveRow(oTable, nRow, result);
         }
 
-        $('#create-new-session').on('click', function(e){
-            e.preventDefault();
-
-            var data = {
-                'start_session_from' : $('input[name="start_session_from"]').val(),
-                'end_session_untill' : $('input[name="end_session_untill"]').val(),
-            }
-
-            $.ajax({
-                url: serverUrl + '/admin/create/or/edit/session/post',
-                method: 'POST',
-                data: data,
-                dataType: 'json',
-                success: function (data) {
-                    if (data.status == "success") {
-                        attachAllSessions(oTable, data.result);
-                        $.hideSubview();
-                        toastr.info('You have successfully Created new Section');
-                    } else if (data.status == "failed") {
-                        toastr.info(data.error.error_description);
-                    }
-                }
-            });
-        });
-
         function restoreRow(oTable, nRow) {
             var aData = oTable.fnGetData(nRow);
             var jqTds = $('>td', nRow);
@@ -63,25 +38,31 @@ var TableDataSchoolSessions = function () {
         function editRow(oTable, nRow) {
             var aData = oTable.fnGetData(nRow);
             var jqTds = $('>td', nRow);
-            jqTds[0].innerHTML = '<input type="text" class="form-control" value="' + aData[0] + '">';
-            jqTds[1].innerHTML = '<input type="text" class="form-control" value="' + aData[1] + '">';
-            jqTds[2].innerHTML = '<input type="text" class="form-control" value="' + aData[2] + '">';
+            jqTds[0].innerHTML = '<input type="text" name="session_start_from" class="form-control" value="' + aData[0] + '">';
+            jqTds[1].innerHTML = '<input type="text" name="end_session_untill" class="form-control" value="' + aData[1] + '">';
+            jqTds[2].innerHTML = '<input type="radio" name="session_make_current" id="session_make_current" disabled>';
 
-            jqTds[3].innerHTML = '<a class="save-row" href="">Save</a>';
-            jqTds[4].innerHTML = '<a class="cancel-row" href="">Cancel</a>';
+            jqTds[3].innerHTML = '<a class="save-session-row" href="">Save</a>';
+            jqTds[4].innerHTML = '<a class="cancel-session-row" href="">Cancel</a>';
+
+
+            $('input[type="text"]').datepicker({
+                format: 'yyyy-mm-dd',
+                autoclose: true
+            });
 
         }
 
         function saveRow(oTable, nRow, result) {
-
             oTable.fnUpdate(result.session_start, nRow, 0, false);
             oTable.fnUpdate(result.session_end, nRow, 1, false);
-
-            var column = '<input type="radio" name="schedule_profile_make_current" id="schedule_profile_make_current">';
-
-            oTable.fnUpdate(column, nRow, 2, false);
-            oTable.fnUpdate('<a class="edit-row" href="">Edit</a>', nRow, 3, false);
-            oTable.fnUpdate('<a class="delete-row" href="">Delete</a>', nRow, 4, false);
+            if(result.current_session){
+                oTable.fnUpdate('<input type="radio" name="session_make_current" id="session_make_current" checked>', nRow, 2, false);
+            }else{
+                oTable.fnUpdate('<input type="radio" name="session_make_current" id="session_make_current">', nRow, 2, false);
+            }
+            oTable.fnUpdate('<a class="edit-session-row">Edit</a>', nRow, 3, false);
+            oTable.fnUpdate('<a class="delete-session-row" href="">Delete</a>', nRow, 4, false);
             oTable.fnDraw();
 
             nRow = nRow.setAttribute('data-school-session-id', result.id);
@@ -102,7 +83,7 @@ var TableDataSchoolSessions = function () {
                 actualEditingRow = nRow;
             }
         });
-        $('#table-school-sessions').on('click', '.cancel-row', function (e) {
+        $('#table-school-sessions').on('click', '.cancel-session-row', function (e) {
 
             e.preventDefault();
             if (newRow) {
@@ -116,7 +97,7 @@ var TableDataSchoolSessions = function () {
                 actualEditingRow = null;
             }
         });
-        $('#table-school-sessions').on('click', '.delete-row', function (e) {
+        $('#table-school-sessions').on('click', '.delete-session-row', function (e) {
             e.preventDefault();
             if (newRow && actualEditingRow) {
                 oTable.fnDeleteRow(actualEditingRow);
@@ -124,62 +105,68 @@ var TableDataSchoolSessions = function () {
 
             }
             var nRow = $(this).parents('tr')[0];
+
+            var data = {
+                'session_id' : $(this).parents('tr').attr('data-school-session-id')
+            }
+
             bootbox.confirm("Are you sure to delete this row?", function (result) {
+
                 if (result) {
                     $.blockUI({
                         message: '<i class="fa fa-spinner fa-spin"></i> Do some ajax to sync with backend...'
                     });
-                    $.mockjax({
-                        url: '/tabledata/delete/webservice',
-                        dataType: 'json',
-                        responseTime: 1000,
-                        responseText: {
-                            say: 'ok'
-                        }
-                    });
                     $.ajax({
-                        url: '/tabledata/delete/webservice',
+                        url: serverUrl + '/admin/delete/session',
+                        method: 'POST',
+                        data: data,
                         dataType: 'json',
-                        success: function (json) {
+                        success: function (data) {
                             $.unblockUI();
-                            if (json.say == "ok") {
+                            if (data.status == "success") {
                                 oTable.fnDeleteRow(nRow);
+                                toastr.info('You have successfully Deleted Section');
+                            } else if (data.status == "failed") {
+                                toastr.warning(data.error.error_description);
                             }
                         }
                     });
-
                 }
             });
-
-
         });
+
         $('#table-school-sessions').on('click', '.save-session-row', function (e) {
             e.preventDefault();
 
             var nRow = $(this).parents('tr')[0];
+
+            var data = {
+                'start_session_from' : $('input[name="session_start_from"]').val(),
+                'end_session_untill' : $('input[name="end_session_untill"]').val(),
+                'school_session_id' : $(this).parents('tr').attr('data-school-session-id')
+            }
+
             $.blockUI({
                 message: '<i class="fa fa-spinner fa-spin"></i> Do some ajax to sync with backend...'
             });
-            $.mockjax({
-                url: '/tabledata/add/webservice',
-                dataType: 'json',
-                responseTime: 1000,
-                responseText: {
-                    say: 'ok'
-                }
-            });
+
             $.ajax({
-                url: '/tabledata/add/webservice',
+                url: serverUrl + '/admin/create/or/edit/session/post',
+                method: 'POST',
+                data: data,
                 dataType: 'json',
-                success: function (json) {
+                success: function (data) {
                     $.unblockUI();
-                    if (json.say == "ok") {
-                        saveRow(oTable, nRow);
+                    if (data.status == "success") {
+                        saveRow(oTable, nRow, data.result);
+                        toastr.info('You have successfully Created new Section');
+                    } else if (data.status == "failed") {
+                        toastr.info(data.error.error_description);
                     }
                 }
             });
         });
-        $('#table-school-sessions').on('click', '.edit-row', function (e) {
+        $('#table-school-sessions').on('click', '.edit-session-row', function (e) {
             e.preventDefault();
             if (actualEditingRow) {
                 if (newRow) {
@@ -226,10 +213,46 @@ var TableDataSchoolSessions = function () {
             oTable.fnSetColumnVis(iCol, ( bVis ? false : true));
         });
     };
+    var makeScheduleSessionCurrent = function () {
+
+        $('#table-school-sessions').on('click', '#session_make_current', function (e) {
+            e.preventDefault();
+
+            var data = {
+                'session_id': $(this).parents('tr').attr('data-school-session-id')
+            };
+
+            var input = $(this);
+            bootbox.confirm("Are you sure , u want to make this Profile Current?", function (result) {
+                if (result) {
+
+                    $.blockUI({
+                        message: '<i class="fa fa-spinner fa-spin"></i> Do some ajax to sync with backend...'
+                    });
+                    $.ajax({
+                        url: serverUrl + '/admin/make/session/current',
+                        dataType: 'json',
+                        data: data,
+                        method: 'POST',
+                        success: function (data, response) {
+                            $.unblockUI();
+                            if (data.status == "success") {
+                                input.prop("checked", true);
+                                toastr.info(data.description);
+                            } else if (data.status == "failed") {
+                                toastr.warning(data.error.error_description);
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    };
     return {
         //main function to initiate template pages
         init: function () {
             runDataTable_example2();
+            makeScheduleSessionCurrent();
         }
     };
 }();
