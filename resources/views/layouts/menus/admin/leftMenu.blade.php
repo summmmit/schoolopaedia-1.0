@@ -7,7 +7,7 @@
         <a href=""><i class="fa fa-caret-up"></i> <span class="title"> Your Profile </span></a>
     </li>
     <li>
-        <a href=""><i class="fa fa-caret-up"></i> <span class="title"> Add or Edit TimeTable </span></a>
+        <a href=""><i class="fa fa-caret-up"></i> <span class="title"> TimeTable </span></a>
     </li>
     <li>
         <a href="{{ URL::route('admin-class-settings') }}"><i class="fa fa-caret-up"></i> <span class="title"> Classes</span></a>

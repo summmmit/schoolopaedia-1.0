@@ -200,6 +200,8 @@ var WelcomeSettingsWizard = function() {
                 changeUrl(serverUrl + '/user/class/set/intial');
             }else if(group_id == Administrator){
                 changeUrl(serverUrl + '/admin/class/set/intial');
+            }else if(group_id == Teacher){
+                changeUrl(serverUrl + '/teacher/class/set/intial');
             }
 
             $('.anchor').children("li").last().children("a").removeClass('wait').removeClass('selected').addClass('done').children('.stepNumber').addClass('animated tada');

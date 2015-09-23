@@ -309,11 +309,6 @@
                                 <div class="col-sm-12">
                                     <div class="tabbable">
                                         <ul id="myTab" class="nav nav-tabs">
-                                            <li class="active">
-                                                <a href="#school-details" data-toggle="tab">
-                                                    <i class="green fa fa-home"></i> School Details
-                                                </a>
-                                            </li>
                                             <li>
                                                 <a href="#school-codes" data-toggle="tab">
                                                     <i class="green fa fa-home"></i> School Registration Codes
@@ -321,57 +316,7 @@
                                             </li>
                                         </ul>
                                         <div class="tab-content">
-                                            <div class="tab-pane fade in active" id="school-details">
-                                                <table data-school-id="" class="table table-bordered table-striped">
-                                                    <tbody>
-                                                    <tr>
-                                                        <td>School Name</td>
-                                                        <td id="school-name">Sumit ISngh</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>School Name</td>
-                                                        <td id="data-school-name"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>School Logo</td>
-                                                        <td id="data-school-logo"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Manager Full Name</td>
-                                                        <td id="data-school-manager"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Registered Phone number</td>
-                                                        <td id="data-school-phone-number"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Email Address</td>
-                                                        <td id="data-school-email"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Address</td>
-                                                        <td id="data-school-address"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>City</td>
-                                                        <td id="data-school-city"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>State</td>
-                                                        <td id="data-school-state"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Country</td>
-                                                        <td id="data-school-country"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Zip Code</td>
-                                                        <td id="data-school-pin-code"></td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            <div class="tab-pane fade" id="school-codes">
+                                            <div class="tab-pane fade in active" id="school-codes">
                                                 <table id="table-school-session"
                                                        class="table table-bordered table-striped">
                                                     <tbody>

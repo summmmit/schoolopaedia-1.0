@@ -10,6 +10,7 @@ use App\Models\UserRegisteredToSchool;
 use App\Models\UsersLoginInfo;
 use App\Models\UsersRegisteredToSchool;
 use App\Models\SchoolSession;
+use App\Models\UsersRegisteredToSession;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Requests;
@@ -268,7 +269,7 @@ class LoginAndRegisterController extends Controller
                         if ($userType == Groups::Student_Group_Id) {
                             return redirect()->intended(route('user-first-page', ['userId' => $user->id]));
                         } elseif ($userType == Groups::Teacher_Group_Id) {
-                            return redirect()->intended(route('teacher-home'));
+                            return redirect()->intended(route('teacher-first-page', ['teacherId' => $user->id]));
                         } elseif ($userType == Groups::Administrator_Group_ID) {
                             return redirect()->intended(route('admin-first-page', ['adminId' => $user->id]));
                         }
@@ -307,9 +308,9 @@ class LoginAndRegisterController extends Controller
             $route_set_class_initial_settings = route('user-class-set-initial');
         } elseif ($userType == Groups::Teacher_Group_Id) {
 
-            $route_home = route('user-home');
-            $route_welcome_settings = route('user-welcome-settings');
-            $route_set_class_initial_settings = route('user-class-set-initial');
+            $route_home = route('teacher-home');
+            $route_welcome_settings = route('teacher-welcome-settings');
+            $route_set_class_initial_settings = route('teacher-class-set-initial');
         }
 
         $user_registered_to_school = UsersRegisteredToSchool::where('user_id', $user_id)->get()->first();
@@ -318,8 +319,8 @@ class LoginAndRegisterController extends Controller
 
             $school_session = SchoolSession::where('school_id', '=', $user_registered_to_school->school_id)->where('current_session', '=', 1)->get()->first();
 
-            $user_registered_to_session = UsersToClass::where('session_id', '=', $school_session->id)
-                ->where('user_id', '=', Sentry::getUser()->id)->get();
+            $user_registered_to_session = UsersRegisteredToSession::where('session_id', $school_session->id)
+                ->where('user_id', Auth::user()->id)->where('school_id', $user_registered_to_school->school_id)->get();
             if ($user_registered_to_session->count() > 0) {
 
                 return redirect($route_home);
@@ -338,7 +339,7 @@ class LoginAndRegisterController extends Controller
 
         $userType = RequiredFunctions::checkUserTypeByUserId($user_id);
 
-        if($userType != Groups::Administrator_Group_ID){
+        if ($userType != Groups::Administrator_Group_ID) {
 
             Session::flash('global', 'Sorry Something went Wrong. Please try again Later!!');
             return redirect(route('admin-welcome-settings'));
@@ -575,7 +576,7 @@ class LoginAndRegisterController extends Controller
                 $user->password = Hash::make($password);
                 $user->password_updated_at = date('Y-m-d H:i:s');
 
-                if($user->save()){
+                if ($user->save()) {
 
                     $flash_data = 'Your Password has been updated. Please Login Now!!';
                     return redirect($account_sign_in_route)->with('global', $flash_data);
@@ -634,6 +635,8 @@ class LoginAndRegisterController extends Controller
         if ($request->is(RequiredConstants::ADMIN_ROUTE)) {
             $account_sign_in_route = route('account-admin-sign-in');
         } elseif ($request->is(RequiredConstants::USER_ROUTE)) {
+            $account_sign_in_route = route('account-user-sign-in');
+        } elseif ($request->is(RequiredConstants::TEACHER_ROUTE)) {
             $account_sign_in_route = route('account-user-sign-in');
         }
 

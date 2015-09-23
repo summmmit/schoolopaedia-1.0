@@ -91,7 +91,12 @@ class UserAccountController extends Controller
                 $user_to_class->section_id = $section_id;
                 $user_to_class->user_id = Auth::user()->id;
 
-                if($user_to_class->save()){
+                $user_registered_to_session = new UsersRegisteredToSession();
+                $user_registered_to_session->session_id = $this->getSchoolAndUserBasicInfo()->getCurrentSchoolSessionId();
+                $user_registered_to_session->school_id = $this->getSchoolAndUserBasicInfo()->getSchoolId();
+                $user_registered_to_session->user_id = $this->getSchoolAndUserBasicInfo()->getUserId();
+
+                if($user_to_class->save() && $user_registered_to_session->save()){
                     return ApiResponseClass::successResponse($user_to_class, $input);
                 }
             }

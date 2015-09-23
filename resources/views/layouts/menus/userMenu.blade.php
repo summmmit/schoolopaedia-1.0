@@ -8,6 +8,8 @@ $user_id = Auth::user()->id;
 $user_group = UserGroup::where('user_id', '=', $user_id)->get()->first();
 $userDetails = UserDetails::where('user_id', '=', $user_id)->get()->first();
 $admin_group_id = Groups::Administrator_Group_ID;
+$teacher_group_id = Groups::Teacher_Group_Id;
+$student_group_id = Groups::Student_Group_Id;
 ?>
 @section('upper-dropdown')
     <a data-toggle="dropdown" data-hover="dropdown" class="dropdown-toggle" data-close-others="true" href="#">
