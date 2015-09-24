@@ -1,4 +1,4 @@
-var TableSchoolStudents = function() {
+var TableDataSchoolStudents = function() {
     "use strict";
     
     var runDataTable_AddClasses = function() {

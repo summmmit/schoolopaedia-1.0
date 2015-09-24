@@ -7,16 +7,16 @@
         <a href=""><i class="fa fa-caret-up"></i> <span class="title"> Your Profile </span></a>
     </li>
     <li>
-        <a href=""><i class="fa fa-caret-up"></i> <span class="title"> TimeTable </span></a>
+        <a href="{{ URL::route('admin-school-time-table') }}"><i class="fa fa-caret-up"></i> <span class="title"> TimeTable </span></a>
     </li>
     <li>
         <a href="{{ URL::route('admin-class-settings') }}"><i class="fa fa-caret-up"></i> <span class="title"> Classes</span></a>
     </li>
     <li>
-        <a href=""><i class="fa fa-caret-up"></i> <span class="title"> Students </span></a>
+        <a href="{{ URL::route('admin-school-students') }}"><i class="fa fa-caret-up"></i> <span class="title"> Students </span></a>
     </li>
     <li>
-        <a href=""><i class="fa fa-caret-up"></i> <span class="title"> Teachers </span></a>
+        <a href="{{ URL::route('admin-school-teachers') }}"><i class="fa fa-caret-up"></i> <span class="title"> Teachers </span></a>
     </li>
     <li>
         <a href=""><i class="fa fa-caret-up"></i> <span class="title"> Events </span></a>

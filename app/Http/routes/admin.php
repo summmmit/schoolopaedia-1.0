@@ -99,7 +99,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
         'uses' => 'Admin\AdminAccountController@getWelcomeSettings'
     ));
     /*
-     * Validate Admin By school code and teacher code
+     * Validate Admin By school code and admin code
      */
     Route::Post('/school/validation', array(
         'as' => 'mobile-admin-school-validation-post',
@@ -342,5 +342,40 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::Post('/check/current/session/is/set', array(
         'as' => 'admin-check-current-session-set',
         'uses' => 'Admin\AdminSchoolSettingsController@checkIfCurrentSessionSet'
+    ));
+    /**
+     * Get All School Teachers (get)
+     */
+    Route::get('/school/teachers', array(
+        'as' => 'admin-school-teachers',
+        'uses' => 'Admin\AdminTeacherSettingsController@getSchoolTeachers'
+    ));
+    /**
+     * Get All the Teachers (Post)
+     */
+    Route::Post('/get/all/teachers', array(
+        'as' => 'admin-all-teachers',
+        'uses' => 'Admin\AdminTeacherSettingsController@postGetAllTheTeachersRegisteredToSchool'
+    ));
+    /**
+     * Get All School Students (get)
+     */
+    Route::get('/school/students', array(
+        'as' => 'admin-school-students',
+        'uses' => 'Admin\AdminStudentSettingsController@getSchoolStudents'
+    ));
+    /**
+     * Get All the Students (Post)
+     */
+    Route::Post('/get/all/students', array(
+        'as' => 'admin-all-students',
+        'uses' => 'Admin\AdminStudentSettingsController@postGetAllTheStudentsRegisteredToSchool'
+    ));
+    /**
+     * Get School Time Table (get)
+     */
+    Route::get('/school/time/table', array(
+        'as' => 'admin-school-time-table',
+        'uses' => 'Admin\AdminTimeTableController@getTimeTable'
     ));
 });
