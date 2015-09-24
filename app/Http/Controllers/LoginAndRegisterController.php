@@ -318,20 +318,19 @@ class LoginAndRegisterController extends Controller
         if ($user_registered_to_school && $user_registered_to_school->count() > 0) {
 
             $school_session = SchoolSession::where('school_id', '=', $user_registered_to_school->school_id)->where('current_session', '=', 1)->get()->first();
-
             $user_registered_to_session = UsersRegisteredToSession::where('session_id', $school_session->id)
                 ->where('user_id', Auth::user()->id)->where('school_id', $user_registered_to_school->school_id)->get();
             if ($user_registered_to_session->count() > 0) {
-
-                return redirect($route_home);
+                if($this->userLoginInfo(Auth::user()->id, $user_registered_to_school->school_id)){
+                    return redirect($route_home)->with('global', 'Welcome Back !!');
+                }
             } else {
-
-                Session::flash('global', 'Loggedin Successfully.<br>You Have to Register For new School Session first');
-                return redirect($route_set_class_initial_settings);
+                return redirect($route_set_class_initial_settings)->with('global', 'Loggedin Successfully. You Have to Register For new School Session first');
             }
         } else {
             return redirect($route_welcome_settings);
         }
+        return redirect(route('account-user-sign-in'))->with('global', 'Something Went Wrong. Try Again later !!');
     }
 
     protected function goToAfterSignInAdmin($user_id)
@@ -341,8 +340,7 @@ class LoginAndRegisterController extends Controller
 
         if ($userType != Groups::Administrator_Group_ID) {
 
-            Session::flash('global', 'Sorry Something went Wrong. Please try again Later!!');
-            return redirect(route('admin-welcome-settings'));
+            return redirect(route('admin-welcome-settings'))->with('global', 'Sorry Something went Wrong. Please try again Later!!');
         }
 
         $user_registered_to_school = UsersRegisteredToSchool::where('user_id', $user_id)->get()->first();
@@ -352,16 +350,16 @@ class LoginAndRegisterController extends Controller
             $school_session = SchoolSession::where('school_id', '=', $user_registered_to_school->school_id)->where('current_session', '=', 1)->get()->first();
 
             if ($school_session && $school_session->count() > 0) {
-
-                return redirect(route('admin-home'));
+                if($this->userLoginInfo(Auth::user()->id, $user_registered_to_school->school_id)){
+                    return redirect(route('admin-home'));
+                }
             } else {
-
-                Session::flash('global', 'Loggedin Successfully.<br>You Have to Register For new School Session first');
-                return redirect(route('admin-class-set-initial'));
+                return redirect(route('admin-class-set-initial'))->with('global', 'Loggedin Successfully. You Have to Register For new School Session first');
             }
         } else {
             return redirect(route('admin-welcome-settings'));
         }
+        return redirect(route('account-admin-sign-in'))->with('global', 'Sorry Something went Wrong. Please try again Later!!');
     }
 
     public function postSignInMobileApp(Request $request)
@@ -642,5 +640,17 @@ class LoginAndRegisterController extends Controller
 
         $flash_data = 'You have been successfully Logged Out!!';
         return redirect($account_sign_in_route)->with('global', $flash_data);
+    }
+
+    private function userLoginInfo($userId, $schoolId){
+
+        $login_info = new UserLoginInfo();
+        $login_info->user_id = $userId;
+        $login_info->school_id = $schoolId;
+
+        if($login_info->save()){
+            return true;
+        }
+        return false;
     }
 }

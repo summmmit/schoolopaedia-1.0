@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Teacher;
 
+use App\Models\UsersRegisteredToSchool;
 use App\Models\UsersRegisteredToSession;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Validator;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -43,14 +45,26 @@ class TeacherAccountController extends Controller
             return ApiResponseClass::errorResponse('You Have Some Input Errors. Please Try Again!!', $input, $validator->errors());
         } else {
 
-            $user_registered_to_session = new UsersRegisteredToSession();
-            $user_registered_to_session->session_id = $session_id;
-            $user_registered_to_session->school_id = $this->getSchoolAndUserBasicInfo()->getSchoolId();
-            $user_registered_to_session->user_id = $this->getSchoolAndUserBasicInfo()->getUserId();
+            $user_registered_to_school = UsersRegisteredToSchool::where('user_id', Auth::user()->id)->get()->first();
 
-            $user_registered_to_session->save();
-            if ($user_registered_to_session->save()) {
-                return ApiResponseClass::successResponse($user_registered_to_session, $input);
+            if($user_registered_to_school){
+
+                $user_registered_to_session = UsersRegisteredToSession::where('session_id', $session_id)
+                    ->where('user_id', Auth::user()->id)->get()->first();
+
+                if($user_registered_to_session){
+                    return ApiResponseClass::successResponse($user_registered_to_session, $input);
+                }
+
+                $user_registered_to_session = new UsersRegisteredToSession();
+                $user_registered_to_session->session_id = $session_id;
+                $user_registered_to_session->school_id = $user_registered_to_school->school_id;
+                $user_registered_to_session->user_id = Auth::user()->id;
+
+                $user_registered_to_session->save();
+                if ($user_registered_to_session->save()) {
+                    return ApiResponseClass::successResponse($user_registered_to_session, $input);
+                }
             }
         }
         return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $input);

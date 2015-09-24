@@ -336,4 +336,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
         'as' => 'admin-current-session',
         'uses' => 'Admin\AdminSchoolSettingsController@postGetSchoolCurrentSession'
     ));
+    /**
+     * Check if Current Session is set
+     */
+    Route::Post('/check/current/session/is/set', array(
+        'as' => 'admin-check-current-session-set',
+        'uses' => 'Admin\AdminSchoolSettingsController@checkIfCurrentSessionSet'
+    ));
 });

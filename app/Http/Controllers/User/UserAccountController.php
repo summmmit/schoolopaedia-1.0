@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\User;
 
 use App\Models\SchoolSession;
+use App\Models\UsersRegisteredToSchool;
+use App\Models\UsersRegisteredToSession;
 use App\Libraries\SchoolAndUserBasicInfo;
 use App\Libraries\ApiResponseClass;
 use App\Models\UsersToClass;
@@ -15,24 +17,6 @@ use App\Http\Controllers\Controller;
 
 class UserAccountController extends Controller
 {
-    protected $_schoolAndUserBasicInfo;
-
-    /**
-     * AdminSchoolSettingsController constructor.
-     */
-    public function __construct(SchoolAndUserBasicInfo $schoolAndUserBasicInfo)
-    {
-        $this->_schoolAndUserBasicInfo = $schoolAndUserBasicInfo;
-    }
-
-    /**
-     * @return SchoolAndUserBasicInfo
-     */
-    public function getSchoolAndUserBasicInfo()
-    {
-        return $this->_schoolAndUserBasicInfo;
-    }
-
     public function getHome()
     {
         return view('user.home');
@@ -45,8 +29,7 @@ class UserAccountController extends Controller
 
     public function getSetInitial()
     {
-        //$school_session = SchoolSession::where('school_id', $this->getSchoolAndUserBasicInfo()->getSchoolId())->get()->first();
-        return view('user.initial-school-settings')->with('session', $this->getSchoolAndUserBasicInfo()->getCurrentSchoolSession());
+        return view('user.initial-school-settings');
     }
 
     public function postSetInitial(Request $request)
@@ -84,20 +67,31 @@ class UserAccountController extends Controller
                 return ApiResponseClass::successResponse($user_to_class, $input, 'User is Already Registered!!');
             }else{
 
-                $user_to_class = new UsersToClass();
-                $user_to_class->session_id = $session_id;
-                $user_to_class->stream_id = $stream_id;
-                $user_to_class->class_id = $class_id;
-                $user_to_class->section_id = $section_id;
-                $user_to_class->user_id = Auth::user()->id;
+                $user_registered_to_school = UsersRegisteredToSchool::where('user_id', Auth::user()->id)->get()->first();
 
-                $user_registered_to_session = new UsersRegisteredToSession();
-                $user_registered_to_session->session_id = $this->getSchoolAndUserBasicInfo()->getCurrentSchoolSessionId();
-                $user_registered_to_session->school_id = $this->getSchoolAndUserBasicInfo()->getSchoolId();
-                $user_registered_to_session->user_id = $this->getSchoolAndUserBasicInfo()->getUserId();
+                $user_registered_to_session = UsersRegisteredToSession::where('session_id', $session_id)
+                    ->where('user_id', Auth::user()->id)->get()->first();
 
-                if($user_to_class->save() && $user_registered_to_session->save()){
-                    return ApiResponseClass::successResponse($user_to_class, $input);
+                if(!$user_registered_to_session){
+
+                    $user_registered_to_session = new UsersRegisteredToSession();
+                    $user_registered_to_session->session_id = $session_id;
+                    $user_registered_to_session->school_id = $user_registered_to_school->school_id;
+                    $user_registered_to_session->user_id = Auth::user()->id;
+
+
+                    $user_to_class = new UsersToClass();
+                    $user_to_class->session_id = $session_id;
+                    $user_to_class->stream_id = $stream_id;
+                    $user_to_class->class_id = $class_id;
+                    $user_to_class->section_id = $section_id;
+                    $user_to_class->user_id = Auth::user()->id;
+
+                    if($user_to_class->save() && $user_registered_to_session->save()){
+                        return ApiResponseClass::successResponse($user_to_class, $input);
+                    }
+                }else{
+                    return ApiResponseClass::successResponse($user_registered_to_session, $input);
                 }
             }
         }

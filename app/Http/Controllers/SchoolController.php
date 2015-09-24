@@ -221,6 +221,15 @@ class SchoolController extends Controller
 
                 if ($school && $school->count() > 0) {
 
+                    $result = array(
+                        'school' => $school
+                    );
+
+                    $users_registered_to_school = UsersRegisteredToSchool::where('user_id', Auth::user()->id)->where('school_id', $school->id)->get()->first();
+
+                    if($users_registered_to_school){
+                        return ApiResponseClass::successResponse($result, $input);
+                    }
                     $users_registered_to_school = new UsersRegisteredToSchool();
                     $users_registered_to_school->user_id = Auth::user()->id;
                     $users_registered_to_school->school_id = $school->id;
@@ -228,10 +237,6 @@ class SchoolController extends Controller
                     $users_registered_to_school->save();
 
                     if ($users_registered_to_school->save()) {
-
-                        $result = array(
-                            'school' => $school
-                        );
                         return ApiResponseClass::successResponse($result, $input);
                     }
                 } else {

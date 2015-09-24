@@ -412,7 +412,8 @@ class AdminSchoolSettingsController extends Controller
         return ApiResponseClass::successResponse($school_sessions);
     }
 
-    public function postGetSessionBySessionId(Request $request){
+    public function postGetSessionBySessionId(Request $request)
+    {
 
         $session_id = $request->input('session_id');
 
@@ -428,10 +429,10 @@ class AdminSchoolSettingsController extends Controller
             return ApiResponseClass::errorResponse('You Have Some Input Errors. Please Try Again!!', $input, $validator->errors());
         } else {
 
-            try{
+            try {
 
                 $school_session = SchoolSession::findOrFail($session_id);
-            }catch (ModelNotFoundException $e){
+            } catch (ModelNotFoundException $e) {
                 return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $input);
             }
             return ApiResponseClass::successResponse($school_session, $input);
@@ -439,11 +440,12 @@ class AdminSchoolSettingsController extends Controller
         return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $input);
     }
 
-    public function postAddOrEditSession(Request $request){
+    public function postAddOrEditSession(Request $request)
+    {
 
         $school_session_id = $request->input('school_session_id');
         $session_start = $request->input('start_session_from');
-        $session_end   = $request->input('end_session_untill');
+        $session_end = $request->input('end_session_untill');
 
         $input = [
             'start_session_from' => $session_start,
@@ -461,10 +463,10 @@ class AdminSchoolSettingsController extends Controller
 
             $school_session = SchoolSession::findOrNew($school_session_id);
             $school_session->session_start = $session_start;
-            $school_session->session_end   = $session_end;
+            $school_session->session_end = $session_end;
             $school_session->school_id = $this->getSchoolAndUserBasicInfo()->getSchoolId();
 
-            if($school_session->save()){
+            if ($school_session->save()) {
 
                 return ApiResponseClass::successResponse($school_session, $input);
             }
@@ -472,7 +474,8 @@ class AdminSchoolSettingsController extends Controller
         return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $input);
     }
 
-    public function postDeleteSession(Request $request){
+    public function postDeleteSession(Request $request)
+    {
 
         $session_id = $request->input('session_id');
 
@@ -488,19 +491,19 @@ class AdminSchoolSettingsController extends Controller
             return ApiResponseClass::errorResponse('You Have Some Input Errors. Please Try Again!!', $input, $validator->errors());
         } else {
 
-            try{
+            try {
 
                 $school_session = SchoolSession::findOrFail($session_id);
-                if($school_session->current_session){
+                if ($school_session->current_session) {
                     return ApiResponseClass::errorResponse('This is current Session .You can not delete it!!', $input);
                 }
-                if(!$school_session->delete()){
+                if (!$school_session->delete()) {
                     throw new ErrorException;
                 }
 
-            }catch (ModelNotFoundException $e){
+            } catch (ModelNotFoundException $e) {
                 return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $input);
-            }catch (ErrorException $e){
+            } catch (ErrorException $e) {
                 return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $input);
             }
             return ApiResponseClass::successResponse($school_session, $input);
@@ -508,7 +511,8 @@ class AdminSchoolSettingsController extends Controller
         return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $input);
     }
 
-    public function postMakeSessionCurrent(Request $request){
+    public function postMakeSessionCurrent(Request $request)
+    {
 
         $session_id = $request->input('session_id');
 
@@ -525,31 +529,31 @@ class AdminSchoolSettingsController extends Controller
         } else {
 
             DB::beginTransaction();
-            try{
+            try {
 
                 $school_session = SchoolSession::findOrFail($session_id);
 
                 $current_session = SchoolSession::where('school_id', $this->getSchoolAndUserBasicInfo()->getSchoolId())
                     ->where('current_session', 1)->get()->first();
-                if($current_session && $current_session->count() > 0){
+                if ($current_session && $current_session->count() > 0) {
                     $current_session->current_session = 0;
 
-                    if(!$current_session->save()){
+                    if (!$current_session->save()) {
                         throw new ErrorException;
                     }
                 }
 
                 $school_session->current_session = 1;
 
-                if(!$school_session->save()){
+                if (!$school_session->save()) {
                     throw new ErrorException;
                 }
 
                 DB::commit();
-            }catch (ModelNotFoundException $e){
+            } catch (ModelNotFoundException $e) {
                 DB::rollback();
                 return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $input);
-            }catch (ErrorException $e){
+            } catch (ErrorException $e) {
                 DB::rollback();
                 return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $input);
             }
@@ -561,5 +565,11 @@ class AdminSchoolSettingsController extends Controller
     public function postGetSchoolCurrentSession()
     {
         return ApiResponseClass::successResponse($this->getSchoolAndUserBasicInfo()->getCurrentSchoolSession());
+    }
+
+    public function checkIfCurrentSessionSet()
+    {
+        $school_session = SchoolSession::where('school_id', $this->getSchoolAndUserBasicInfo()->getSchoolId())->where('current_session', 1)->get()->first();
+        return ApiResponseClass::successResponse($school_session->id);
     }
 }

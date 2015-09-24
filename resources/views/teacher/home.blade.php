@@ -30,7 +30,6 @@
 @stop
 
 @section('scripts')
-<script src="{{ URL::asset('assets/js/required/countries.js') }}"></script>
 
 <!-- Scripts for This page only -->
 <script>

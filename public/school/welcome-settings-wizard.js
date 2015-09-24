@@ -199,7 +199,18 @@ var WelcomeSettingsWizard = function() {
             if(group_id == Student){
                 changeUrl(serverUrl + '/user/class/set/intial');
             }else if(group_id == Administrator){
-                changeUrl(serverUrl + '/admin/class/set/intial');
+                $.ajax({
+                    url:  serverUrl + '/admin/check/current/session/is/set',
+                    dataType: 'json',
+                    method: 'POST',
+                    success: function(data, response) {
+                        if(data.result){
+                            changeUrl(serverUrl + '/admin/home');
+                        }else{
+                            changeUrl(serverUrl + '/admin/class/set/intial');
+                        }
+                    }
+                });
             }else if(group_id == Teacher){
                 changeUrl(serverUrl + '/teacher/class/set/intial');
             }
