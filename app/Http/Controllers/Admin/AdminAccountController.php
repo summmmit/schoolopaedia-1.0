@@ -53,4 +53,9 @@ class AdminAccountController extends Controller
     {
         return view('admin.welcome-settings');
     }
+
+    public function getProfile()
+    {
+        return view('admin.profile');
+    }
 }

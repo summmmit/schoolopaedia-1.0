@@ -52,5 +52,26 @@ Route::group([ 'prefix' => 'user', 'middleware' => 'auth' ], function(){
         'as' => 'user-class-set-initial',
         'uses' => 'User\UserAccountController@getSetInitial'
     ));
+    /**
+     * Get User Profile (get)
+     */
+    Route::get('/profile', array(
+        'as' => 'user-profile',
+        'uses' => 'User\UserAccountController@getProfile'
+    ));
+    /**
+     * Get User Details (post)
+     */
+    Route::Post('/get/details', array(
+        'as' => 'user-get-details',
+        'uses' => 'User\UserAccountController@postGetDetails'
+    ));
+    /**
+     * Update User Details (post)
+     */
+    Route::Post('/update/details', array(
+        'as' => 'user-update-details',
+        'uses' => 'User\UserAccountController@postUpdateDetails'
+    ));
 
 });

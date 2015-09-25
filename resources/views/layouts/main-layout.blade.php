@@ -682,6 +682,7 @@
         <!-- end: CORE JAVASCRIPTS  -->
         <!-- start: VARIABLES FOR JAVASCRIPTS  -->
         <script src="{{ URL::asset('school/required/javascript-variables.js') }} "></script>
+        <script src="{{ URL::asset('school/required/required-dropdowns.js') }} "></script>
         <!-- end: VARIABLES FOR JAVASCRIPTS  -->
         <!-- start: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
         @yield('scripts')

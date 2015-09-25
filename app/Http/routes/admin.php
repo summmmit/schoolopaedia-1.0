@@ -378,4 +378,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
         'as' => 'admin-school-time-table',
         'uses' => 'Admin\AdminTimeTableController@getTimeTable'
     ));
+    /**
+     * Get Admin Profile (get)
+     */
+    Route::get('/profile', array(
+        'as' => 'admin-profile',
+        'uses' => 'Admin\AdminAccountController@getProfile'
+    ));
 });

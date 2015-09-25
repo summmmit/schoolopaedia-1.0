@@ -254,7 +254,7 @@ class LoginAndRegisterController extends Controller
         } else {
 
             $user = User::where('email', $email)->get()->first();
-            if ($user->count() > 0) {
+            if ($user && $user->count() > 0) {
                 if ($user->activated) {
 
                     $auth = Auth::attempt([
