@@ -370,17 +370,13 @@
                         <div class="row">
                             <div class="user-left">
                                 <div class="col-sm-6">
-                                    <table class="table table-condensed table-hover">
+                                    <table class="table table-condensed table-hover" id="login_methods_details">
                                         <thead>
                                         <tr>
                                             <th colspan="3"><h3>Login Details</h3></th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr>
-                                            <td class="column-left"><i class="fa fa-skype fa-2x"></i> Skype Id</td>
-                                            <td class="column-right text-center"><strong>summmmit44</strong></td>
-                                        </tr>
                                         <tr>
                                             <td class="column-left"><i class="fa fa-facebook-square fa-2x"></i> Facebook
                                             </td>
@@ -393,23 +389,41 @@
                                             <td class="column-right text-center"><a href="">Connect Facebook</a></td>
                                         </tr>
                                         <tr>
-                                            <td class="column-left">Current Email:</td>
-                                            <td class="column-right text-center"><strong>summmmit44@gmail.com</strong>
+                                            <td class="column-left"><i class="fa fa-cloud fa-2x"></i> Current Email:</td>
+                                            <td class="column-right text-center"><strong id="current_email"></strong>
                                             </td>
                                         </tr>
                                         </tbody>
                                     </table>
-                                    <div class="row" id="update-email-address">
-                                        <div class="col-sm-8">
-                                            <input type="text" class="form-control" id="email" placeholder="Change Email Address"
-                                                   name="email">
+                                    <form role="form" id="update-email-address">
+                                        <h3>Change Email Address</h3>
+                                        <div class="form-group">
+                                            <label class="control-label">
+                                                New Email Address
+                                            </label>
+                                            <input type="email" placeholder="New Email Address" class="form-control"
+                                                   name="new_email" id="email">
                                         </div>
-                                        <div class="col-sm-3">
-                                            <button class="btn btn-info" id="button-update-email">
-                                                Update Email <i class="fa fa-arrow-circle-right"></i>
-                                            </button>
+                                        <div class="form-group">
+                                            <label class="control-label">
+                                                Password
+                                            </label>
+                                            <input type="password" placeholder="Enter Password" class="form-control"
+                                                   name="password" id="password">
                                         </div>
-                                    </div>
+                                        <div class="row">
+                                            <div class="col-sm-9">
+                                                <p class="text-danger">
+                                                    Click the Update Button to Update your Details.
+                                                </p>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <button class="btn btn-success btn-block" type="submit" id="button-update-email">
+                                                    Update <i class="fa fa-arrow-circle-right"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                             <div class="col-sm-6">
@@ -439,7 +453,7 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-9">
-                                            <p>
+                                            <p class="text-danger">
                                                 Click the Update Button to Update your Details.
                                             </p>
                                         </div>

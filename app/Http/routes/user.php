@@ -73,5 +73,12 @@ Route::group([ 'prefix' => 'user', 'middleware' => 'auth' ], function(){
         'as' => 'user-update-details',
         'uses' => 'User\UserAccountController@postUpdateDetails'
     ));
+    /**
+     * Update User Email (post)
+     */
+    Route::Post('/update/email', array(
+        'as' => 'user-update-email',
+        'uses' => 'User\UserAccountController@postChangeEmailAddress'
+    ));
 
 });

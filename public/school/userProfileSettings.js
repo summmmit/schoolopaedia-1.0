@@ -10,7 +10,6 @@ var UserProfileSettings = function () {
             dataType: 'json',
             method: 'POST',
             success: function (data, response) {
-                console.log(data);
                 if (data.status == "success") {
                     attachUserDetails(data.result);
                     attachToFormDetails(data.result);
@@ -37,6 +36,8 @@ var UserProfileSettings = function () {
             $('#social-icons').find('#twitter').attr('href', 'http://www.twitter.com/' + result.user_details.twitter);
             $('#social-icons').find('#facebook').attr('href', 'http://www.facebook.com/' + result.user_details.facebook);
             $('#social-icons').find('#google').attr('href', 'http://www.google.com/' + result.user_details.google);
+            // login methods details table
+            $('#login_methods_details').find('#current_email').html(result.user.email);
         }
 
         function attachToFormDetails(result) {
@@ -44,7 +45,6 @@ var UserProfileSettings = function () {
             $('#form-edit-user-details').find('#middle_name').val(result.user_details.middle_name);
             $('#form-edit-user-details').find('#last_name').val(result.user_details.last_name);
             var dob = breakDateToYMD(result.user_details.dob);
-            console.log(dob[2]);
             $('#form-edit-user-details').find('select[id="dd"]>option[value="' + dob[2] + '"]').prop('selected', 'selected');
             $('#form-edit-user-details').find('#mm').val();
             $('#form-edit-user-details').find('#yyyy').val(dob[0]);
@@ -114,13 +114,34 @@ var UserProfileSettings = function () {
             });
         });
 
+        function attachEmailAddress(result){
+            $('#login_methods_details').find('#current_email').html(result);
+            $('#table-user-contact-information').find('#email').html(result);
+        }
+
         $('#button-update-email').on('click', function (e) {
             e.preventDefault();
 
             var data = {
-                'email' : $('#udpate-email-address').find('#email').val()
+                'new_email' : $(this).parents('form').find('#email').val(),
+                'password' : $(this).parents('form').find('#password').val()
             }
-            console.log(data);
+            $.ajax({
+                url: serverUrl + '/user/update/email',
+                dataType: 'json',
+                cache: false,
+                method: 'POST',
+                data: data,
+                success: function (data, response) {
+                    if (data.status == "failed") {
+                        toastr.warning(data.error.error_description);
+                    } else if (data.status == "success") {
+                        attachEmailAddress(data.result.email);
+                        toastr.success('You Have Successfully Updated Your details');
+                        window.location = '#panel_overview';
+                    }
+                }
+            });
         });
     };
 
@@ -133,7 +154,6 @@ var UserProfileSettings = function () {
             method: 'POST',
             data: data,
             success: function (result, response) {
-                console.log(result);
 
                 if (result.status == "failed") {
                     errorHandler(result.error.result);

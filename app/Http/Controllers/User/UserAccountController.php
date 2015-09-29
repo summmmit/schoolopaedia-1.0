@@ -227,30 +227,37 @@ class UserAccountController extends Controller
 
     public function postChangeEmailAddress(Request $request){
 
-        $email = $request->input('email');
+        $email = $request->input('new_email');
+        $password = $request->input('password');
 
         $validator = Validator::make($request->all(), array(
             'email' => 'sometimes|max:60|email|unique:users'
         ));
+
         if ($validator->fails()) {
             return ApiResponseClass::errorResponse('You Have Some Input Errors. Please Try Again!!', $request->all(), $validator->errors());
         } else {
 
             $user = User::findOrFail($this->getUserId());
 
-            $now = date("Y-m-d H-i-s");
+            //authenticate the password here
+            $password_authenticated = true;
 
-            if ($user->email != $email) {
-                $user->email = $email;
-                $user->email_updated_at = $now;
-            }
-            //send email for verification
-            if ($user->save()) {
+            if($user && $password_authenticated){
 
-                $result = [
-                    'user' => User::findOrFail($this->getUserId())
-                ];
-                return ApiResponseClass::successResponse($result, $request->all());
+                $now = date("Y-m-d H-i-s");
+
+                if ($user->email != $email) {
+                    $user->email = $email;
+                    $user->email_updated_at = $now;
+                }
+                //send email for verification
+                if ($user->save()) {
+
+                    return ApiResponseClass::successResponse($user, $request->all());
+                }
+            }else{
+                return ApiResponseClass::errorResponse('Password is not authenticated. Try again Later!!', $request->all());
             }
         }
         return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $request->all());
