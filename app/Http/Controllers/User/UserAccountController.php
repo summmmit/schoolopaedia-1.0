@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\User;
 
+use app\Exceptions\ModelNotSavedException;
+use app\Libraries\RequiredConstants;
 use App\Models\SchoolSession;
 use App\Models\User;
 use App\Models\UserDetails;
@@ -12,7 +14,12 @@ use App\Libraries\ApiResponseClass;
 use App\Models\UsersToClass;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use League\Flysystem\FileNotFoundException;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Validator;
+use Storage;
+use DB;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -119,9 +126,9 @@ class UserAccountController extends Controller
         return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $input);
     }
 
-    public function getProfile()
+    public function getProfileDetails()
     {
-        return view('user.profile');
+        return view('user.profile-details');
     }
 
     public function postGetDetails()
@@ -155,7 +162,7 @@ class UserAccountController extends Controller
         $state = $request->input('state');
         $pin_code = $request->input('pin_code');
         $country = $request->input('country');
-        $skype   = $request->input('skype');
+        $skype = $request->input('skype');
         $facebook = $request->input('facebook');
         $google_plus = $request->input('google_plus');
         $twitter = $request->input('twitter');
@@ -190,14 +197,14 @@ class UserAccountController extends Controller
             $user->sex = $sex;
             $user->marriage_status = $marriage_status;
 
-            if($user->mobile_number != $mobile_number){
+            if ($user->mobile_number != $mobile_number) {
                 $user->mobile_updated_at = $now;
             }
 
             $user->mobile_number = $mobile_number;
             $user->home_number = $home_number;
 
-            if($user->add_1 != $add_1 or $user->add_2 != $add_2){
+            if ($user->add_1 != $add_1 or $user->add_2 != $add_2) {
                 $user->address_updated_at = $now;
             }
 
@@ -225,7 +232,8 @@ class UserAccountController extends Controller
         return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $request->all());
     }
 
-    public function postChangeEmailAddress(Request $request){
+    public function postChangeEmailAddress(Request $request)
+    {
 
         $email = $request->input('new_email');
         $password = $request->input('password');
@@ -240,82 +248,119 @@ class UserAccountController extends Controller
 
             $user = User::findOrFail($this->getUserId());
 
-            //authenticate the password here
-            $password_authenticated = true;
-
-            if($user && $password_authenticated){
+            if ($user && Hash::check($password, $user->password)) {
 
                 $now = date("Y-m-d H-i-s");
-
                 if ($user->email != $email) {
                     $user->email = $email;
                     $user->email_updated_at = $now;
                 }
                 //send email for verification
                 if ($user->save()) {
-
                     return ApiResponseClass::successResponse($user, $request->all());
                 }
-            }else{
+            } else {
                 return ApiResponseClass::errorResponse('Password is not authenticated. Try again Later!!', $request->all());
             }
         }
         return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $request->all());
     }
 
-    public function postChangePassword()
+    public function postChangePassword(Request $request)
     {
+        $old_password = $request->input('old_password');
+        $password = $request->input('password');
+        $password_again = $request->input('password_again');
 
-        $updated = false;
+        $validator = Validator::make($request->all(), array(
+            'password' => 'required|max:60',
+            'old_password' => 'required|max:60',
+            'password_again' => 'required|same:password',
+        ));
 
-        $user = User::find(Auth::user()->id);
+        if ($validator->fails()) {
+            return ApiResponseClass::errorResponse('You Have Some Input Errors. Please Try Again!!', $request->all(), $validator->errors());
+        } else {
 
-        $now = date("Y-m-d H-i-s");
+            $user = User::findOrFail($this->getUserId());
 
-        if ($user->email != Input::get('email')) {
+            if ($user && Hash::check($old_password, $user->password)) {
 
-            $updated = true;
-
-            $validator = Validator::make(Input::all(), array('email' => 'sometimes|max:60|email|unique:users'));
-            if ($validator->fails()) {
-                return Redirect::route('user-profile')->withErrors($validator)->withInput();
-            } else {
-                $user->email = Input::get('email');
-                $user->email_updated_at = $now;
-            }
-        }
-
-        $auth = Auth::attempt(array('password' => Input::get('old_password')));
-
-        if ($auth) {
-            if (Input::get('password') != NULL) {
-
-                $updated = true;
-
-                $validator = Validator::make(Input::all(), array(
-                        'password' => 'required|min:3',
-                        'password_again' => 'required|same:password'
-                    )
-                );
-                if ($validator->fails()) {
-                    return Redirect::route('user-profile')->withErrors($validator);
-                } else {
-                    $user->password = Hash::make(Input::get('password'));
-                    $user->password_updated_at = $now;
+                $now = date("Y-m-d H-i-s");
+                $user->password = Hash::make($password);
+                $user->password_updated_at = $now;
+                //send email for verification
+                if ($user->save()) {
+                    return ApiResponseClass::successResponse($user, $request->all());
                 }
+            } else {
+                return ApiResponseClass::errorResponse('Password is not authenticated. Try again Later!!', $request->all());
             }
-        } else {
-            return Redirect::route('user-profile')->with('details-not-changed', 'Your Current Password is not matched. Try Again');
+        }
+    }
+
+    public function getProfile()
+    {
+        return view('user.profile');
+    }
+
+    public function postUpdateProfilePic(Request $request)
+    {
+        if ($request->hasFile('profile_image')) {
+
+            $profile_image = $request->file('profile_image');
+            if ($profile_image->isValid()) {
+                if ($profile_image->getClientSize() <= RequiredConstants::MAXIMUM_PROFILE_IMAGE_SIZE) {
+
+                    $allowed_file_types = [ 'jpg', 'png', 'jpeg' ];
+                    if(in_array($profile_image->guessClientExtension(), $allowed_file_types)){
+
+                        DB::beginTransaction();
+
+                        try{
+                            $now = date("Y-m-d H:i:s");
+                            $pic_name = rand(1, 500000).strtotime($now).'.'.$profile_image->guessClientExtension();
+
+                            $userDetails = UserDetails::where('user_id', $this->getUserId())->get()->first();
+
+                            //Storage::delete(app_path(RequiredConstants::USER_PROFILE_IMAGES_PATH.'/'.$userDetails->pic));
+
+                            $userDetails->pic = $pic_name;
+                            $userDetails->pic_updated_at = $now;
+
+                            if(!$userDetails->save()){
+                                throw new ModelNotSavedException();
+                            }
+
+                            $profile_image->move(RequiredConstants::USER_PROFILE_IMAGES_PATH, $pic_name);
+                            DB::commit();
+                        }catch (ModelNotSavedException $e){
+                            DB::rollback();
+                            return ApiResponseClass::errorResponse('File Could not be uploaded. Please Try Again!!', $request->all());
+                        }catch (FileException $e){
+                            DB::rollback();
+                            return ApiResponseClass::errorResponse('File Could not be uploaded. Please Try Again!!', $request->all());
+                        }catch (FileNotFoundException $e){
+                            DB::rollback();
+                            return ApiResponseClass::errorResponse('File Not Found. Please Try Again!!', $request->all());
+                        }
+                        return ApiResponseClass::successResponse($userDetails, $request->all());
+                    }else{
+                        return ApiResponseClass::errorResponse('This file type is not allowed to upload.!!', $request->all());
+                    }
+                } else {
+                    return ApiResponseClass::errorResponse('Maximum file size limit is 5MB.!!', $request->all());
+                }
+            } else {
+                return ApiResponseClass::errorResponse('Not a Valid File.!!', $request->all());
+            }
         }
 
-        if ($updated) {
-            if ($user->save()) {
-                return Redirect::route('user-profile')->with('details-changed', ' Your Details are Changed');
-            } else {
-                return Redirect::route('user-profile')->with('details-not-changed', 'Your details Not Changed . Try Again');
-            }
-        } else {
-            return Redirect::route('user-profile')->with('details-not-changed', ' You didn\'t changed any details. Check and Try Again');
-        }
+        return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $request->all());
+    }
+
+    protected function deleteLastImage($image_name, $path){
+
+        storage_path($path.$image_name);
     }
 }

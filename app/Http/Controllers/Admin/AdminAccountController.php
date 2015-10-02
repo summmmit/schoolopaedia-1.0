@@ -56,6 +56,6 @@ class AdminAccountController extends Controller
 
     public function getProfile()
     {
-        return view('admin.profile');
+        return view('admin.profile-test');
     }
 }

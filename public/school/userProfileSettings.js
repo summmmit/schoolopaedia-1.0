@@ -114,17 +114,55 @@ var UserProfileSettings = function () {
             });
         });
 
-        function attachEmailAddress(result){
+        function attachEmailAddress(result) {
             $('#login_methods_details').find('#current_email').html(result);
             $('#table-user-contact-information').find('#email').html(result);
         }
+
+        function blankEmailFormValues() {
+            $('#update-email-address').find('#email').val("");
+            $('#update-email-address').find('#password').val("");
+        }
+
+        function blankPasswordFormValues() {
+            $('#form-update-password').find('#password').val("");
+            $('#form-update-password').find('#old_password').val("");
+            $('#form-update-password').find('#password_again').val("");
+        }
+
+        $('#button-update-password').on('click', function (e) {
+            e.preventDefault();
+
+            var data = {
+                'old_password': $(this).parents('form').find('#old_password').val(),
+                'password': $(this).parents('form').find('#password').val(),
+                'password_again': $(this).parents('form').find('#password_again').val()
+            }
+            $.ajax({
+                url: serverUrl + '/user/update/password',
+                dataType: 'json',
+                cache: false,
+                method: 'POST',
+                data: data,
+                success: function (data, response) {
+                    blankPasswordFormValues();
+                    if (data.status == "failed") {
+                        toastr.warning(data.error.error_description);
+                    } else if (data.status == "success") {
+                        attachEmailAddress(data.result.email);
+                        toastr.success('You Have Successfully Updated Your Password');
+                        window.location = '#panel_overview';
+                    }
+                }
+            });
+        });
 
         $('#button-update-email').on('click', function (e) {
             e.preventDefault();
 
             var data = {
-                'new_email' : $(this).parents('form').find('#email').val(),
-                'password' : $(this).parents('form').find('#password').val()
+                'new_email': $(this).parents('form').find('#email').val(),
+                'password': $(this).parents('form').find('#password').val()
             }
             $.ajax({
                 url: serverUrl + '/user/update/email',
@@ -134,6 +172,7 @@ var UserProfileSettings = function () {
                 data: data,
                 success: function (data, response) {
                     if (data.status == "failed") {
+                        blankEmailFormValues();
                         toastr.warning(data.error.error_description);
                     } else if (data.status == "success") {
                         attachEmailAddress(data.result.email);
@@ -144,26 +183,6 @@ var UserProfileSettings = function () {
             });
         });
     };
-
-    function sendRequest(data, url_data_from, url_change_page_to) {
-
-        $.ajax({
-            url: url_data_from,
-            dataType: 'json',
-            cache: false,
-            method: 'POST',
-            data: data,
-            success: function (result, response) {
-
-                if (result.status == "failed") {
-                    errorHandler(result.error.result);
-                } else if (result.status == "success") {
-                    //changeUrl(url_change_page_to);
-                }
-            }
-        });
-    }
-
     return {
         //main function to initiate template pages
         init: function () {
