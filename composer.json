@@ -11,7 +11,8 @@
     "php": ">=5.5.9",
     "laravel/framework": "5.1.*",
     "rokde/laravel-bootstrap-formbuilder": "0.0.2",
-    "oriceon/oauth-5-laravel": "dev-master"
+    "oriceon/oauth-5-laravel": "dev-master",
+    "laravel/socialite": "^2.0"
   },
   "require-dev": {
     "fzaninotto/faker": "~1.4",
@@ -25,8 +26,7 @@
   "autoload": {
     "classmap": [
       "database",
-      "app/Models",
-      "app/Exceptions/ModelNotSavedException"
+      "app/Models"
     ],
     "psr-4": {
       "App\\": "app/"
