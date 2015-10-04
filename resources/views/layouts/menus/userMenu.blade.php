@@ -15,10 +15,10 @@ $student_group_id = Groups::Student_Group_Id;
     <a data-toggle="dropdown" data-hover="dropdown" class="dropdown-toggle" data-close-others="true" href="#">
         @if($userDetails->pic == null)
             <img src="{{ URL::asset('assets/images/anonymous.jpg') }}" class="img-circle" alt="" width="30px"
-                 height="30px">
+                 height="30px" id="upper_dropdown_menu_profile_image">
         @else
-            <img src="{{ URL::asset('assets/projects/images/profilepics/'.$userDetails->pic) }}" class="img-circle"
-                 alt="" width="30px" height="30px">
+            <img src="{{ URL::asset('school/images/user/profile_images/'.$userDetails->pic) }}" class="img-circle"
+                 alt="" width="30px" height="30px" id="upper_dropdown_menu_profile_image">
         @endif
         <span class="username hidden-xs">{{ $userDetails->first_name }} {{ $userDetails->last_name }}</span> <i
                 class="fa fa-caret-down "></i>
@@ -28,10 +28,10 @@ $student_group_id = Groups::Student_Group_Id;
     <div class="inline-block">
         @if($userDetails->pic == null)
             <img src="{{ URL::asset('assets/images/anonymous.jpg') }}" class="img-circle" alt="" width="50px"
-                 height="50px">
+                 height="50px" id="left_menu_profile_image">
         @else
-            <img src="{{ URL::asset('assets/projects/images/profilepics/'.$userDetails->pic) }}" alt="" height="50px"
-                 width="50px">
+            <img src="{{ URL::asset('school/images/user/profile_images/'.$userDetails->pic) }}" alt="" height="50px"
+                 width="50px" id="left_menu_profile_image">
         @endif
     </div>
     <div class="inline-block">

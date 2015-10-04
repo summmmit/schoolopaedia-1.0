@@ -52,12 +52,13 @@ Route::group([ 'prefix' => 'user', 'middleware' => 'auth' ], function(){
         'as' => 'user-class-set-initial',
         'uses' => 'User\UserAccountController@getSetInitial'
     ));
+    /*----------------------------user profile details -----------------------------------------*/
     /**
-     * Get User Profile (get)
+     * Get User Profile Details (get)
      */
-    Route::get('/profile', array(
-        'as' => 'user-profile',
-        'uses' => 'User\UserAccountController@getProfile'
+    Route::get('/profile/details', array(
+        'as' => 'user-profile-details',
+        'uses' => 'User\UserAccountController@getProfileDetails'
     ));
     /**
      * Get User Details (post)
@@ -80,5 +81,26 @@ Route::group([ 'prefix' => 'user', 'middleware' => 'auth' ], function(){
         'as' => 'user-update-email',
         'uses' => 'User\UserAccountController@postChangeEmailAddress'
     ));
-
+    /**
+     * Update User Password (post)
+     */
+    Route::Post('/update/password', array(
+        'as' => 'user-update-password',
+        'uses' => 'User\UserAccountController@postChangePassword'
+    ));
+    /********************************** User Profile ****************************************/
+    /**
+     * Get User Profile (get)
+     */
+    Route::get('/profile', array(
+        'as' => 'user-profile',
+        'uses' => 'User\UserAccountController@getProfile'
+    ));
+    /**
+     * Update User Profile pic (post)
+     */
+    Route::Post('/update/profile/pic', array(
+        'as' => 'user-update-profile-pic',
+        'uses' => 'User\UserAccountController@postUpdateProfilePic'
+    ));
 });
