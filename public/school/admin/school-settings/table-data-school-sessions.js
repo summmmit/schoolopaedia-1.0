@@ -61,8 +61,8 @@ var TableDataSchoolSessions = function () {
             }else{
                 oTable.fnUpdate('<input type="radio" name="session_make_current" id="session_make_current">', nRow, 2, false);
             }
-            oTable.fnUpdate('<a class="edit-session-row">Edit</a>', nRow, 3, false);
-            oTable.fnUpdate('<a class="delete-session-row" href="">Delete</a>', nRow, 4, false);
+            oTable.fnUpdate('<a class="edit-session-row" href="#">Edit</a>', nRow, 3, false);
+            oTable.fnUpdate('<a class="delete-session-row" href="#">Delete</a>', nRow, 4, false);
             oTable.fnDraw();
 
             nRow = nRow.setAttribute('data-school-session-id', result.id);

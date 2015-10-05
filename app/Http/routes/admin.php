@@ -385,4 +385,73 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
         'as' => 'admin-profile',
         'uses' => 'Admin\AdminAccountController@getProfile'
     ));
+
+    /****************************Period Profile *************************************/
+
+    /**
+     * Get Admin Periods (get)
+     */
+    Route::get('/periods', array(
+        'as' => 'admin-periods',
+        'uses' => 'Admin\AdminTimeTableController@getPeriods'
+    ));
+    /**
+     * Get All Periods Profiles (post)
+     */
+    Route::Post('/get/all/period/profiles', array(
+        'as' => 'admin-get-all-period-profiles',
+        'uses' => 'Admin\AdminTimeTableController@postGetAllPeriodProfiles'
+    ));
+    /**
+     * Edit or Create Periods Profiles (post)
+     */
+    Route::Post('/edit/create/period/profiles', array(
+        'as' => 'admin-edit-or-create-period-profiles',
+        'uses' => 'Admin\AdminTimeTableController@postEditOrCreatePeriodProfiles'
+    ));
+    /**
+     * Delete Periods Profiles (post)
+     */
+    Route::Post('/delete/period/profiles', array(
+        'as' => 'admin-delete-period-profiles',
+        'uses' => 'Admin\AdminTimeTableController@postDeletePeriodProfiles'
+    ));
+    /**
+     * Make Periods Profiles Current (post)
+     */
+    Route::Post('/make/current/period/profiles', array(
+        'as' => 'admin-make-current-period-profiles',
+        'uses' => 'Admin\AdminTimeTableController@postMakeCurrentPeriodProfiles'
+    ));
+    /**
+     * Make Periods Profiles Current (post)
+     */
+    Route::Post('/get/period/profiles/by/id', array(
+        'as' => 'admin-period-profiles-by-id',
+        'uses' => 'Admin\AdminTimeTableController@postPeriodProfilesById'
+    ));
+
+    /****************************************Periods*****************************************
+
+    /**
+     * Get All Periods (post)
+     */
+    Route::Post('/get/all/periods/by/profile/id', array(
+        'as' => 'admin-get-all-periods-by-profile-id',
+        'uses' => 'Admin\AdminTimeTableController@postGetAllPeriodsByProfileId'
+    ));
+    /**
+     * Edit or Create Periods (post)
+     */
+    Route::Post('/edit/create/period', array(
+        'as' => 'admin-edit-or-create-period',
+        'uses' => 'Admin\AdminTimeTableController@postEditOrCreatePeriod'
+    ));
+    /**
+     * Delete Periods (post)
+     */
+    Route::Post('/delete/period', array(
+        'as' => 'admin-delete-period',
+        'uses' => 'Admin\AdminTimeTableController@postDeletePeriod'
+    ));
 });

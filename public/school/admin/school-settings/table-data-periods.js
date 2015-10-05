@@ -126,7 +126,7 @@ var TableDataPeriods = function() {
                     restoreRow(oTable, actualEditingRow);
                 }
                 newRow = true;
-                var aiNew = oTable.fnAddData(['', '', '', '', '']);
+                var aiNew = oTable.fnAddData(['', '', '', '']);
                 var nRow = oTable.fnGetNodes(aiNew[0]);
                 editRow(oTable, nRow);
                 actualEditingRow = nRow;

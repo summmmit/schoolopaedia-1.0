@@ -162,7 +162,7 @@ class AdminClassSettingsController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return ApiResponseClass::errorResponse('You Have Some Input Errors. Please Try Again!!', $input, $validator->errors());
+            return ApiResponseClass::errorResponse('You Have Some Input Errors. Please Try Again!!', $request->all(), $validator->errors());
         } else {
 
             $class = Classes::findOrNew($class_id);
@@ -171,26 +171,22 @@ class AdminClassSettingsController extends Controller
             $class->school_id = $this->getSchoolAndUserBasicInfo()->getSchoolId();
 
             if ($class->save()) {
-                return ApiResponseClass::successResponse($class, $input);
+                return ApiResponseClass::successResponse($class, $request->all());
             }
         }
-        return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $input);
+        return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $request->all());
     }
 
     public function postDeleteClass(Request $request)
     {
         $class_id = $request->input('class_id');
 
-        $input = [
-            'class_id' => $class_id,
-        ];
-
         $validator = validator::make($request->all(), [
             'class_id' => 'required'
         ]);
 
         if ($validator->fails()) {
-            return ApiResponseClass::errorResponse('You Have Some Input Errors. Please Try Again!!', $input, $validator->errors());
+            return ApiResponseClass::errorResponse('You Have Some Input Errors. Please Try Again!!', $request->all(), $validator->errors());
         } else {
 
             DB::beginTransaction();
@@ -207,37 +203,33 @@ class AdminClassSettingsController extends Controller
 
             } catch (ModelNotFoundException $e) {
                 DB::rollback();
-                return ApiResponseClass::errorResponse('SomeThing Went Wrong. Please Try Again Later or Contact Support!!', $input);
+                return ApiResponseClass::errorResponse('SomeThing Went Wrong. Please Try Again Later or Contact Support!!', $request->all());
             } catch (ErrorException $e) {
                 DB::rollback();
-                return ApiResponseClass::errorResponse('SomeThing Went Wrong. Please Try Again Later or Contact Support!!', $input);
+                return ApiResponseClass::errorResponse('SomeThing Went Wrong. Please Try Again Later or Contact Support!!', $request->all());
             }
-            return ApiResponseClass::successResponse($class, $input);
+            return ApiResponseClass::successResponse($class, $request->all());
         }
-        return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $input);
+        return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $request->all());
     }
 
     public function postGetAllSectionsByClassId(Request $request)
     {
         $class_id = $request->input('class_id');
 
-        $input = [
-            'class_id' => $class_id,
-        ];
-
         $validator = validator::make($request->all(), [
             'class_id' => 'required'
         ]);
 
         if ($validator->fails()) {
-            return ApiResponseClass::errorResponse('You Have Some Input Errors. Please Try Again!!', $input, $validator->errors());
+            return ApiResponseClass::errorResponse('You Have Some Input Errors. Please Try Again!!', $request->all(), $validator->errors());
         } else {
 
             $sections = Sections::where('class_id', $class_id)->get();
 
-            return ApiResponseClass::successResponse($sections, $input);
+            return ApiResponseClass::successResponse($sections, $request->all());
         }
-        return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $input);
+        return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $request->all());
     }
 
     public function postAddOrEditSection(Request $request)
@@ -246,19 +238,13 @@ class AdminClassSettingsController extends Controller
         $section_name = $request->input('section_name');
         $section_id = $request->input('section_id');
 
-        $input = [
-            'class_id' => $class_id,
-            'section_id' => $section_id,
-            'section_name' => $section_name
-        ];
-
         $validator = validator::make($request->all(), [
             'class_id' => 'required',
             'section_name' => 'required'
         ]);
 
         if ($validator->fails()) {
-            return ApiResponseClass::errorResponse('You Have Some Input Errors. Please Try Again!!', $input, $validator->errors());
+            return ApiResponseClass::errorResponse('You Have Some Input Errors. Please Try Again!!', $request->all(), $validator->errors());
         } else {
 
             $section = Sections::findOrNew($section_id);
@@ -266,26 +252,22 @@ class AdminClassSettingsController extends Controller
             $section->class_id = $class_id;
 
             if ($section->save()) {
-                return ApiResponseClass::successResponse($section, $input);
+                return ApiResponseClass::successResponse($section, $request->all());
             }
         }
-        return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $input);
+        return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $request->all());
     }
 
     public function postDeleteSection(Request $request)
     {
         $section_id = $request->input('section_id');
 
-        $input = [
-            'section_id' => $section_id,
-        ];
-
         $validator = validator::make($request->all(), [
             'section_id' => 'required'
         ]);
 
         if ($validator->fails()) {
-            return ApiResponseClass::errorResponse('You Have Some Input Errors. Please Try Again!!', $input, $validator->errors());
+            return ApiResponseClass::errorResponse('You Have Some Input Errors. Please Try Again!!', $request->all(), $validator->errors());
         } else {
 
             DB::beginTransaction();
@@ -301,36 +283,32 @@ class AdminClassSettingsController extends Controller
                 DB::commit();
             } catch (ModelNotFoundException $e) {
                 DB::rollback();
-                return ApiResponseClass::errorResponse('SomeThing Went Wrong. Please Try Again Later or Contact Support!!', $input);
+                return ApiResponseClass::errorResponse('SomeThing Went Wrong. Please Try Again Later or Contact Support!!', $request->all());
             } catch (ErrorException $e) {
                 DB::rollback();
-                return ApiResponseClass::errorResponse('SomeThing Went Wrong. Please Try Again Later or Contact Support!!', $input);
+                return ApiResponseClass::errorResponse('SomeThing Went Wrong. Please Try Again Later or Contact Support!!', $request->all());
             }
-            return ApiResponseClass::successResponse($section, $input);
+            return ApiResponseClass::successResponse($section, $request->all());
         }
-        return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $input);
+        return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $request->all());
     }
 
     public function postGetAllSubjectsBySectionId(Request $request)
     {
         $section_id = $request->input('section_id');
 
-        $input = [
-            'section_id' => $section_id,
-        ];
-
         $validator = validator::make($request->all(), [
             'section_id' => 'required'
         ]);
 
         if ($validator->fails()) {
-            return ApiResponseClass::errorResponse('You Have Some Input Errors. Please Try Again!!', $input, $validator->errors());
+            return ApiResponseClass::errorResponse('You Have Some Input Errors. Please Try Again!!', $request->all(), $validator->errors());
         } else {
 
             $subjects = Subjects::where('section_id', $section_id)->get();
-            return ApiResponseClass::successResponse($subjects, $input);
+            return ApiResponseClass::successResponse($subjects, $request->all());
         }
-        return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $input);
+        return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $request->all());
     }
 
     public function postAddOrEditSubject(Request $request)
@@ -340,13 +318,6 @@ class AdminClassSettingsController extends Controller
         $subject_code = $request->input('subject_code');
         $section_id = $request->input('section_id');
 
-        $input = [
-            'subject_id' => $subject_id,
-            'subject_name' => $subject_name,
-            'subject_code' => $subject_code,
-            'section_id' => $section_id
-        ];
-
         $validator = validator::make($request->all(), [
             'section_id' => 'required',
             'subject_name' => 'required',
@@ -354,7 +325,7 @@ class AdminClassSettingsController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return ApiResponseClass::errorResponse('You Have Some Input Errors. Please Try Again!!', $input, $validator->errors());
+            return ApiResponseClass::errorResponse('You Have Some Input Errors. Please Try Again!!', $request->all(), $validator->errors());
         } else {
 
             $subject = Subjects::findOrNew($subject_id);
@@ -363,26 +334,22 @@ class AdminClassSettingsController extends Controller
             $subject->section_id = $section_id;
 
             if ($subject->save()) {
-                return ApiResponseClass::successResponse($subject, $input);
+                return ApiResponseClass::successResponse($subject, $request->all());
             }
         }
-        return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $input);
+        return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $request->all());
     }
 
     public function postDeleteSubject(Request $request)
     {
         $subject_id = $request->input('subject_id');
 
-        $input = [
-            'subject_id' => $subject_id,
-        ];
-
         $validator = validator::make($request->all(), [
             'subject_id' => 'required',
         ]);
 
         if ($validator->fails()) {
-            return ApiResponseClass::errorResponse('You Have Some Input Errors. Please Try Again!!', $input, $validator->errors());
+            return ApiResponseClass::errorResponse('You Have Some Input Errors. Please Try Again!!', $request->all(), $validator->errors());
         } else {
 
             try{
@@ -392,13 +359,13 @@ class AdminClassSettingsController extends Controller
                     throw new ErrorException;
                 }
             }catch (ModelNotFoundException $e){
-                return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $input);
+                return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $request->all());
             }catch (ErrorException $e){
-                return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $input);
+                return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $request->all());
             }
-            return ApiResponseClass::successResponse($subject, $input);
+            return ApiResponseClass::successResponse($subject, $request->all());
         }
-        return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $input);
+        return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $request->all());
     }
 
 }

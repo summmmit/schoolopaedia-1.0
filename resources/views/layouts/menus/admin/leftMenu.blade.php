@@ -40,7 +40,7 @@
                 </a>
             </li>
             <li>
-                <a href="">
+                <a href="{{ URL::route('admin-periods') }}">
                     <span class="title">Periods</span>
                 </a>
             </li>
