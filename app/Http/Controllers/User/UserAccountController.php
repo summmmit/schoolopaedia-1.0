@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Validator;
 use Storage;
 use DB;
+use File;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -323,7 +324,12 @@ class UserAccountController extends Controller
 
                             $userDetails = UserDetails::where('user_id', $this->getUserId())->get()->first();
 
-                            //Storage::delete(app_path(RequiredConstants::USER_PROFILE_IMAGES_PATH.'/'.$userDetails->pic));
+                            if($userDetails->pic){
+                                $path = public_path(RequiredConstants::USER_PROFILE_IMAGES_PATH.$userDetails->pic);
+                                if(!File::delete($path)){
+                                    throw new FileNotFoundException();
+                                }
+                            }
 
                             $userDetails->pic = $pic_name;
                             $userDetails->pic_updated_at = $now;
@@ -359,8 +365,63 @@ class UserAccountController extends Controller
         return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $request->all());
     }
 
-    protected function deleteLastImage($image_name, $path){
+    public function postUpdateCoverPic(Request $request)
+    {
+        if ($request->hasFile('cover_image')) {
 
-        storage_path($path.$image_name);
+            $cover_image = $request->file('cover_image');
+            if ($cover_image->isValid()) {
+                if ($cover_image->getClientSize() <= RequiredConstants::MAXIMUM_COVER_IMAGE_SIZE) {
+
+                    $allowed_file_types = [ 'jpg', 'png', 'jpeg' ];
+                    if(in_array($cover_image->guessClientExtension(), $allowed_file_types)){
+
+                        DB::beginTransaction();
+
+                        try{
+                            $now = date("Y-m-d H:i:s");
+                            $pic_name = rand(1, 500000).strtotime($now).'.'.$cover_image->guessClientExtension();
+
+                            $userDetails = UserDetails::where('user_id', $this->getUserId())->get()->first();
+
+                            if($userDetails->cover_pic){
+                                $path = public_path(RequiredConstants::USER_COVER_PICS_PATH.$userDetails->cover_pic);
+                                if(!File::delete($path)){
+                                    throw new FileNotFoundException();
+                                }
+                            }
+
+                            $userDetails->cover_pic = $pic_name;
+                            $userDetails->cover_pic_updated_at = $now;
+
+                            if(!$userDetails->save()){
+                                throw new ModelNotSavedException();
+                            }
+
+                            $cover_image->move(RequiredConstants::USER_COVER_PICS_PATH, $pic_name);
+                            DB::commit();
+                        }catch (ModelNotSavedException $e){
+                            DB::rollback();
+                            return ApiResponseClass::errorResponse('File Could not be uploaded. Please Try Again!!', $request->all());
+                        }catch (FileException $e){
+                            DB::rollback();
+                            return ApiResponseClass::errorResponse('File Could not be uploaded. Please Try Again!!', $request->all());
+                        }catch (FileNotFoundException $e){
+                            DB::rollback();
+                            return ApiResponseClass::errorResponse('File Not Found. Please Try Again!!', $request->all());
+                        }
+                        return ApiResponseClass::successResponse($userDetails, $request->all());
+                    }else{
+                        return ApiResponseClass::errorResponse('This file type is not allowed to upload.!!', $request->all());
+                    }
+                } else {
+                    return ApiResponseClass::errorResponse('Maximum file size limit is 5MB.!!', $request->all());
+                }
+            } else {
+                return ApiResponseClass::errorResponse('Not a Valid File.!!', $request->all());
+            }
+        }
+
+        return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $request->all());
     }
 }

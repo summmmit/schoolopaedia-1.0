@@ -25,7 +25,7 @@ class RequiredConstants
 
     // Images Folder Paths
     Const USER_PROFILE_IMAGES_PATH = "school/images/user/profile_images/";
-    Const USER_COVER_PICS_PATH = "school/images/user/profile_images/";
+    Const USER_COVER_PICS_PATH = "school/images/user/cover_pics/";
 
     Const ADMIN_PROFILE_IMAGES_PATH = "school/images/admin/profile_images/";
     Const ADMIN_COVER_PICS_PATH = "school/images/admin/profile_images/";
@@ -34,4 +34,5 @@ class RequiredConstants
     Const TEACHER_COVER_PICS_PATH = "school/images/teacher/profile_images/";
 
     Const MAXIMUM_PROFILE_IMAGE_SIZE = 50000;
+    Const MAXIMUM_COVER_IMAGE_SIZE = 1500000;
 }

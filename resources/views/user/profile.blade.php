@@ -16,7 +16,7 @@
             margin-bottom: 0px;
         }
 
-        .profile .image {
+        .profile .cover-image {
             display: block;
             position: relative;
             z-index: 1;
@@ -63,7 +63,7 @@
 
         .cover-upload-btn {
             position: absolute;
-            top: -40px;
+            top: 8px;
             right: 6px;
         }
 
@@ -121,15 +121,20 @@
             <div class="row">
                 <div class="col-sm-12">
                     <div class="profile clearfix">
-                        <div class="image clearfix">
-                            <img src="{{ URL::asset('school/images/default-cover-pic.jpg') }}" class="img-cover"
-                                 id="user-cover-pic">
-									<span class="btn btn-light-purple btn-file btn-sm cover-upload-btn pull-right"
-                                          data-target=".modal-update-profile-pic" data-toggle="modal">
-                                                                            <span class="fileupload-new">
-                                                                                <i class="fa fa-camera"></i>
-                                                                            </span>
-                                    </span>
+                        <div class="cover-image clearfix">
+                            <form role="form" id="cover_image_change" enctype="multipart/form-data">
+                                <div class="fileupload fileupload-new" data-provides="fileupload">
+                                    <img src="{{ URL::asset('school/images/default-cover-pic.jpg') }}"
+                                         class="img-cover" id="user-cover-pic">
+                                    <div class="user-image-buttons">
+																		<span class="btn btn-azure btn-file btn-sm cover-upload-btn no-display">
+                                                                            <span class="fileupload-new"><i class="fa fa-camera"></i></span>
+                                                                            <span class="fileupload-exists"><i class="fa fa-camera"></i></span>
+																			<input class="form-control" type="file" id="cover_image" name="cover_image">
+																		</span>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                         <div class="user clearfix">
                             <div class="avatar">
@@ -188,17 +193,15 @@
                                                                                    id="profile_image"
                                                                                    name="profile_image">
 																		</span>
-                                                            <a href="#" class="btn fileupload-exists btn-red btn-sm"
-                                                               data-dismiss="fileupload">
-                                                                <i class="fa fa-times"></i>
-                                                            </a>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <button data-dismiss="modal" class="btn btn-default" type="button" id="button_close_profile_image">
+                                                <button data-dismiss="modal" class="btn btn-default" type="button"
+                                                        id="button_close_profile_image">
                                                     Close
                                                 </button>
-                                                <button class="btn btn-primary no-display" type="submit" id="button_update_profile_image">
+                                                <button class="btn btn-primary no-display" type="submit"
+                                                        id="button_update_profile_image">
                                                     Save changes
                                                 </button>
                                             </form>
