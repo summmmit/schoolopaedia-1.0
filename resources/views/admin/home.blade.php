@@ -186,7 +186,7 @@
                 </a>
                 <div class="circle-tile-content purple">
                     <div class="circle-tile-description text-faded">Total Students</div>
-                    <div class="circle-tile-number text-faded ">265</div>
+                    <div class="circle-tile-number text-faded "><span id="total_number_students"></span></div>
                     <a class="circle-tile-footer" href="#">Students <i class="fa fa-chevron-circle-right"></i></a>
                 </div>
             </div>
@@ -225,6 +225,26 @@
         jQuery(document).ready(function () {
             Main.init();
             SVExamples.init();
+
+            var total_students = function(){
+
+                $.ajax({
+                    url: serverUrl + '/admin/get/all/students',
+                    dataType: 'json',
+                    cache: false,
+                    method: 'POST',
+                    success: function(data, response) {
+                        console.log(data);
+                        $('#total_number_students').text(data.result.length);
+                    }
+                });
+            }
+
+            var polling = setInterval(function(){
+                total_students();
+            }, 3000);
+
+            total_students();
         });
     </script>
 

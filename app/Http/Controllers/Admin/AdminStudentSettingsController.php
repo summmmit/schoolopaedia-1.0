@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Libraries\SchoolAndUserBasicInfo;
+use App\Libraries\ApiResponseClass;
+use DB;
+
 
 class AdminStudentSettingsController extends Controller
 {
@@ -33,7 +36,7 @@ class AdminStudentSettingsController extends Controller
         return view('admin.school-students');
     }
 
-    public function getAllTheStudentsRegisteredToSchool()
+    public function postGetAllTheStudentsRegisteredToSchool()
     {
         $query = 'SELECT
                   user_details.id,

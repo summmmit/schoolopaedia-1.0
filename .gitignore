@@ -1,5 +1,3 @@
 .idea/
-/public/school/images
-.env
-.env.example
+/.env
 public/school/images/*
