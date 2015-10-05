@@ -103,4 +103,11 @@ Route::group([ 'prefix' => 'user', 'middleware' => 'auth' ], function(){
         'as' => 'user-update-profile-pic',
         'uses' => 'User\UserAccountController@postUpdateProfilePic'
     ));
+    /**
+     * Update User Cover pic (post)
+     */
+    Route::Post('/update/cover/pic', array(
+        'as' => 'user-update-cover-pic',
+        'uses' => 'User\UserAccountController@postUpdateCoverPic'
+    ));
 });

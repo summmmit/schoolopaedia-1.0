@@ -1,5 +1,4 @@
+/.env
+/.env.example
 .idea/
-/public/school/images
-.env
-.env.example
 public/school/images/*
