@@ -1,7 +1,18 @@
-var TableSchoolTeachers = function() {
+var TableDataSchoolStudents = function() {
     "use strict";
     
     var runDataTable_AddClasses = function() {
+
+        $.ajax({
+            url: serverUrl + '/admin/get/all/students',
+            dataType: 'json',
+            cache: false,
+            method: 'POST',
+            success: function(data, response) {
+                console.log(data);
+            }
+        });
+
         var newRow = false;
         var actualEditingRow = null;
 

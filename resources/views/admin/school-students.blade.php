@@ -1020,7 +1020,7 @@
 @section('scripts')
 <!-- Scripts for This page only -->
 <script src="{{ URL::asset('assets/plugins/select2/select2.min.js') }}"></script>
-<script src="{{ URL::asset('school/table-school-students.js') }}"></script><!-- For subjects Table -->
+<script src="{{ URL::asset('school/admin/table-school-students.js') }}"></script><!-- For subjects Table -->
 <script src="{{ URL::asset('assets/js/ui-subview.js') }}"></script>
 
 <script>

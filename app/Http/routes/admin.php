@@ -357,6 +357,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
         'as' => 'admin-all-teachers',
         'uses' => 'Admin\AdminTeacherSettingsController@postGetAllTheTeachersRegisteredToSchool'
     ));
+    //-------------------------------------school students -------------------------------------------------
     /**
      * Get All School Students (get)
      */
@@ -371,6 +372,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
         'as' => 'admin-all-students',
         'uses' => 'Admin\AdminStudentSettingsController@postGetAllTheStudentsRegisteredToSchool'
     ));
+    //------------------------------------------------------school timetable-----------------------------------
     /**
      * Get School Time Table (get)
      */
