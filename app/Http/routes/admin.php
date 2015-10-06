@@ -343,6 +343,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
         'as' => 'admin-check-current-session-set',
         'uses' => 'Admin\AdminSchoolSettingsController@checkIfCurrentSessionSet'
     ));
+
+    //--------------------------------------Teachers -------------------------------------------------------------------
+
     /**
      * Get All School Teachers (get)
      */
@@ -357,7 +360,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
         'as' => 'admin-all-teachers',
         'uses' => 'Admin\AdminTeacherSettingsController@postGetAllTheTeachersRegisteredToSchool'
     ));
+
     //-------------------------------------school students -------------------------------------------------
+
     /**
      * Get All School Students (get)
      */

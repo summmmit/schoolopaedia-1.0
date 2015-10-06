@@ -72,12 +72,13 @@
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-white panel-add-streams">
                 <div class="panel-heading">
-                    <h4><i class="fa fa-calendar"></i><span id="period-profile-name" data-profile-period-id=""> </span></h4>
+                    <h4><i class="fa fa-calendar"></i><span id="period-profile-name" data-profile-period-id=""> </span>
+                    </h4>
                 </div>
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-sm-6 space20">
-                            <button class="btn btn-green add-row-periods">
+                            <button class="btn btn-green add-new-period-row">
                                 Add New <i class="fa fa-plus"></i>
                             </button>
                         </div>
@@ -88,7 +89,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="table-responsive">
+                    <div class="table-responsive margin-bottom-5">
                         <table class="table table-striped table-hover" id="table-periods">
                             <thead>
                             <tr>
@@ -103,6 +104,13 @@
                             </tbody>
                         </table>
                     </div>
+                    <div class="row">
+                        <div class="col-sm-offset-9 col-sm-3">
+                            <button class="btn btn-success">
+                                Delete Profile <i class="fa fa-crosshairs"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -113,7 +121,8 @@
             <!-- Scripts for This page only -->
     <script src="{{ URL::asset('assets/plugins/select2/select2.min.js') }}"></script>
     <script src="{{ URL::asset('school/admin/school-settings/table-data-periods-profiles.js') }}"></script>
-
+    <script src="{{ URL::asset('assets/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js') }}"></script>
+    <script src="{{ URL::asset('assets/plugins/combodate/combodate.js') }}"></script>
     <script>
         jQuery(document).ready(function () {
             Main.init();

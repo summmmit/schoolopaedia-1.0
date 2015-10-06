@@ -101,17 +101,24 @@ class AdminTimeTableController extends Controller
             return ApiResponseClass::errorResponse('You Have Some Input Errors. Please Try Again!!', $request->all(), $validator->errors());
         } else {
 
+            DB::beginTransaction();
+
             try {
 
                 $period_profile = PeriodProfiles::findOrFail($period_profiles_id);
 
+                $periods = Periods::where('period_profile_id', $period_profiles_id)->delete();
+
                 if (!$period_profile->delete()) {
                     throw new ModelNotSavedException();
                 }
+                DB::commit();
 
             } catch (ModelNotSavedException $e) {
+                DB::rollback();
                 return ApiResponseClass::errorResponse('Sorry, profile could not be deleted. Try Again Later!!', $request->all());
             } catch (ModelNotFoundException $e) {
+                DB::rollback();
                 return ApiResponseClass::errorResponse('Sorry, profile could not be deleted. Try Again Later!!', $request->all());
             }
             return ApiResponseClass::successResponse($period_profile, $request->all());

@@ -198,7 +198,7 @@
                 </a>
                 <div class="circle-tile-content dark-blue">
                     <div class="circle-tile-description text-faded">Registered Teachers</div>
-                    <div class="circle-tile-number text-faded ">265</div>
+                    <div class="circle-tile-number text-faded "><span id="total_number_teachers"></span></div>
                     <a class="circle-tile-footer" href="#">Teachers <i class="fa fa-chevron-circle-right"></i></a>
                 </div>
             </div>
@@ -219,32 +219,13 @@
     @stop
 
     @section('scripts')
-
             <!-- Scripts for This page only -->
+    <script src="{{ URL::asset('school/admin/home.js') }}"></script>
     <script>
         jQuery(document).ready(function () {
             Main.init();
             SVExamples.init();
-
-            var total_students = function(){
-
-                $.ajax({
-                    url: serverUrl + '/admin/get/all/students',
-                    dataType: 'json',
-                    cache: false,
-                    method: 'POST',
-                    success: function(data, response) {
-                        console.log(data);
-                        $('#total_number_students').text(data.result.length);
-                    }
-                });
-            }
-
-            var polling = setInterval(function(){
-                total_students();
-            }, 3000);
-
-            total_students();
+            AdminHome.init();
         });
     </script>
 

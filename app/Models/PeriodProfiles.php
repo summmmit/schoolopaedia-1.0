@@ -13,4 +13,8 @@ class PeriodProfiles extends Model
     protected $table = 'period_profiles';
 
     protected $fillable = array('profile_name', 'school_id', 'current_profile');
+
+    public function setProfileNameAttribute($profile_name){
+        $this->attributes['profile_name'] = ucwords($profile_name);
+    }
 }
