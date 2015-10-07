@@ -133,6 +133,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
         'as' => 'admin-class-set-initial-post',
         'uses' => 'Admin\AdminSchoolSettingsController@postSetSchoolSessions'
     ));
+
+    //--------------------------------------------------School Schedule Profiles -----------------------------------------------
+
     /*
      * Get All School Schedule Profiles (post)
      */
@@ -143,8 +146,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     /*
      * Set School Schedule Profile (post)
      */
-    Route::Post('/school/set/schedule/profile/post', array(
-        'as' => 'admin-school-set-schedule-profile-post',
+    Route::Post('/edit/set/schedule/profile/post', array(
+        'as' => 'admin-edit-set-schedule-profile-post',
         'uses' => 'Admin\AdminSchoolSettingsController@postSetSchoolScheduleProfile'
     ));
     /*
@@ -161,6 +164,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
         'as' => 'admin-school-make-current-schedule-profile-post',
         'uses' => 'Admin\AdminSchoolSettingsController@postMakeSchoolScheduleProfileCurrent'
     ));
+
+    //**********************************************School Schedules ***************************************************
+
     /*
      * Get School Schedule (post)
      */
@@ -169,18 +175,25 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
         'uses' => 'Admin\AdminSchoolSettingsController@getSchoolSchedule'
     ));
     /*
+     * Get School Schedules By Profile (post)
+     */
+    Route::Post('/get/all/schedules/by/profile/post', array(
+        'as' => 'admin-get-all-schedules-by-profile-post',
+        'uses' => 'Admin\AdminSchoolSettingsController@postGetAllSchedulesFromProfile'
+    ));
+    /*
      * Set Initial School Schedule (post)
      */
-    Route::Post('/school/set/schedule/post', array(
-        'as' => 'admin-school-set-schedule-post',
+    Route::Post('/edit/set/schedule/post', array(
+        'as' => 'admin-edit-set-schedule-post',
         'uses' => 'Admin\AdminSchoolSettingsController@postSetSchoolSchedule'
     ));
     /*
-     * Get School Schedules By Profile (post)
+     * Delete School Schedule (post)
      */
-    Route::Post('/school/get/schedule/by/profile/post', array(
-        'as' => 'admin-school-get-schedule-by-profile-post',
-        'uses' => 'Admin\AdminSchoolSettingsController@postGetAllSchedulesFromProfile'
+    Route::Post('/delete/schedule/post', array(
+        'as' => 'admin-delete-schedule-post',
+        'uses' => 'Admin\AdminSchoolSettingsController@postDeleteSchoolScheduleById'
     ));
     /*
      * School Information
@@ -203,6 +216,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
         'as' => 'admin-school-students',
         'uses' => 'Admin\AdminSchoolSettingsController@getSchoolStudents'
     ));
+
+    //------------------------------------------------------------Streams and Classes-----------------------------------
+
     /**
      * Get School Streams And Classes settings
      */
@@ -231,6 +247,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
         'as' => 'admin-delete-stream',
         'uses' => 'Admin\AdminClassSettingsController@postDeleteStream'
     ));
+
+    //*************************************************************Streams *********************************************
+
     /**
      * Get All Class By Stream Id
      */
@@ -252,6 +271,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
         'as' => 'admin-delete-class',
         'uses' => 'Admin\AdminClassSettingsController@postDeleteClass'
     ));
+
+    //--------------------------------------------------------------Sections -------------------------------------------
+
     /**
      * Get All Sections By Class Id
      */
@@ -273,6 +295,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
         'as' => 'admin-delete-section',
         'uses' => 'Admin\AdminClassSettingsController@postDeleteSection'
     ));
+
+    //------------------------------------------------Subjects ---------------------------------------------------------
+
     /**
      * Get All Subjects By Section Id
      */
@@ -294,6 +319,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
         'as' => 'admin-delete-subject',
         'uses' => 'Admin\AdminClassSettingsController@postDeleteSubject'
     ));
+
+    //******************************** School Sessions *****************************************************************
+
     /**
      * Get All School Sessions
      */

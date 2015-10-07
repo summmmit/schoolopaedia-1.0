@@ -106,7 +106,7 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-offset-9 col-sm-3">
-                            <button class="btn btn-success">
+                            <button class="btn btn-success delete-period-profile">
                                 Delete Profile <i class="fa fa-crosshairs"></i>
                             </button>
                         </div>

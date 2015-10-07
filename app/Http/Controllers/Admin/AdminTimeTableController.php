@@ -107,6 +107,10 @@ class AdminTimeTableController extends Controller
 
                 $period_profile = PeriodProfiles::findOrFail($period_profiles_id);
 
+                if($period_profile->current_profile){
+                    return ApiResponseClass::errorResponse('Sorry, This is current Profile. You cant delete it.!!', $request->all());
+                }
+
                 $periods = Periods::where('period_profile_id', $period_profiles_id)->delete();
 
                 if (!$period_profile->delete()) {

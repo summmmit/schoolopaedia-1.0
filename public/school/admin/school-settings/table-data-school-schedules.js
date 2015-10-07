@@ -347,39 +347,6 @@ var TableDataSchoolScheduleNew = function () {
 
     };
     var makeScheduleProfileCurrent = function () {
-
-        $('#table-schedule-profiles').on('click', '#schedule_profile_make_current', function (e) {
-            e.preventDefault();
-
-            var data = {
-                'profile_id': $(this).parents('tr').attr('data-profile-id')
-            };
-
-            var input = $(this);
-            bootbox.confirm("Are you sure , u want to make this Profile Current?", function (result) {
-                if (result) {
-
-                    $.blockUI({
-                        message: '<i class="fa fa-spinner fa-spin"></i> Do some ajax to sync with backend...'
-                    });
-                    $.ajax({
-                        url: serverUrl + '/admin/school/make/current/schedule/profile/post',
-                        dataType: 'json',
-                        data: data,
-                        method: 'POST',
-                        success: function (data, response) {
-                            $.unblockUI();
-                            if (data.status == "success") {
-                                input.prop("checked", true);
-                                toastr.info("This is Your Current Profile.");
-                            } else if (data.status == "failed") {
-                                toastr.warning(data.error.error_description);
-                            }
-                        }
-                    });
-                }
-            });
-        });
     };
     return {
         //main function to initiate template pages
