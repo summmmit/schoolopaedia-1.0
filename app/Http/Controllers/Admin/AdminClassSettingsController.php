@@ -43,11 +43,11 @@ class AdminClassSettingsController extends Controller
         return view('admin.class-settings');
     }
 
+    //-----------------------------------------Streams -----------------------------------------------------------------
+
     public function postAllStreams()
     {
-
         $streams = Streams::where('school_id', $this->getSchoolAndUserBasicInfo()->getSchoolId())->get();
-
         return ApiResponseClass::successResponse($streams);
     }
 

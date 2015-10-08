@@ -489,4 +489,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
         'as' => 'admin-delete-period',
         'uses' => 'Admin\AdminTimeTableController@postDeletePeriod'
     ));
+
+    //********************************************** Week Days**********************************************************
+
+    /**
+     * Get All Weekdays (post)
+     */
+    Route::Post('/get/all/weekdays', array(
+        'as' => 'admin-get-all-weekdays',
+        'uses' => 'Admin\AdminTimeTableController@postGetAllWeekDays'
+    ));
 });

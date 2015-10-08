@@ -36,34 +36,35 @@
                 <div class="row">
                     <div class="col-md-offset-3 col-md-6">
                         <div class="form-group">
-                            <label for="field-select-time-table-class">
-                                Select a class
-                            </label>
-                            <select id="field-select-time-table-class" class="form-control">
-                                <option value="">Select a class.....</option>
+                            <select id="form-field-select-streams" class="form-control">
+                                <option value="">Select a stream...</option>
                             </select>
                         </div>
                     </div>
                 </div>
-                <div class="row no-display" id="form-select-section-day">
-                    <div class="col-md-offset-3 col-md-4">
-                        <div class="form-group" id="form-select-section">
-                            <label for="field-select-time-table-section">
-                                Select a section
-                            </label>
-                            <select id="field-select-time-table-section" class="form-control">
-                                <option value="">Select a section.....</option>
+                <div class="row">
+                    <div class="col-md-offset-3 col-md-6 no-display" id="select-classes-dropdown">
+                        <div class="form-group">
+                            <select id="form-field-select-classes" class="form-control">
+                                <option value="">Select a Class...</option>
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-2">
-                        <div class="form-group" id="form-select-day">
-                            <label for="field-select-time-table-day">
-                                Select a Day..
-                            </label>
-                            <select id="field-select-time-table-day" class="form-control">
-                                <option value="">Select a Day...</option>
-                                
+                </div>
+                <div class="row">
+                    <div class="col-md-offset-3 col-md-6 no-display" id="select-sections-dropdown">
+                        <div class="form-group">
+                            <select id="form-field-select-sections" class="form-control">
+                                <option value="">Select a Section...</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-offset-3 col-md-6 no-display" id="select-days-dropdown">
+                        <div class="form-group">
+                            <select id="form-field-select-days" class="form-control">
+                                <option value="">Select a day...</option>
                             </select>
                         </div>
                     </div>
@@ -83,11 +84,10 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover" id="table-add-class-time-table">
+                        <div class="table-responsive no-display" id="section-time-table">
+                            <table class="table table-striped table-hover" id="table-time-table">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
                                         <th>Period</th>
                                         <th>Subject Name (Subject Code)</th>
                                         <th>Teacher Name</th>
@@ -111,14 +111,14 @@
 @section('scripts')
 <!-- Scripts for This page only -->
 <script src="{{ URL::asset('assets/plugins/select2/select2.min.js') }}"></script>
-<script src="{{ URL::asset('assets/js/modifiedJs/admin/timetable/table-data-time-table.js') }}"></script>        <!-- For creating Time Table -->
+<script src="{{ URL::asset('school/admin/timetable/table-data-time-table.js') }}"></script>        <!-- For creating Time Table -->
 <script src="{{ URL::asset('assets/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js') }}"></script>        <!-- For creating Time Table -->
 <script src="{{ URL::asset('assets/plugins/TimePicki-master/js/timepicki.js') }}"></script>        <!-- For TimePicki plugin -->
 <script>
 jQuery(document).ready(function() {
     Main.init();
     SVExamples.init();
-    TableDataTimeTable.init();
+    TableDataTimeTableNew.init();
 });
 </script>
 

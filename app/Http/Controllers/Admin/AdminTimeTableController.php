@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use app\Exceptions\ModelNotSavedException;
 use App\Models\PeriodProfiles;
 use App\Models\Periods;
+use App\Models\WeekDays;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
@@ -296,4 +297,15 @@ class AdminTimeTableController extends Controller
         return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $request->all());
     }
 
+    //--------------------------------------------------------Week Days----------------------------------------------
+
+    /**
+     * @params void
+     * @return json for all the weekdays
+     */
+    public function postGetAllWeekDays(){
+
+        $days = WeekDays::all();
+        return ApiResponseClass::successResponse($days, null);
+    }
 }

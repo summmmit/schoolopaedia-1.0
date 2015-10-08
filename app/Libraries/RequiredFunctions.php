@@ -54,4 +54,23 @@ class RequiredFunctions {
         return $userGroup->group_id;
     }
 
+    /**
+     * @param Void
+     * @return JsonResponse with days
+     */
+    public static function getWeekDaysJson(){
+
+        $days = [
+            'MONDAY' => RequiredConstants::MONDAY,
+            'TUESDAY' => RequiredConstants::TUESDAY,
+            'WEDNESDAY' => RequiredConstants::WEDNESDAY,
+            'THURSDAY' => RequiredConstants::THURSDAY,
+            'FRIDAY' => RequiredConstants::FRIDAY,
+            'SATURDAY' => RequiredConstants::SATURDAY,
+            'SUNDAY' => RequiredConstants::SUNDAY,
+        ];
+
+        return response()->json($days);
+    }
+
 }
