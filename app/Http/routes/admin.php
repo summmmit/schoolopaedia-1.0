@@ -489,6 +489,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
         'as' => 'admin-delete-period',
         'uses' => 'Admin\AdminTimeTableController@postDeletePeriod'
     ));
+    /**
+     * Get All Periods for current Period Profile (post)
+     */
+    Route::Post('/get/all/periods/by/current/profile', array(
+        'as' => 'admin-all-periods-by-current-profile',
+        'uses' => 'Admin\AdminTimeTableController@postGetPeriodsOfCurrentProfile'
+    ));
 
     //********************************************** Week Days**********************************************************
 

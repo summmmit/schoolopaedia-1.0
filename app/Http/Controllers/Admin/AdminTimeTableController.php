@@ -297,6 +297,20 @@ class AdminTimeTableController extends Controller
         return ApiResponseClass::errorResponse('There is Something Wrong. Please Try Again!!', $request->all());
     }
 
+    /**
+     * @params void
+     * @return Json containing all the periods for current profile
+     */
+    public function postGetPeriodsOfCurrentProfile(){
+
+        $current_profile = PeriodProfiles::where('school_id', $this->getSchoolAndUserBasicInfo()->getSchoolId())
+            ->where('current_profile', 1)->get()->first();
+
+        $periods = Periods::where('period_profile_id', $current_profile->id)->get();
+
+        return ApiResponseClass::successResponse($periods, null);
+    }
+
     //--------------------------------------------------------Week Days----------------------------------------------
 
     /**
@@ -307,5 +321,16 @@ class AdminTimeTableController extends Controller
 
         $days = WeekDays::all();
         return ApiResponseClass::successResponse($days, null);
+    }
+
+    //----------------------------------------------------------TimeTable ---------------------------------------------
+
+    public function postGetTimeTableByDayIdPeriodIdSectionId(Request $request){
+
+        $current_profile = PeriodProfiles::where('school_id', $this->getSchoolAndUserBasicInfo()->getSchoolId())
+            ->where('current_profile', 1)->get()->first();
+
+        $periods = Periods::where('period_profile_id', $current_profile->id)->get();
+
     }
 }

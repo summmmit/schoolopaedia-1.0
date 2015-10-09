@@ -183,6 +183,20 @@ var TableDataTimeTableNew = function() {
 
             if (day_id) {
 
+                $.ajax({
+                    url: serverUrl + '/admin/get/all/periods/by/current/profile',
+                    dataType: 'json',
+                    method: 'POST',
+                    success: function (data, response) {
+                        console.log(data)
+                        if (data.result.length > 0) {
+                            for (var i = 0; i < data.result.length; i++) {
+                                attachAllPeriods(data.result[i]);
+                            }
+                        }
+                    }
+                });
+
                 showTimeTable();
             } else {
                 hideTimeTable();
@@ -195,6 +209,13 @@ var TableDataTimeTableNew = function() {
 
         function hideTimeTable(){
             $('body').find('#section-time-table').addClass('no-display');
+        }
+
+        function attachAllPeriods(result) {
+
+            var aiNew = oTable.fnAddData(['', '', '', '', '']);
+            var nRow = oTable.fnGetNodes(aiNew[0]);
+            saveRow(oTable, nRow, result);
         }
 
 		function restoreRow(oTable, nRow) {
@@ -220,11 +241,11 @@ var TableDataTimeTableNew = function() {
 
 		}
 
-		function saveRow(oTable, nRow) {
-			var jqInputs = $('input', nRow);
-			oTable.fnUpdate(jqInputs[0].value, nRow, 0, false);
-			oTable.fnUpdate(jqInputs[1].value, nRow, 1, false);
-			oTable.fnUpdate(jqInputs[2].value, nRow, 2, false);
+		function saveRow(oTable, nRow, result) {
+
+			oTable.fnUpdate(result.period_name, nRow, 0, false);
+			oTable.fnUpdate(result.period_name, nRow, 1, false);
+			oTable.fnUpdate(result.period_name, nRow, 2, false);
 			oTable.fnUpdate('<a class="edit-row" href="">Edit</a>', nRow, 3, false);
 			oTable.fnUpdate('<a class="delete-row" href="">Delete</a>', nRow, 4, false);
 			oTable.fnDraw();
@@ -245,6 +266,7 @@ var TableDataTimeTableNew = function() {
 				actualEditingRow = nRow;
 			}
 		});
+
 		$('#table-time-table').on('click', '.cancel-row', function(e) {
 
 			e.preventDefault();
@@ -259,6 +281,7 @@ var TableDataTimeTableNew = function() {
 				actualEditingRow = null;
 			}
 		});
+
 		$('#table-time-table').on('click', '.delete-row', function(e) {
 			e.preventDefault();
 			if (newRow && actualEditingRow) {
@@ -297,6 +320,7 @@ var TableDataTimeTableNew = function() {
 
 			
 		});
+
 		$('#table-time-table').on('click', '.save-row', function(e) {
 			e.preventDefault();
 
@@ -323,6 +347,7 @@ var TableDataTimeTableNew = function() {
 						}
 					});	
 		});
+
 		$('#table-time-table').on('click', '.edit-row', function(e) {
 			e.preventDefault();
 			if (actualEditingRow) {
@@ -337,8 +362,8 @@ var TableDataTimeTableNew = function() {
 			var nRow = $(this).parents('tr')[0];
 			editRow(oTable, nRow);
 			actualEditingRow = nRow;
-
 		});
+
 		var oTable = $('#table-time-table').dataTable({
 			"aoColumnDefs" : [{
 				"aTargets" : [0]
@@ -357,6 +382,7 @@ var TableDataTimeTableNew = function() {
 			// set the initial value
 			"iDisplayLength" : 10,
 		});
+
 		$('#table-time-table_wrapper .dataTables_filter input').addClass("form-control input-sm").attr("placeholder", "Search");
 		// modify table search input
 		$('#table-time-table_wrapper .dataTables_length select').addClass("m-wrap small");
