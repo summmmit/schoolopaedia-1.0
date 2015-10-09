@@ -7,6 +7,9 @@
         <a href=""><i class="fa fa-caret-up"></i> <span class="title"> Your Profile </span></a>
     </li>
     <li>
+        <a href="{{ URL::route('admin-inbox') }}"><i class="fa fa-caret-up"></i> <span class="title"> Inbox</span></a>
+    </li>
+    <li>
         <a href="{{ URL::route('admin-school-time-table') }}"><i class="fa fa-caret-up"></i> <span class="title"> TimeTable </span></a>
     </li>
     <li>

@@ -385,4 +385,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
         'as' => 'admin-profile',
         'uses' => 'Admin\AdminAccountController@getProfile'
     ));
+
+    //*******************************************Inbox *****************************************************************
+
+    /**
+     * Get Admin Inbox (get)
+     */
+    Route::get('/inbox', array(
+        'as' => 'admin-inbox',
+        'uses' => 'Admin\AdminInboxController@getInbox'
+    ));
 });
