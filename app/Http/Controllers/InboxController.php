@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests;
@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Libraries\SchoolAndUserBasicInfo;
 use App\Libraries\ApiResponseClass;
 
-class AdminInboxController extends Controller
+class inboxController extends Controller
 {
     protected $_schoolAndUserBasicInfo;
 
@@ -31,8 +31,13 @@ class AdminInboxController extends Controller
 
     //**-----------------------------------------------------Inbox ---------------------------------------------------**
 
-    public function getInbox()
+    /**
+     * @param none
+     * @return Inbox mails to this user
+     */
+    public function postGetAllInboxMails()
     {
-        return view('admin.inbox');
+
+
     }
 }

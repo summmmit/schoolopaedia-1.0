@@ -395,4 +395,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
         'as' => 'admin-inbox',
         'uses' => 'Admin\AdminInboxController@getInbox'
     ));
+    /**
+     * Get All the Inbox Mails (Post)
+     */
+    Route::Post('/get/all/inbox/mails', array(
+        'as' => 'admin-all-inbox-mails',
+        'uses' => 'InboxController@postGetAllInboxMails'
+    ));
 });
