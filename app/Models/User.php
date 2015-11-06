@@ -55,4 +55,24 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         'activation_code',
         'persist_code'
     );
+
+    /**
+     * @param $email
+     * @return false if Email is not found
+     * @return user_id if true
+     */
+    public static function getUserIdByEmail($email)
+    {
+        if (!$email) {
+            return false;
+        }
+
+        $user_id = User::where('email', $email)->get()->first()->id;
+
+        if (!$user_id) {
+            return false;
+        }
+
+        return $user_id;
+    }
 }

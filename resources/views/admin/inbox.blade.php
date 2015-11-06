@@ -7,6 +7,8 @@
 @section('stylesheets')
     <link rel="stylesheet"
           href="{{ URL::asset('assets/plugins/material-design-floating-action-button/dist/css/kc.fab.css') }}"/>
+    <link rel="stylesheet"
+          href="{{ URL::asset('assets/plugins/multiple-emails/multiple-emails.css') }}"/>
     <style>
         .mail-box {
             border-collapse: collapse;
@@ -692,8 +694,7 @@
                                     <input type="checkbox" class="mail-checkbox">
                                 </td>
                                 <td class="inbox-small-cells"><i class="fa fa-star inbox-started"></i></td>
-                                <td class="view-message dont-show">Freelancer.com <span
-                                            class="label label-danger pull-right">urgent</span>
+                                <td class="view-message dont-show">Freelancer.com
                                 </td>
                                 <td class="view-message">Stop wasting your visitors</td>
                                 <td class="view-message inbox-small-cells"></td>
@@ -724,9 +725,7 @@
                                     <input type="checkbox" class="mail-checkbox">
                                 </td>
                                 <td class="inbox-small-cells"><i class="fa fa-star"></i></td>
-                                <td class="view-message dont-show">Drupal Community<span
-                                            class="label label-success pull-right">megazine</span>
-                                </td>
+                                <td class="view-message dont-show">Drupal Community </td>
                                 <td class="view-message view-message">Welcome to the Drupal Community</td>
                                 <td class="view-message inbox-small-cells"></td>
                                 <td class="view-message text-right">March 04</td>
@@ -889,7 +888,7 @@
                     <div class="panel-body">
                         <form accept-charset="UTF-8" action="" method="POST" role="form" class="">
                             <div class="form-group">
-                                <input type="text" class="form-control" name="reciepents" placeholder="Reciepents"
+                                <input type="text" class="form-control" name="recipients" placeholder="Recipients"
                                        style="margin-bottom:10px;"/>
                             </div>
                             <div class="form-group">
@@ -900,14 +899,8 @@
                                 <textarea class="form-control counted" name="message" placeholder="Type in your message"
                                           rows="5" style="margin-bottom:10px;"></textarea>
                             </div>
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" value="">
-                                    Notification
-                                </label>
-                            </div>
                             <h6 class="pull-right" id="counter">2500 characters remaining</h6>
-                            <button class="btn btn-info" type="submit">Post New Message</button>
+                            <button class="btn btn-info" id="send_new_mail" type="button">Send New Message</button>
                         </form>
                     </div>
                 </div>
@@ -922,6 +915,7 @@
 
             <!-- Scripts for This page only -->
     <script src="{{ URL::asset('assets/plugins/material-design-floating-action-button/dist/js/kc.fab.min.js') }}"></script>
+    <script src="{{ URL::asset('assets/plugins/multiple-emails/multiple-emails.js') }}"></script>
     <script src="{{ URL::asset('school/inbox.js') }}"></script>
     <script>
         jQuery(document).ready(function () {
@@ -949,6 +943,12 @@
             ]
 
             $('.kc_fab_wrapper').kc_fab(links);
+
+            $('input[name="recipients"]').multiple_emails({
+                position: 'top', // Display the added emails above the input
+                theme: 'bootstrap', // Bootstrap is the default theme
+                checkDupEmail: true // Should check for duplicate emails added
+            });
         });
     </script>
 

@@ -5,23 +5,26 @@
  * Time: 9:18
  */
 
-namespace app\Libraries;
+namespace App\Libraries;
+
 use App\Models\User;
 use App\Models\UserGroup;
 
-class RequiredFunctions {
+class RequiredFunctions
+{
 
     /**
      * @param $email
      * @return true if email is of domain : user.xx, teacher.xx, admin.xx, school.xx  [xx - any domain]
      * @return false if any other type of email domain
      */
-    public static function checkIfTestEmail($email){
+    public static function checkIfTestEmail($email)
+    {
 
         $breakEmail = explode('@', $email);
         $testEmailArray = explode('.', $breakEmail[1]);
 
-        if($testEmailArray[0] == 'user' || $testEmailArray[0] == 'admin' || $testEmailArray[0] == 'teacher' || $testEmailArray[0] == 'school'){
+        if ($testEmailArray[0] == 'user' || $testEmailArray[0] == 'admin' || $testEmailArray[0] == 'teacher' || $testEmailArray[0] == 'school') {
             return true;
         }
 
@@ -34,7 +37,8 @@ class RequiredFunctions {
      * @return 2 if User is Student
      * @return 3 if User is Teacher
      */
-    public static function checkUserTypeByEmail($email){
+    public static function checkUserTypeByEmail($email)
+    {
 
         $user = User::where('email', $email)->get()->first();
         $userGroup = UserGroup::where('user_id', $user->id)->get()->first();
@@ -48,7 +52,8 @@ class RequiredFunctions {
      * @return 2 if User is Student
      * @return 3 if User is Teacher
      */
-    public static function checkUserTypeByUserId($userId){
+    public static function checkUserTypeByUserId($userId)
+    {
 
         $userGroup = UserGroup::where('user_id', $userId)->get()->first();
         return $userGroup->group_id;

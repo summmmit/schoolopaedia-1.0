@@ -49,6 +49,39 @@ var InboxSettings = function () {
             hideReadEmail();
         });
 
+        // send new mail
+        $('.compose-new-email').on('click', '#send_new_mail', function(e){
+            e.preventDefault();
+            var data = {
+                'recipients' : $(this).parentsUntil('panel-body').find('input[name="recipients"]').val(),
+                'subject' : $(this).parentsUntil('panel-body').find('input[name="subject"]').val(),
+                'message' : $(this).parentsUntil('panel-body').find('textarea[name="message"]').val()
+            }
+
+            $.ajax({
+                url: serverUrl + '/admin/compose/mail',
+                dataType: 'json',
+                method: 'POST',
+                data: data,
+                success: function(data, response) {
+                    toastr.success('You have successfully send your mail to recipients');
+                },
+                failed: function(data){
+
+                }
+            });
+
+            $(this).parentsUntil('panel-body').find('input[name="recipients"]').val('');
+            $(this).parentsUntil('panel-body').find('input[name="subject"]').val('');
+            $(this).parentsUntil('panel-body').find('textarea[name="message"]').val('');
+
+            showInboxHeader();
+            showInboxFolder();
+            hideSentMailsFolder();
+            hideComposeEmail();
+            hideReadEmail();
+        });
+
     }
 
     function showInboxHeader() {

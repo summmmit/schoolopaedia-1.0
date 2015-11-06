@@ -402,4 +402,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
         'as' => 'admin-all-inbox-mails',
         'uses' => 'InboxController@postGetAllInboxMails'
     ));
+    /**
+     * Compose Email (Post)
+     */
+    Route::Post('/compose/mail', array(
+        'as' => 'admin-compose-mail',
+        'uses' => 'InboxController@postComposeMail'
+    ));
 });
