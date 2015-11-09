@@ -50,12 +50,12 @@ var InboxSettings = function () {
         });
 
         // send new mail
-        $('.compose-new-email').on('click', '#send_new_mail', function(e){
+        $('.compose-new-email').on('click', '#send_new_mail', function (e) {
             e.preventDefault();
             var data = {
-                'recipients' : $(this).parentsUntil('panel-body').find('input[name="recipients"]').val(),
-                'subject' : $(this).parentsUntil('panel-body').find('input[name="subject"]').val(),
-                'message' : $(this).parentsUntil('panel-body').find('textarea[name="message"]').val()
+                'recipients': $(this).parentsUntil('panel-body').find('input[name="recipients"]').val(),
+                'subject': $(this).parentsUntil('panel-body').find('input[name="subject"]').val(),
+                'message': $(this).parentsUntil('panel-body').find('textarea[name="message"]').val()
             }
 
             $.ajax({
@@ -63,11 +63,11 @@ var InboxSettings = function () {
                 dataType: 'json',
                 method: 'POST',
                 data: data,
-                success: function(data, response) {
+                success: function (data, response) {
                     toastr.success('You have successfully send your mail to recipients');
                 },
-                failed: function(data){
-
+                error: function (data) {
+                    toastr.info('Sorry, something happened. You cant send mail now.');
                 }
             });
 
@@ -124,9 +124,32 @@ var InboxSettings = function () {
         $('.compose-new-email').addClass('no-display');
     }
 
+    var getInboxMails = function () {
+
+        $.ajax({
+            url: serverUrl + '/admin/get/all/inbox/mails',
+            dataType: 'json',
+            method: 'POST',
+            success: function (data, response) {
+                console.log(data);
+                for(var i = 0; i<data.result.length; i++){
+
+                    var inboxMailRow = '<tr class="unread"><td class="inbox-small-cells"><input name="'+ data.result[i].id +'" type="checkbox" class="mail-checkbox"></td>' +
+                        '<td class="inbox-small-cells"><i class="fa fa-star"></i></td><td class="view-message  dont-show">'+ data.result[i].subject +'</td>' +
+                        '<td class="view-message ">'+ data.result[i].message +'</td>' +
+                        '<td class="view-message  text-right">'+ momemt(data.result[i].created_at).format('MMMM Do YYYY, h:mm:ss a') +'</td></tr>';
+
+                    $('#table-inbox-incoming-mails').find('tbody').prepend(inboxMailRow);
+                }
+            },
+            error: function (data) {
+            }
+        });
+    };
     return {
         init: function () {
             inboxPage();
+            getInboxMails();
         }
     }
 }();

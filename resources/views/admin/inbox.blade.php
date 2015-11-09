@@ -549,7 +549,7 @@
             </div>
             <div class="panel">
                 <div class="panel-body">
-                    <ul class="inbox-nav inbox-divider">
+                    <ul class="inbox-nav inbox-divider" id="inbox-folders">
                         <li class="active">
                             <a href="#" id="button-folder-inbox">
                                 <i class="fa fa-inbox"></i> Inbox <span class="label label-danger pull-right">2</span>
@@ -557,15 +557,18 @@
                         </li>
                         <li>
                             <a href="#" id="button-folder-sent-mails">
-                                <i class="fa fa-envelope-o"></i> Sent Mail
+                                <i class="fa fa-envelope-o"></i> Sent Mail <span class="label label-success pull-right">2</span>
                             </a>
                         </li>
                         <li>
-                            <a href="#"><i class=" fa fa-external-link"></i> Drafts <span
-                                        class="label label-info pull-right">30</span></a>
+                            <a href="#" id="button-folder-important">
+                                <i class=" fa fa-external-link"></i> Important <span class="label label-info pull-right">30</span>
+                            </a>
                         </li>
                         <li>
-                            <a href="#"><i class=" fa fa-trash-o"></i> Trash</a>
+                            <a href="#" id="button-folder-trash">
+                                <i class=" fa fa-trash-o"></i> Trash <span class="label label-danger pull-right">2</span>
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -649,87 +652,6 @@
                         </div>
                         <table class="table table-inbox table-hover" id="table-inbox-incoming-mails">
                             <tbody>
-                            <tr class="unread">
-                                <td class="inbox-small-cells">
-                                    <input type="checkbox" class="mail-checkbox">
-                                </td>
-                                <td class="inbox-small-cells"><i class="fa fa-star"></i></td>
-                                <td class="view-message  dont-show">PHPClass</td>
-                                <td class="view-message ">Added a new class: Login Class Fast Site</td>
-                                <td class="view-message  inbox-small-cells"><i class="fa fa-paperclip"></i></td>
-                                <td class="view-message  text-right">9:27 AM</td>
-                            </tr>
-                            <tr class="unread">
-                                <td class="inbox-small-cells">
-                                    <input type="checkbox" class="mail-checkbox">
-                                </td>
-                                <td class="inbox-small-cells"><i class="fa fa-star"></i></td>
-                                <td class="view-message dont-show">Google Webmaster</td>
-                                <td class="view-message">Improve the search presence of WebSite</td>
-                                <td class="view-message inbox-small-cells"></td>
-                                <td class="view-message text-right">March 15</td>
-                            </tr>
-                            <tr class="">
-                                <td class="inbox-small-cells">
-                                    <input type="checkbox" class="mail-checkbox">
-                                </td>
-                                <td class="inbox-small-cells"><i class="fa fa-star"></i></td>
-                                <td class="view-message dont-show">JW Player</td>
-                                <td class="view-message">Last Chance: Upgrade to Pro for</td>
-                                <td class="view-message inbox-small-cells"></td>
-                                <td class="view-message text-right">March 15</td>
-                            </tr>
-                            <tr class="">
-                                <td class="inbox-small-cells">
-                                    <input type="checkbox" class="mail-checkbox">
-                                </td>
-                                <td class="inbox-small-cells"><i class="fa fa-star"></i></td>
-                                <td class="view-message dont-show">Tim Reid, S P N</td>
-                                <td class="view-message">Boost Your Website Traffic</td>
-                                <td class="view-message inbox-small-cells"></td>
-                                <td class="view-message text-right">April 01</td>
-                            </tr>
-                            <tr class="">
-                                <td class="inbox-small-cells">
-                                    <input type="checkbox" class="mail-checkbox">
-                                </td>
-                                <td class="inbox-small-cells"><i class="fa fa-star inbox-started"></i></td>
-                                <td class="view-message dont-show">Freelancer.com
-                                </td>
-                                <td class="view-message">Stop wasting your visitors</td>
-                                <td class="view-message inbox-small-cells"></td>
-                                <td class="view-message text-right">May 23</td>
-                            </tr>
-                            <tr class="">
-                                <td class="inbox-small-cells">
-                                    <input type="checkbox" class="mail-checkbox">
-                                </td>
-                                <td class="inbox-small-cells"><i class="fa fa-star inbox-started"></i></td>
-                                <td class="view-message dont-show">WOW Slider</td>
-                                <td class="view-message">New WOW Slider v7.8 - 67% off</td>
-                                <td class="view-message inbox-small-cells"><i class="fa fa-paperclip"></i></td>
-                                <td class="view-message text-right">March 14</td>
-                            </tr>
-                            <tr class="">
-                                <td class="inbox-small-cells">
-                                    <input type="checkbox" class="mail-checkbox">
-                                </td>
-                                <td class="inbox-small-cells"><i class="fa fa-star inbox-started"></i></td>
-                                <td class="view-message dont-show">LinkedIn Pulse</td>
-                                <td class="view-message">The One Sign Your Co-Worker Will Stab</td>
-                                <td class="view-message inbox-small-cells"><i class="fa fa-paperclip"></i></td>
-                                <td class="view-message text-right">Feb 19</td>
-                            </tr>
-                            <tr class="">
-                                <td class="inbox-small-cells">
-                                    <input type="checkbox" class="mail-checkbox">
-                                </td>
-                                <td class="inbox-small-cells"><i class="fa fa-star"></i></td>
-                                <td class="view-message dont-show">Drupal Community </td>
-                                <td class="view-message view-message">Welcome to the Drupal Community</td>
-                                <td class="view-message inbox-small-cells"></td>
-                                <td class="view-message text-right">March 04</td>
-                            </tr>
                             </tbody>
                         </table>
                         <table class="table table-inbox table-hover no-display" id="table-inbox-sent-mails">

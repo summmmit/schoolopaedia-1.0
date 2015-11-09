@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use app\Exceptions\ModelNotSavedException;
 use App\Libraries\RequiredFunctions;
+use App\Models\InboxFolders;
 use App\Models\Mails;
+use App\Models\MailsToFolder;
 use App\Models\MailsToUser;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -27,6 +29,8 @@ class inboxController extends Controller
     public function __construct(SchoolAndUserBasicInfo $schoolAndUserBasicInfo)
     {
         $this->_schoolAndUserBasicInfo = $schoolAndUserBasicInfo;
+
+        $this->getCreateDefaultInboxFolders();
     }
 
     /**
@@ -39,13 +43,88 @@ class inboxController extends Controller
 
     //**-----------------------------------------------------Inbox ---------------------------------------------------**
 
+    public function getCreateDefaultInboxFolders()
+    {
+
+        try {
+
+            $folder_inbox = InboxFolders::where('folder_id', InboxFolders::FOLDER_INBOX_ID)
+                ->where('user_id', $this->getSchoolAndUserBasicInfo()->getUserId())->get()->first();
+            if (!$folder_inbox) {
+
+                $folder_inbox = new InboxFolders();
+                $folder_inbox->user_id = $this->getSchoolAndUserBasicInfo()->getUserId();
+                $folder_inbox->folder_id = InboxFolders::FOLDER_INBOX_ID;
+                $folder_inbox->folder_name = InboxFolders::FOLDER_INBOX;
+                if (!$folder_inbox->save()) {
+                    throw new ModelNotSavedException();
+                }
+            }
+
+            $folder_sent_mails = InboxFolders::where('folder_id', InboxFolders::FOLDER_SENT_MAILS_ID)
+                ->where('user_id', $this->getSchoolAndUserBasicInfo()->getUserId())->get()->first();
+            if (!$folder_sent_mails) {
+
+                $folder_sent_mails = new InboxFolders();
+                $folder_sent_mails->user_id = $this->getSchoolAndUserBasicInfo()->getUserId();
+                $folder_sent_mails->folder_id = InboxFolders::FOLDER_SENT_MAILS_ID;
+                $folder_sent_mails->folder_name = InboxFolders::FOLDER_SENT_MAILS;
+                if (!$folder_sent_mails->save()) {
+                    throw new ModelNotSavedException();
+                }
+            }
+
+            $folder_important = InboxFolders::where('folder_id', InboxFolders::FOLDER_IMPORTANT_ID)
+                ->where('user_id', $this->getSchoolAndUserBasicInfo()->getUserId())->get()->first();
+            if (!$folder_important) {
+
+                $folder_important = new InboxFolders();
+                $folder_important->user_id = $this->getSchoolAndUserBasicInfo()->getUserId();
+                $folder_important->folder_id = InboxFolders::FOLDER_IMPORTANT_ID;
+                $folder_important->folder_name = InboxFolders::FOLDER_IMPORTANT;
+                if (!$folder_important->save()) {
+                    throw new ModelNotSavedException();
+                }
+            }
+
+            $folder_trash = InboxFolders::where('folder_id', InboxFolders::FOLDER_TRASH_ID)
+                ->where('user_id', $this->getSchoolAndUserBasicInfo()->getUserId())->get()->first();
+            if (!$folder_trash) {
+
+                $folder_trash = new InboxFolders();
+                $folder_trash->user_id = $this->getSchoolAndUserBasicInfo()->getUserId();
+                $folder_trash->folder_id = InboxFolders::FOLDER_TRASH_ID;
+                $folder_trash->folder_name = InboxFolders::FOLDER_TRASH;
+                if (!$folder_trash->save()) {
+                    throw new ModelNotSavedException();
+                }
+            }
+
+        } catch (ErrorException $e) {
+
+        } catch (ModelNotSavedException $e) {
+
+        }
+    }
+
     /**
      * @param none
      * @return Inbox mails to this user
      */
     public function postGetAllInboxMails()
     {
+        $inbox_mails = MailsToFolder::where('user_id', $this->getSchoolAndUserBasicInfo()->getUserId())
+            ->where('folder_id',  $this->getInboxFolderId())->get();
 
+        $mails = array();
+
+        foreach($inbox_mails as $inbox_mail){
+            $mail = Mails::find($inbox_mail->mail_id);
+
+            array_push($mails, $mail);
+        }
+
+        return ApiResponseClass::successResponse($mails, null);
     }
 
     public function postComposeMail(Request $request)
@@ -88,6 +167,24 @@ class inboxController extends Controller
                     if (!$mail_to_user->save()) {
                         throw new ModelNotSavedException();
                     }
+
+                    $mail_to_folder = new MailsToFolder();
+                    $mail_to_folder->mail_id = $new_mail->id;
+                    $mail_to_folder->user_id = $this->getSchoolAndUserBasicInfo()->getUserId();
+                    $mail_to_folder->folder_id = $this->getSentMailsFolderId();
+
+                    if (!$mail_to_folder->save()) {
+                        throw new ModelNotSavedException();
+                    }
+
+                    $mail_to_folder = new MailsToFolder();
+                    $mail_to_folder->mail_id = $new_mail->id;
+                    $mail_to_folder->user_id = $recipient_id;
+                    $mail_to_folder->folder_id = $this->getInboxFolderId();
+
+                    if (!$mail_to_folder->save()) {
+                        throw new ModelNotSavedException();
+                    }
                 }
                 DB::commit();
             } catch (ModelNotSavedException $e) {
@@ -97,5 +194,28 @@ class inboxController extends Controller
         }
 
         return ApiResponseClass::successResponse($recipients, $request->all());
+    }
+
+    public function getInboxFolderId(){
+
+        $inbox_folder = InboxFolders::where('user_id', $this->getSchoolAndUserBasicInfo()->getUserId())
+            ->where('folder_id', InboxFolders::FOLDER_INBOX_ID)->get()->first();
+
+        return $inbox_folder->id;
+    }
+
+    public function getSentMailsFolderId(){
+
+        $inbox_folder = InboxFolders::where('user_id', $this->getSchoolAndUserBasicInfo()->getUserId())
+            ->where('folder_id', InboxFolders::FOLDER_SENT_MAILS_ID)->get()->first();
+
+        return $inbox_folder->id;
+    }
+
+    public function postGetAllInboxFolders(){
+
+        $inbox_folder = InboxFolders::where('user_id', $this->getSchoolAndUserBasicInfo()->getUserId())->get();
+
+        return ApiResponseClass::successResponse($inbox_folder, null);
     }
 }

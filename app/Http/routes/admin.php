@@ -409,4 +409,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
         'as' => 'admin-compose-mail',
         'uses' => 'InboxController@postComposeMail'
     ));
+    /**
+     * Get Inbox Folders (Post)
+     */
+    Route::Post('/get/inbox/folders', array(
+        'as' => 'admin-compose-mail',
+        'uses' => 'InboxController@postGetAllInboxFolders'
+    ));
 });
