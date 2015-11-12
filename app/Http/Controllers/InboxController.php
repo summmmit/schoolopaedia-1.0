@@ -9,6 +9,8 @@ use App\Models\Mails;
 use App\Models\MailsToFolder;
 use App\Models\MailsToUser;
 use App\Models\User;
+use App\Models\UserDetails;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -113,28 +115,60 @@ class inboxController extends Controller
      */
     public function postGetAllInboxMails()
     {
-        $inbox_mails = MailsToFolder::where('user_id', $this->getSchoolAndUserBasicInfo()->getUserId())
-            ->where('folder_id',  $this->getInboxFolderId())->get();
+        $inbox_mails = MailsToUser::where('user_send_to', $this->getSchoolAndUserBasicInfo()->getUserId())->get();
 
         $mails = array();
 
-        foreach($inbox_mails as $inbox_mail){
+        foreach ($inbox_mails as $inbox_mail) {
+
             $mail = Mails::find($inbox_mail->mail_id);
-
-            array_push($mails, $mail);
+            $mail_info = array(
+                'mail' => $mail,
+                'mails_to_user' => $inbox_mail
+            );
+            array_push($mails, $mail_info);
         }
-
         return ApiResponseClass::successResponse($mails, null);
+    }
+
+    /**
+     * @param none
+     * @return Sent mails By this user
+     */
+    public function postGetAllSentMails()
+    {
+        $inbox_mails = MailsToUser::where('user_send_by', $this->getSchoolAndUserBasicInfo()->getUserId())->get();
+
+        $mails = array();
+
+        foreach ($inbox_mails as $inbox_mail) {
+
+            $mail = Mails::find($inbox_mail->mail_id);
+            $mail_info = array(
+                'mail' => $mail,
+                'mails_to_user' => $inbox_mail
+            );
+            array_push($mails, $mail_info);
+        }
+        return ApiResponseClass::successResponse($mails, null);
+    }
+
+    public function postGetAllSchoolUsers()
+    {
+        $users = RequiredFunctions::getAllUsersWithEmailAndNames($this->getSchoolAndUserBasicInfo()->getSchoolId());
+
+        //return response()->json($users);
+        return ApiResponseClass::successResponse($users, null);
     }
 
     public function postComposeMail(Request $request)
     {
-        $recipients = json_decode($request->input('recipients'));
+        $recipients = $request->input('recipients');
         $subject = $request->input('subject');
         $message = $request->input('message');
 
         $validator = validator::make($request->all(), [
-            'recipients' => 'required|JSON',
+            'recipients' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -155,12 +189,10 @@ class inboxController extends Controller
 
                 foreach ($recipients as $recipient) {
 
-                    $recipient_id = User::getUserIdByEmail($recipient);
-
                     $mail_to_user = new MailsToUser();
                     $mail_to_user->mail_id = $new_mail->id;
                     $mail_to_user->user_send_by = $this->getSchoolAndUserBasicInfo()->getUserId();
-                    $mail_to_user->user_send_to = $recipient_id;
+                    $mail_to_user->user_send_to = $recipient;
                     $mail_to_user->send_at = date('Y-m-d H:i:s');
                     $mail_to_user->is_read = MailsToUser::MAIL_UNREAD;
 
@@ -179,7 +211,7 @@ class inboxController extends Controller
 
                     $mail_to_folder = new MailsToFolder();
                     $mail_to_folder->mail_id = $new_mail->id;
-                    $mail_to_folder->user_id = $recipient_id;
+                    $mail_to_folder->user_id = $recipient;
                     $mail_to_folder->folder_id = $this->getInboxFolderId();
 
                     if (!$mail_to_folder->save()) {
@@ -196,7 +228,8 @@ class inboxController extends Controller
         return ApiResponseClass::successResponse($recipients, $request->all());
     }
 
-    public function getInboxFolderId(){
+    public function getInboxFolderId()
+    {
 
         $inbox_folder = InboxFolders::where('user_id', $this->getSchoolAndUserBasicInfo()->getUserId())
             ->where('folder_id', InboxFolders::FOLDER_INBOX_ID)->get()->first();
@@ -204,7 +237,8 @@ class inboxController extends Controller
         return $inbox_folder->id;
     }
 
-    public function getSentMailsFolderId(){
+    public function getSentMailsFolderId()
+    {
 
         $inbox_folder = InboxFolders::where('user_id', $this->getSchoolAndUserBasicInfo()->getUserId())
             ->where('folder_id', InboxFolders::FOLDER_SENT_MAILS_ID)->get()->first();
@@ -212,10 +246,66 @@ class inboxController extends Controller
         return $inbox_folder->id;
     }
 
-    public function postGetAllInboxFolders(){
+    public function postGetAllInboxFolders()
+    {
 
         $inbox_folder = InboxFolders::where('user_id', $this->getSchoolAndUserBasicInfo()->getUserId())->get();
 
         return ApiResponseClass::successResponse($inbox_folder, null);
+    }
+
+    public function postMakeMailRead(Request $request)
+    {
+        $mails_to_user_id = $request->input('mails_to_user_id');
+
+        $mails_to_user = MailsToUser::findOrFail($mails_to_user_id);
+        $mails_to_user->is_read = 1;
+        $mails_to_user->save();
+
+        return ApiResponseClass::successResponse($mails_to_user, null);
+    }
+
+    public function postGetMailInfo(Request $request)
+    {
+        $mails_to_user_id = $request->input('mails_to_user_id');
+
+        $validator = validator::make($request->all(), [
+            'mails_to_user_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return ApiResponseClass::errorResponse('You Have Some Input Errors. Please Try Again!!', $request->all(), $validator->errors());
+        } else {
+
+            try {
+
+                $mail_to_user = MailsToUser::findOrFail($mails_to_user_id);
+                $mail = Mails::findOrFail($mail_to_user->mail_id);
+                $user_send_by = User::findOrFail($mail_to_user->user_send_by);
+                $user_send_by_details = UserDetails::where('user_id', $mail_to_user->user_send_by)->get()->first();
+
+                // make the mail read
+                $mail_to_user->is_read = 1;
+                if (!$mail_to_user->save()) {
+                    throw new ModelNotSavedException();
+                }
+
+                $mail_info = array(
+                    'mail_to_user' => $mail_to_user,
+                    'mail' => $mail,
+                    'user_send_by' => $user_send_by,
+                    'user_send_by_details' => $user_send_by_details,
+                );
+
+            } catch (ModelNotSavedException $e) {
+                return ApiResponseClass::errorResponse('You Have Some Network Errors. Please Try Again!!', $request->all());
+            } catch (ModelNotFoundException $e) {
+                return ApiResponseClass::errorResponse('You Have Some Network Errors. Please Try Again!!', $request->all());
+            }
+
+            return ApiResponseClass::successResponse($mail_info, null);
+        }
+
+        return ApiResponseClass::errorResponse('You Have Some Network Errors. Please Try Again!!', $request->all());
     }
 }

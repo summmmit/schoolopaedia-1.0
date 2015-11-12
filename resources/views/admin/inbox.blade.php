@@ -9,6 +9,8 @@
           href="{{ URL::asset('assets/plugins/material-design-floating-action-button/dist/css/kc.fab.css') }}"/>
     <link rel="stylesheet"
           href="{{ URL::asset('assets/plugins/multiple-emails/multiple-emails.css') }}"/>
+    <link rel="stylesheet" type="text/css"
+          href="{{ URL::asset('assets/plugins/select2/select2-4.0.1/css/select2.min.css') }}"/>
     <style>
         .mail-box {
             border-collapse: collapse;
@@ -499,7 +501,7 @@
             list-style: none;
         }
 
-        .mail-info ul li:before {
+        .mail-info ul li:not(:first-child):before {
             content: '| \0000a0';
             font-size: 1.2em;
             font-weight: bold;
@@ -550,7 +552,7 @@
             <div class="panel">
                 <div class="panel-body">
                     <ul class="inbox-nav inbox-divider" id="inbox-folders">
-                        <li class="active">
+                        <li>
                             <a href="#" id="button-folder-inbox">
                                 <i class="fa fa-inbox"></i> Inbox <span class="label label-danger pull-right">2</span>
                             </a>
@@ -562,12 +564,14 @@
                         </li>
                         <li>
                             <a href="#" id="button-folder-important">
-                                <i class=" fa fa-external-link"></i> Important <span class="label label-info pull-right">30</span>
+                                <i class=" fa fa-external-link"></i> Important <span
+                                        class="label label-info pull-right">30</span>
                             </a>
                         </li>
                         <li>
                             <a href="#" id="button-folder-trash">
-                                <i class=" fa fa-trash-o"></i> Trash <span class="label label-danger pull-right">2</span>
+                                <i class=" fa fa-trash-o"></i> Trash <span
+                                        class="label label-danger pull-right">2</span>
                             </a>
                         </li>
                     </ul>
@@ -591,11 +595,81 @@
         </aside>
         <aside class="lg-side">
             <div class="inbox-body">
-                <div class="panel incoming-mails">
+                <div class="panel inbox-incoming-mails">
                     <div class="panel-body">
                         <div class="mail-option">
                             <div class="chk-all">
-                                <input type="checkbox" class="mail-checkbox mail-group-checkbox">
+                                <label class="checkbox-inline" style="margin: 0px !important;">
+                                    <input type="checkbox" name="incoming_mails_all_checkbox" class="grey">
+                                </label>
+
+                                <div class="btn-group">
+                                    <a data-toggle="dropdown" href="#" class="btn mini all" aria-expanded="false">
+                                        All
+                                        <i class="fa fa-angle-down "></i>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#" id="incoming_mails_checkbox_none"> None</a></li>
+                                        <li><a href="#" id="incoming_mails_checkbox_read"> Read</a></li>
+                                        <li><a href="#" id="incoming_mails_checkbox_unread"> Unread</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="btn-group">
+                                <a data-original-title="Refresh" data-placement="top" data-toggle="dropdown"
+                                   href="#"
+                                   class="btn tooltips">
+                                    <i class=" fa fa-refresh"></i>
+                                </a>
+                            </div>
+                            <div class="btn-group hidden-phone">
+                                <a data-toggle="dropdown" href="#" class="btn mini blue" aria-expanded="false">
+                                    More
+                                    <i class="fa fa-angle-down "></i>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#" id="incoming_mails_more_mark_read"><i class="fa fa-pencil"></i> Mark
+                                            as Read</a></li>
+                                    <li><a href="#" id="incoming_mails_more_mark_unread"><i class="fa fa-pencil"></i>
+                                            Mark as UnRead</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="#" id="incoming_mails_more_mark_delete"><i class="fa fa-trash-o"></i>
+                                            Delete</a></li>
+                                </ul>
+                            </div>
+                            <div class="btn-group">
+                                <a data-toggle="dropdown" href="#" class="btn mini blue">
+                                    Move to
+                                    <i class="fa fa-angle-down "></i>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#" id="incoming_mails_move_to_important"><i
+                                                    class="fa fa-external-link"></i> Important</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <table class="table table-inbox table-hover" id="table-inbox-incoming-mails">
+                            <thead class="no-display">
+                            <tr>
+                                <th>Checkbox</th>
+                                <th>Important</th>
+                                <th>Subject</th>
+                                <th>Message</th>
+                                <th>Date</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="panel inbox-sent-mails no-display">
+                    <div class="panel-body">
+                        <div class="mail-option">
+                            <div class="chk-all">
+                                <label class="checkbox-inline" style="margin: 0px !important;">
+                                    <input type="checkbox" value="" class="grey">
+                                </label>
 
                                 <div class="btn-group">
                                     <a data-toggle="dropdown" href="#" class="btn mini all" aria-expanded="false">
@@ -610,8 +684,9 @@
                                 </div>
                             </div>
                             <div class="btn-group">
-                                <a data-original-title="Refresh" data-placement="top" data-toggle="dropdown" href="#"
-                                   class="btn mini tooltips">
+                                <a data-original-title="Refresh" data-placement="top" data-toggle="dropdown"
+                                   href="#"
+                                   class="btn tooltips">
                                     <i class=" fa fa-refresh"></i>
                                 </a>
                             </div>
@@ -622,7 +697,7 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li><a href="#"><i class="fa fa-pencil"></i> Mark as Read</a></li>
-                                    <li><a href="#"><i class="fa fa-ban"></i> Spam</a></li>
+                                    <li><a href="#"><i class="fa fa-pencil"></i> Mark as UnRead</a></li>
                                     <li class="divider"></li>
                                     <li><a href="#"><i class="fa fa-trash-o"></i> Delete</a></li>
                                 </ul>
@@ -633,195 +708,92 @@
                                     <i class="fa fa-angle-down "></i>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="#"><i class="fa fa-pencil"></i> Mark as Read</a></li>
-                                    <li><a href="#"><i class="fa fa-ban"></i> Spam</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="#"><i class="fa fa-trash-o"></i> Delete</a></li>
+                                    <li><a href="#"><i class="fa fa-external-link"></i> Important</a></li>
                                 </ul>
                             </div>
-
-                            <ul class="unstyled inbox-pagination">
-                                <li><span>1-50 of 234</span></li>
-                                <li>
-                                    <a class="np-btn" href="#"><i class="fa fa-angle-left  pagination-left"></i></a>
-                                </li>
-                                <li>
-                                    <a class="np-btn" href="#"><i class="fa fa-angle-right pagination-right"></i></a>
-                                </li>
-                            </ul>
                         </div>
-                        <table class="table table-inbox table-hover" id="table-inbox-incoming-mails">
+                        <table class="table table-inbox table-hover" id="table-inbox-sent-mails">
+                            <thead class="no-display">
+                            <tr>
+                                <th>Checkbox</th>
+                                <th>Important</th>
+                                <th>Subject</th>
+                                <th>Message</th>
+                                <th>Date</th>
+                            </tr>
+                            </thead>
                             <tbody>
-                            </tbody>
-                        </table>
-                        <table class="table table-inbox table-hover no-display" id="table-inbox-sent-mails">
-                            <tbody>
-                            <tr class="unread">
-                                <td class="inbox-small-cells">
-                                    <input type="checkbox" class="mail-checkbox">
-                                </td>
-                                <td class="inbox-small-cells"><i class="fa fa-star"></i></td>
-                                <td class="view-message dont-show">Google Webmaster</td>
-                                <td class="view-message">Improve the search presence of WebSite</td>
-                                <td class="view-message inbox-small-cells"></td>
-                                <td class="view-message text-right">March 15</td>
-                            </tr>
-                            <tr class="">
-                                <td class="inbox-small-cells">
-                                    <input type="checkbox" class="mail-checkbox">
-                                </td>
-                                <td class="inbox-small-cells"><i class="fa fa-star"></i></td>
-                                <td class="view-message dont-show">JW Player</td>
-                                <td class="view-message">Last Chance: Upgrade to Pro for</td>
-                                <td class="view-message inbox-small-cells"></td>
-                                <td class="view-message text-right">March 15</td>
-                            </tr>
-                            <tr class="">
-                                <td class="inbox-small-cells">
-                                    <input type="checkbox" class="mail-checkbox">
-                                </td>
-                                <td class="inbox-small-cells"><i class="fa fa-star"></i></td>
-                                <td class="view-message dont-show">Tim Reid, S P N</td>
-                                <td class="view-message">Boost Your Website Traffic</td>
-                                <td class="view-message inbox-small-cells"></td>
-                                <td class="view-message text-right">April 01</td>
-                            </tr>
-                            <tr class="">
-                                <td class="inbox-small-cells">
-                                    <input type="checkbox" class="mail-checkbox">
-                                </td>
-                                <td class="inbox-small-cells"><i class="fa fa-star inbox-started"></i></td>
-                                <td class="view-message dont-show">Freelancer.com <span
-                                            class="label label-danger pull-right">urgent</span>
-                                </td>
-                                <td class="view-message">Stop wasting your visitors</td>
-                                <td class="view-message inbox-small-cells"></td>
-                                <td class="view-message text-right">May 23</td>
-                            </tr>
-                            <tr class="">
-                                <td class="inbox-small-cells">
-                                    <input type="checkbox" class="mail-checkbox">
-                                </td>
-                                <td class="inbox-small-cells"><i class="fa fa-star inbox-started"></i></td>
-                                <td class="view-message dont-show">WOW Slider</td>
-                                <td class="view-message">New WOW Slider v7.8 - 67% off</td>
-                                <td class="view-message inbox-small-cells"><i class="fa fa-paperclip"></i></td>
-                                <td class="view-message text-right">March 14</td>
-                            </tr>
-                            <tr class="">
-                                <td class="inbox-small-cells">
-                                    <input type="checkbox" class="mail-checkbox">
-                                </td>
-                                <td class="inbox-small-cells"><i class="fa fa-star inbox-started"></i></td>
-                                <td class="view-message dont-show">LinkedIn Pulse</td>
-                                <td class="view-message">The One Sign Your Co-Worker Will Stab</td>
-                                <td class="view-message inbox-small-cells"><i class="fa fa-paperclip"></i></td>
-                                <td class="view-message text-right">Feb 19</td>
-                            </tr>
-                            <tr class="">
-                                <td class="inbox-small-cells">
-                                    <input type="checkbox" class="mail-checkbox">
-                                </td>
-                                <td class="inbox-small-cells"><i class="fa fa-star"></i></td>
-                                <td class="view-message dont-show">Drupal Community<span
-                                            class="label label-success pull-right">megazine</span>
-                                </td>
-                                <td class="view-message view-message">Welcome to the Drupal Community</td>
-                                <td class="view-message inbox-small-cells"></td>
-                                <td class="view-message text-right">March 04</td>
+                            <tr>
+                                <th>Checkbox</th>
+                                <th>Important</th>
+                                <th>Subject</th>
+                                <th>Message</th>
+                                <th>Date</th>
                             </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
                 <div class="panel panel-default mail-container read-mails no-display">
-                    <div class="panel-heading"><strong><span class="glyphicon glyphicon-th"></span> View
-                            Article</strong></div>
+                    <div class="panel-heading">
+                        <strong><span class="glyphicon glyphicon-th"></span> Read Mail</strong>
+                    </div>
                     <div class="panel-body">
-                        <div class="mail-header row">
-                            <div class="col-md-4 col-md-offset-8">
-                                <div class="pull-right">
-                                    <a href="#/mail/compose" class="btn btn-sm btn-default">Reply <i
-                                                class="fa fa-mail-reply"></i></a>
-                                    <a href="javascript:;" class="btn btn-sm btn-default"><i
-                                                class="fa fa-print"></i></a>
-                                    <a href="javascript:;" class="btn btn-sm btn-default"><i class="fa fa-trash-o"></i></a>
+                        <div class="mail" data-mail-id="">
+                            <div class="mail-info">
+                                <div class="row">
+                                    <div class="col-md-7">
+                                        <h3 style="display: inline;"><span id="mail_subject"></span></h3>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <ul class="list-unstyled list-inline">
+                                            <li><i class="fa fa-user"></i><span id="mail_sent_by"></span></li>
+                                            <li><i class="fa fa-calendar-o"></i><span id="mail_sent_at"></span></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <p></p>
+                            </div>
+                            <div class="mail-content">
+                                <p id="mail_message_content"></p>
+                            </div>
+                            <hr>
+                            <div class="mail-actions row">
+                                <div class="col-md-4">
+                                    <div class="mail">
+                                        <a href="#/mail/compose" class="btn btn-sm btn-default">Reply <i
+                                                    class="fa fa-mail-reply"></i></a>
+                                        <a href="javascript:;" class="btn btn-sm btn-default"><i
+                                                    class="fa fa-print"></i></a>
+                                        <a href="javascript:;" class="btn btn-sm btn-default"><i
+                                                    class="fa fa-trash-o"></i></a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="mail-header row">
-                            <div class="col-md-12">
-                                <h3>How to include an image in production description</h3>
-                            </div>
-                        </div>
-                        <div class="mail-info">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <ul class="list-unstyled list-inline">
-                                        <li><i class="fa fa-calendar-o"></i>8/28/2013</li>
-                                        <li><i class="fa fa-user"></i>Sergio Rodriguez</li>
-                                        <li><i class="glyphicon glyphicon-bookmark"></i><a
-                                                    href="http://localhost:8080/Utilities/xmlKnowledgeBase23/index.asp?displayCategory=yes&id=Gateway">Gateway</a>
-                                        </li>
-                                        <li><i class="fa fa-star"></i>33 views</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mail-content">
-                            <p>Quo, animi, reprehenderit, dolorem obcaecati reiciendis quasi accusamus totam alias
-                                sapiente sint tempore quam adipisci temporibus unde odit eveniet eum molestias! Esse,
-                                hic ut maxime animi et! Dolores, cum libero pariatur facere nesciunt tempore. Expedita,
-                                vel, ut illo magni quis suscipit nisi deserunt enim eaque veniam.</p>
-                            <blockquote>Ipsum dolor sit amet, consectetur adipisicing elit. Doloremque, error, nulla,
-                                quia, neque est animi necessitatibus qui vero beatae quae ut laudantium facere
-                                consequuntur maiores cupiditate amet vitae magni nihil!
-                                <small>Someone famous</small>
-                            </blockquote>
-                            <p>Officiis, tempore, unde, sint in ut neque alias ad est ex fugit odio nobis nemo dolorem
-                                aperiam labore ipsam sapiente optio nostrum perferendis ab. Molestias, </p>
-
-                            <p>sit, dolorem consequuntur vel quibusdam illum veniam veritatis vitae blanditiis officiis
-                                ducimus voluptatibus omnis cum quae tempore porro reiciendis animi dignissimos optio rem
-                                laborum eius magnam. Esse, accusantium quia deleniti fugiat commodi architecto itaque
-                                nulla in. Consequatur beatae non explicabo in qui aspernatur deleniti quas
-                                doloribus!</p>
-
-                            <p>Aperiam, veniam, quae temporibus ratione suscipit accusantium provident amet deserunt
-                                natus veritatis ipsa error accusamus saepe debitis quisquam labore facilis magnam
-                                impedit minus explicabo quidem dicta ipsam nam velit quasi esse ad culpa sequi dolorum
-                                eaque. Iste exercitationem facilis nemo aut quae! Sit?</p>
-                        </div>
-                        <div class="mail-attachments">
-                            <p><i class="fa fa-paperclip"></i> 2 attachements | <a href="javascript:;">Download all
-                                    attachements</a></p>
-                            <ul class="list-unstyled">
-                                <li><a>iniformation.pdf</a></li>
-                                <li><a>drivername.ini</a></li>
-                            </ul>
-                        </div>
-                        <div class="mail-actions">
-                            <a href="#/mail/compose" class="btn btn-sm btn-default">Reply <i
-                                        class="fa fa-mail-reply"></i></a>
                         </div>
                     </div>
                 </div>
                 <div class="panel panel-default compose-new-email no-display">
                     <div class="panel-body">
+                        <h4 class="bold">Compose New Mail</h4>
+
                         <form accept-charset="UTF-8" action="" method="POST" role="form" class="">
                             <div class="form-group">
-                                <input type="text" class="form-control" name="recipients" placeholder="Recipients"
-                                       style="margin-bottom:10px;"/>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control" name="subject" placeholder="Subject"
-                                       style="margin-bottom:10px;"/>
+                                <input type="text" class="form-control" name="subject" placeholder="Subject"/>
                             </div>
                             <div class="form-group">
                                 <textarea class="form-control counted" name="message" placeholder="Type in your message"
                                           rows="5" style="margin-bottom:10px;"></textarea>
                             </div>
                             <h6 class="pull-right" id="counter">2500 characters remaining</h6>
+
+                            <div class="form-group">
+                                <label for="form-field-select-4">
+                                    Recipients
+                                </label>
+                                <select name="recipients" multiple="multiple" id="form-field-select-4"
+                                        class="form-control search-select" style="width: 100%;"></select>
+                            </div>
                             <button class="btn btn-info" id="send_new_mail" type="button">Send New Message</button>
                         </form>
                     </div>
@@ -836,14 +808,17 @@
     @section('scripts')
 
             <!-- Scripts for This page only -->
+    <script src="{{ URL::asset('assets/plugins/select2/select2-4.0.1/js/select2.min.js') }}"></script>
     <script src="{{ URL::asset('assets/plugins/material-design-floating-action-button/dist/js/kc.fab.min.js') }}"></script>
     <script src="{{ URL::asset('assets/plugins/multiple-emails/multiple-emails.js') }}"></script>
     <script src="{{ URL::asset('school/inbox.js') }}"></script>
+    <script src="{{ URL::asset('school/table-data-inbox.js') }}"></script>
     <script>
         jQuery(document).ready(function () {
             Main.init();
             SVExamples.init();
             InboxSettings.init();
+            TableDataInbox.init();
             var links = [
                 {
                     "bgcolor": "green",

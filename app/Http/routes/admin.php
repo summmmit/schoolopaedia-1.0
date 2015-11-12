@@ -403,6 +403,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
         'uses' => 'InboxController@postGetAllInboxMails'
     ));
     /**
+     * Get All the Sent Mails (Post)
+     */
+    Route::Post('/get/all/sent/mails', array(
+        'as' => 'admin-all-sent-mails',
+        'uses' => 'InboxController@postGetAllSentMails'
+    ));
+    /**
      * Compose Email (Post)
      */
     Route::Post('/compose/mail', array(
@@ -415,5 +422,26 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::Post('/get/inbox/folders', array(
         'as' => 'admin-compose-mail',
         'uses' => 'InboxController@postGetAllInboxFolders'
+    ));
+    /**
+     * Get School Users (Post)
+     */
+    Route::Post('/get/school/users', array(
+        'as' => 'admin-school-users',
+        'uses' => 'InboxController@postGetAllSchoolUsers'
+    ));
+    /**
+     * Make Mail Read (Post)
+     */
+    Route::Post('/make/mail/read', array(
+        'as' => 'admin-make-mail-read',
+        'uses' => 'InboxController@postMakeMailRead'
+    ));
+    /**
+     * Get Mail Info (Post)
+     */
+    Route::Post('/mail/info', array(
+        'as' => 'admin-mail-info',
+        'uses' => 'InboxController@postGetMailInfo'
     ));
 });
