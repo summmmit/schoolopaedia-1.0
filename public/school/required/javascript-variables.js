@@ -90,4 +90,20 @@ var months = [
     }
 ];
 
+// constants for inbox folders
+
+const FOLDER_INBOX = 'Inbox';
+const FOLDER_INBOX_ID = 1;
+
+const FOLDER_SENT_MAILS = 'Sent Mails';
+const FOLDER_SENT_MAILS_ID = 2;
+
+const FOLDER_IMPORTANT = 'Important';
+const FOLDER_IMPORTANT_ID = 3;
+
+const FOLDER_TRASH = 'Trash';
+const FOLDER_TRASH_ID = 4;
+
+const USER_MADE_FOLDER = 9;
+
 

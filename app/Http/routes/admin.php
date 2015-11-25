@@ -444,4 +444,18 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
         'as' => 'admin-mail-info',
         'uses' => 'InboxController@postGetMailInfo'
     ));
+    /**
+     * Move Mails to Important Folder(Post)
+     */
+    Route::Post('/move/mail/to/important', array(
+        'as' => 'admin-move-mail-to-important',
+        'uses' => 'InboxController@postMoveMailsToImportantFolder'
+    ));
+    /**
+     * Move Mails to Another Folder(Post)
+     */
+    Route::Post('/move/mail/to/another/folder', array(
+        'as' => 'admin-move-mail-to-another-folder',
+        'uses' => 'InboxController@postMoveMailsToFolder'
+    ));
 });

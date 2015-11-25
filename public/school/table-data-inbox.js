@@ -12,20 +12,46 @@ var TableDataInbox = function () {
                 dataType: 'json',
                 method: 'POST',
                 success: function (data, response) {
-
+                    console.log(data);
                     if (data.status == "success") {
-                        for (var i = 0; i < data.result.length; i++) {
+                        for (var i = 0; i < data.result.mails.length; i++) {
 
                             var aiNew = oTable.fnAddData(['', '', '', '', '']);
                             var nRow = oTable.fnGetNodes(aiNew[0]);
 
-                            saveRow(oTable, nRow, data.result[i]);
+                            saveRow(oTable, nRow, data.result.mails[i]);
                         }
+                        attachInboxFolders(data.result);
                     }
                 },
                 error: function (data) {
                 }
             });
+        }
+
+        function attachInboxFolders(folder) {
+
+            // give each folder an id
+
+            // inbox folder
+            for (var i = 0; i < folder.inbox_folders.length; i++) {
+
+                if (folder.inbox_folders[i].folder_id == FOLDER_INBOX_ID) {
+                    $('.inbox-incoming-mails').attr('data-folder-id', folder.inbox_folders[i].id);
+                } else if (folder.inbox_folders[i].folder_id == FOLDER_SENT_MAILS_ID) {
+                    $('.inbox-sent-mails').attr('data-folder-id', folder.inbox_folders[i].id);
+                }
+            }
+
+            for (var i = 0; i < folder.inbox_folders.length; i++) {
+
+                if ((folder.inbox_folders[i].folder_id == FOLDER_INBOX_ID)) {
+                }else if(folder.inbox_folders[i].folder_id == FOLDER_SENT_MAILS_ID){
+                }else if(folder.inbox_folders[i].folder_id == FOLDER_TRASH_ID){
+                }else{
+                    $('#move_to_inbox_folders').append('<li><a href="#" id="move_mail" data-move-to-folder-id="'+ folder.inbox_folders[i].folder_id +'"><i class="fa fa-external-link"></i> '+ folder.inbox_folders[i].folder_name +'</a></li>');
+                }
+            }
         }
 
         function restoreRow(oTable, nRow) {
@@ -63,6 +89,7 @@ var TableDataInbox = function () {
                 nRow.setAttribute('class', 'unread');
             }
             nRow.setAttribute('data-mails-to-user-id', result.mails_to_user.id);
+            nRow.setAttribute('data-mail-id', result.mail.id);
             newRow = false;
             actualEditingRow = null;
 
@@ -223,7 +250,7 @@ var TableDataInbox = function () {
             showReadEmail();
 
             var data = {
-                'mails_to_user_id' : $(this).parent().attr('data-mails-to-user-id')
+                'mails_to_user_id': $(this).parent().attr('data-mails-to-user-id')
             }
 
             $.ajax({
@@ -248,8 +275,6 @@ var TableDataInbox = function () {
         // on click send mail folder button ............show sent mails only and hide other things
         $('#button-folder-sent-mails').on('click', function (e) {
             e.preventDefault();
-
-            oTable.fnClearTable();
 
             hideInboxFolder();
             showSentMailsFolder();
@@ -298,11 +323,17 @@ var TableDataInbox = function () {
             hideSentMailsFolder();
             hideComposeEmail();
             hideReadEmail();
+
+            oTable.fnClearTable();
+
+            attachInboxMails(oTable);
         });
 
         // on click on button inbox button ...........hide any compose email section and any opened email
         $('#button-folder-inbox').on('click', function (e) {
             e.preventDefault();
+
+            oTable.fnClearTable();
 
             showInboxFolder();
             hideSentMailsFolder();

@@ -600,7 +600,8 @@
                         <div class="mail-option">
                             <div class="chk-all">
                                 <label class="checkbox-inline" style="margin: 0px !important;">
-                                    <input type="checkbox" name="incoming_mails_all_checkbox" class="grey">
+                                    <input type="checkbox" name="incoming_mails_all_checkbox" class="grey"
+                                           id="incoming_mails_all_checkbox">
                                 </label>
 
                                 <div class="btn-group">
@@ -628,23 +629,17 @@
                                     <i class="fa fa-angle-down "></i>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="#" id="incoming_mails_more_mark_read"><i class="fa fa-pencil"></i> Mark
-                                            as Read</a></li>
-                                    <li><a href="#" id="incoming_mails_more_mark_unread"><i class="fa fa-pencil"></i>
-                                            Mark as UnRead</a></li>
+                                    <li><a href="#" id="incoming_mails_more_mark_read"><i class="fa fa-pencil"></i> Mark as Read</a></li>
+                                    <li><a href="#" id="incoming_mails_more_mark_unread"><i class="fa fa-pencil"></i> Mark as UnRead</a></li>
                                     <li class="divider"></li>
-                                    <li><a href="#" id="incoming_mails_more_mark_delete"><i class="fa fa-trash-o"></i>
-                                            Delete</a></li>
+                                    <li><a href="#" id="incoming_mails_more_mark_delete"><i class="fa fa-trash-o"></i> Delete</a></li>
                                 </ul>
                             </div>
                             <div class="btn-group">
                                 <a data-toggle="dropdown" href="#" class="btn mini blue">
-                                    Move to
-                                    <i class="fa fa-angle-down "></i>
+                                    Move to <i class="fa fa-angle-down "></i>
                                 </a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#" id="incoming_mails_move_to_important"><i
-                                                    class="fa fa-external-link"></i> Important</a></li>
+                                <ul class="dropdown-menu" id="move_to_inbox_folders">
                                 </ul>
                             </div>
                         </div>
@@ -819,6 +814,53 @@
             SVExamples.init();
             InboxSettings.init();
             TableDataInbox.init();
+
+            $('#move_to_inbox_folders').on('click', '#move_mail', function (e) {
+                e.preventDefault();
+
+                var folder_move_to_id = $(this).attr('data-move-to-folder-id');
+                var folder_from_id = $(this).closest('.panel').attr('data-folder-id');
+
+                var all_checked_inputs = $("input:checked").closest('tr');
+
+                var mail_ids = new Array();
+
+                all_checked_inputs.each(function (i) {
+                    mail_ids.push($(this).attr('data-mail-id'));
+                });
+
+                var data = {
+                    'mail_ids' : mail_ids,
+                    'folder_from_id' : folder_from_id,
+                    'folder_move_to_id' : folder_move_to_id
+                }
+
+                console.log(data);
+
+                if(mail_ids.length > 0){
+
+                    $.ajax({
+                        url: serverUrl + '/admin/move/mail/to/another/folder',
+                        dataType: 'json',
+                        method: 'POST',
+                        data: data,
+                        success: function (data, response) {
+
+                            console.log(data);
+
+                            if (data.status == "success") {
+
+                            }
+                        },
+                        error: function (data) {
+                        }
+                    });
+                }else{
+                    toastr.info('Select at least one mail');
+                }
+
+            });
+
             var links = [
                 {
                     "bgcolor": "green",
